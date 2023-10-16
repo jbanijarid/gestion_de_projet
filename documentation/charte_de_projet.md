@@ -20,15 +20,18 @@ Le projet JAFN est une application web qui permet la gestion de projet en utilis
 - L'application fonctionne sur Firefox. 
 - L'application fonctionne sur Opera.
 - Respect des dimensions selon l'écran. 
-- 3 membres sur 4 de l'équipe qui satisfaits du résultat.
+- 3 membres sur 5 de l'équipe qui satisfaits du résultat et du qualité.
 
 ##### Critères de sortie :  
-- Respecter la date de livraison : 04/12/2023
+- Respecter la date de livraison : 04/12/2023 
 - Utiliser des API gratuits. 
 - Respecter le budget.
-- .
+- 
+
+#### Exclusion 
+
 
 
 ## Equipe et ressources : 
-*  
+ - 
 
