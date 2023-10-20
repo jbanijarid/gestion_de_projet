@@ -71,5 +71,5 @@ Rôles et responsabilités au sein de l'équipe :
 
 ### Signature et approbation de la charte :
 
-- Chef de projet (@NiNejah) : ____________________ (Signature)
-- Responsable de l'approbation : ____________________(Signature)
+- 
+- 
