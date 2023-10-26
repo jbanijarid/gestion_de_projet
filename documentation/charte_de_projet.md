@@ -71,5 +71,8 @@ Rôles et responsabilités au sein de l'équipe :
 
 ### Signature et approbation de la charte :
 
-- 
-- 
+- Nejah AL-MAWLA    
+- Jad BANI JARID
+- Ali Abdoulaye AHMAT
+- Firas MESSAOUD
+- Théo BRGEGERE
