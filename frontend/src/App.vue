@@ -3,20 +3,56 @@
 </script>
 
 <template>
-  Hello !!! 
+  <div id="app">
+    <nav>
+      <ul>
+        <li>
+          <router-link to="/" > Home</router-link>
+        </li>
+        <li>
+          <router-link to="/user">User</router-link>
+        </li>
+        <li>
+          <router-link to="/docs">Docs</router-link>
+        </li>
+      </ul>
+    </nav>
+
+    <div>
+      <h1>Conduite de projet</h1>
+      <router-view />
+    </div>
+  </div>
 </template>
 
-<style scoped>
-.logo {
-  height: 6em;
-  padding: 1.5em;
-  will-change: filter;
-  transition: filter 300ms;
+<style>
+#app {
+  text-align: center;
+  font-family: Arial, Helvetica, sans-serif;
+  color: #2c3e50;
 }
-.logo:hover {
-  filter: drop-shadow(0 0 2em #646cffaa);
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+  background-color: #333;
 }
-.logo.vue:hover {
-  filter: drop-shadow(0 0 2em #42b883aa);
+li {
+  float: left;
+}
+li a {
+  display: block;
+  color: white;
+  text-align: center;
+  padding: 14px 16px;
+  text-decoration: none;
+}
+.error {
+  color: red;
+  font-weight: bold;
+  list-style-type: none;
+  margin-top: 1em;
 }
 </style>
+
