@@ -1,20 +1,81 @@
+
 <script setup>
 import TaskCard from '../components/TaskCard.vue';
-import tasks from '../data/tasks.js'; // Replace with the correct path
+import Draggable from 'vuedraggable';
+import { ref } from 'vue';
+import tasksData from '../data/tasks.js';
 
+const tasks = ref(tasksData);
+
+const onDrop = (etat) => (event) => {
+    const taskId = event.dataTransfer.getData('task-id');
+    const taskIndex = tasks.value.findIndex((task) => task.id === parseInt(taskId, 10));
+
+    if (taskIndex !== -1) {
+        if (tasks.value[taskIndex].etat !== etat) {
+            // Change the etat only if the task is dropped into a different column
+            tasks.value[taskIndex].etat = etat;
+        }
+    }
+};
+
+const onDragEnd = () => {
+    // Handle drag end if needed
+};
 </script>
-
 <template>
-<div class="title">
-    <task-card v-for="task in tasks" 
-    :key="task.id" 
-    :id="task.id" 
-    :name="task.name" 
-    :description="task.description" 
-    :project-id="task.projectId" />
-</div>
-
+    <div class="container-fluid">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="task-column" @drop="onDrop('todo')">
+                    <h3>To Do</h3>
+                    <draggable :list="tasks.filter(task => task.etat === 'todo')" @end="onDragEnd">
+                        <template #item="{ element }">
+                            <task-card :id="element.id" :name="element.name" :description="element.description"
+                                :project-id="element.projectId" :etat="element.etat" />
+                        </template>
+                    </draggable>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="task-column" @drop="onDrop('progress')">
+                    <h3>In Progress</h3>
+                    <draggable :list="tasks.filter(task => task.etat === 'progress')" @end="onDragEnd">
+                        <template #item="{ element }">
+                            <task-card :id="element.id" :name="element.name" :description="element.description"
+                                :project-id="element.projectId" :etat="element.etat" />
+                        </template>
+                    </draggable>
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="task-column" @drop="onDrop('done')">
+                    <h3>Done</h3>
+                    <draggable :list="tasks.filter(task => task.etat === 'done')" @end="onDragEnd">
+                        <template #item="{ element }">
+                            <task-card :id="element.id" :name="element.name" :description="element.description"
+                                :project-id="element.projectId" :etat="element.etat" />
+                        </template>
+                    </draggable>
+                </div>
+            </div>
+        </div>
+    </div>
 </template>
+  
 
+  
 <style>
+.task-column {
+    border: 1px solid #ddd;
+    padding: 10px;
+    margin: 10px;
+    border-radius: 8px;
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+}
+
+.task-card {
+    margin-bottom: 10px;
+}
 </style>
+  

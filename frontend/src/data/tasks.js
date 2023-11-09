@@ -5,6 +5,7 @@ const tasks = [
         description: "this task1 for testing ...",
         projectId: 1,
         membresId : 2,
+        etat : "todo"
     },
     {
         id: 2,
@@ -12,6 +13,7 @@ const tasks = [
         description: "this task2 for testing ...",
         projectId: 1,
         membresId : 1,
+        etat : 'done'
     },
     {
         id: 3,
@@ -19,6 +21,7 @@ const tasks = [
         description: "this task3 for testing ...",
         projectId: 1,
         membresId : 2,
+        etat : "progress"
     }
 ];
 

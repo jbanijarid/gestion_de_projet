@@ -10,6 +10,7 @@ const props = defineProps({
     name: String,
     description: String,
     projectId: Number,
+    etat : String
 
 });
 
@@ -35,7 +36,7 @@ const teamMembersNames = computed(() => {
 <template>
     <div class="task-card">
         <div class="header">
-            <h2>{{ props.name }}</h2>
+            <h3>{{ props.name }}</h3>
         </div>
         <div class="content">
             <p>{{ props.description }}</p>
@@ -44,6 +45,9 @@ const teamMembersNames = computed(() => {
             <div class="info">
                 <p>Project: {{ project.name }}</p>
                 <p>Owner: {{ owner.name }}</p>
+                <p>etat: {{ props.etat }}</p>
+
+                
             </div>
             <!-- Uncomment the following line to display team members -->
             <!-- <p>Team Members: {{ teamMembersNames.join(', ') }}</p> -->
