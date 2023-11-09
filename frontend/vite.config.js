@@ -1,15 +1,30 @@
 import { defineConfig } from 'vite'
 import vue from '@vitejs/plugin-vue'
+import path from "path";
 
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [vue()],
-  server: {
-    watch : {
-      usePolling:true,
+  resolve: {
+    alias: {
+      "@": path.resolve(__dirname, "./src"),
     },
-    host : true,
-    strictPort:true,
-    port: 8080,
   },
+  server: {
+    proxy: {
+      '^/api/users': {
+        target: 'http://localhost:8080' 
+      },
+      '^/api/projects': {
+        target: 'http://localhost:8080' 
+      },
+      '^/api/tasks': {
+        target: 'http://localhost:8080' 
+      }
+    }
+  },
+  build: {
+    outDir: 'target/dist',
+    assetsDir: 'static'
+  }
 })
