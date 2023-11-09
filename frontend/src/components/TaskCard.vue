@@ -1,96 +1,104 @@
-<template>
-    <div class="task-card" :class="{ 'edit-mode': editMode }">
-      <div v-if="!editMode" class="header" @click="toggleEditMode">
-        <h2>{{ props.name }}</h2>
-      </div>
-      <div v-else class="header">
-        <input v-model="editedName" class="edit-input" />
-        <button @click="saveChanges">Save</button>
-      </div>
-      <div class="content">
-        <p v-if="!editMode">{{ props.description }}</p>
-        <textarea v-else v-model="editedDescription" class="edit-input"></textarea>
-      </div>
-      <div class="footer">
-        <div class="info">
-          <p>Project: {{ project.name }}</p>
-          <p>Owner: {{ owner.name }}</p>
-        </div>
-      </div>
-    </div>
-  </template>
-  
-  <script setup>
-  import { ref, computed } from 'vue';
-  import projects from '../data/projects.js';
-  import users from '../data/users.js';
-  import { defineProps } from 'vue';
-  
-  const props = defineProps({
+
+<script setup>
+import { ref, computed } from 'vue';
+import projects from '../data/projects.js';
+import users from '../data/users.js';
+import { defineProps } from 'vue';
+
+const props = defineProps({
     id: Number,
     name: String,
     description: String,
     projectId: Number,
-  });
-  
-  const editMode = ref(false);
-  const editedName = ref(props.name);
-  const editedDescription = ref(props.description);
-  
-  const project = computed(() => {
+
+});
+
+
+const project = computed(() => {
     return projects.find((p) => p.id === props.projectId) || {};
-  });
-  
-  const owner = computed(() => {
+});
+
+const owner = computed(() => {
     return users.find((user) => user.id === project.value.ownerId) || {};
-  });
+});
+
+const teamMembers = computed(() => project.value.teamMembers || []);
+
+const teamMembersNames = computed(() => {
+    return teamMembers.value.map((userId) => {
+        const user = users.find((u) => u.id === userId);
+        return user ? user.name : '';
+    });
+});
+</script>
+
+<template>
+    <div class="task-card">
+        <div class="header">
+            <h2>{{ props.name }}</h2>
+        </div>
+        <div class="content">
+            <p>{{ props.description }}</p>
+        </div>
+        <div class="footer">
+            <div class="info">
+                <p>Project: {{ project.name }}</p>
+                <p>Owner: {{ owner.name }}</p>
+            </div>
+            <!-- Uncomment the following line to display team members -->
+            <!-- <p>Team Members: {{ teamMembersNames.join(', ') }}</p> -->
+        </div>
+    </div>
+</template>
   
-  const toggleEditMode = () => {
-    editMode.value = !editMode.value;
-    if (!editMode.value) {
-      // Reset edited values if not in edit mode
-      editedName.value = props.name;
-      editedDescription.value = props.description;
-    }
-  };
-  
-  const saveChanges = () => {
-    // Save changes to parent component or perform any desired action
-    // In a real application, you might want to emit an event or call an API to update the data
-    console.log('Name:', editedName.value);
-    console.log('Description:', editedDescription.value);
-    // Toggle back to view mode after saving
-    toggleEditMode();
-  };
-  </script>
-  
-  <style scoped>
-  .task-card {
-    /* Your existing styles */
-  }
-  
-  .task-card.edit-mode {
-    cursor: text;
-  }
-  
-  .edit-input {
-    width: 100%;
-    padding: 8px;
-    margin-top: 4px;
-  }
-  
-  .header {
-    cursor: pointer;
-  }
-  
-  .header button {
-    margin-left: 8px;
-  }
-  
-  @media screen and (min-width: 600px) {
+<style scoped>
+.task-card {
+    background-color: #fff;
+    border: 1px solid #e2e2e2;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    margin: 10px;
+    overflow: hidden;
+    transition: box-shadow 0.3s ease;
+}
+
+.task-card:hover {
+    box-shadow: 0 8px 16px rgba(0, 0, 0, 0.2);
+}
+
+.header {
+    background-color: #2c3e50;
+    color: #fff;
+    padding: 12px;
+    border-bottom: 1px solid #2980b9;
+}
+
+.header h2 {
+    margin: 0;
+}
+
+.content {
+    padding: 16px;
+}
+
+.footer {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 12px;
+    border-top: 1px solid #e2e2e2;
+}
+
+.info p {
+    margin: 0;
+    font-size: 14px;
+    color: #555;
+}
+
+@media screen and (min-width: 600px) {
     .task-card {
-      width: 300px;
+        width: 300px;
     }
-  }
-  </style>
+}
+</style>
   
