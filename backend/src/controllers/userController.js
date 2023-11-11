@@ -1,5 +1,5 @@
 import  User from '../models/user.js';
-import { countAllUsers,findAllUsers } from '../models/user.js';
+import { countAllUsers,findAllUsers, getUserByUsername } from '../models/user.js';
 // Controller to get a list of all users
 export async function getAllUsers() {
   try {
@@ -25,7 +25,7 @@ export const getUserById = async (id) => {
     return { success: true, data: user };
 
   } catch (error) {
-    return { success: false, message: 'Error getting user: ' + err };
+    return { success: false, message: 'Error getting user: ' + error };
   }
 };
 
@@ -36,7 +36,26 @@ export const addUser = async (body) => {
     const result = await user.save();
     return { success: true, data: result };
   } catch (error) {
-    return { success: false, message: 'User not added ' + err };
+    return { success: false, message: 'User not added ' + error };
   }
 };
 
+export const loginUser = async (username, password) => {
+    try {
+      const user = await getUserByUsername(username);
+      //console.log(username);
+      console.log(user.data.username);
+    if (!user) {
+      return { success: false, message: 'User not found' };
+    }
+    if(password === user.data.password){
+      return{success :true ,data :user};
+    } else {
+      return { success: false, message: 'wrong password' };
+    }
+
+  } catch (error) {
+    return { success: false, message: 'Error getting user: ' + error };
+  }
+
+};

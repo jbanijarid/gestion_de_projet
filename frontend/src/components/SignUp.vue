@@ -34,7 +34,7 @@
 </template>
 
 <script>
-import axios from "axios";
+import {api} from '../../http-api';
 
 export default {
   data() {
@@ -42,33 +42,12 @@ export default {
       username: '',
       email: '',
       password: '',
-      options: ['Manager', "Membre d'equipe"],
+      options: ['manager', "team member"],
       selectedOption: ''
     };
   },
   methods: {
-    async postData(url, data) {
-      try {
-        const response = await fetch(url, {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(data),
-        });
-
-        if (!response.ok) {
-          throw new Error('La requête a échoué');
-        }
-
-        const responseData = await response.json();
-        console.log('Réponse du serveur:', responseData);
-        return responseData;
-      } catch (error) {
-        console.error('Erreur lors de la requête:', error.message);
-        throw error;
-      }
-    },
+    
     register() {
       const userData = {
         username: this.username,
@@ -77,8 +56,14 @@ export default {
         role: this.selectedOption
       };
 
-      let url="@/api/users";
-      this.postData(url, userData);
+      api.addUSer(userData)
+        .then((data) => {
+      // userList.value = data.data ;
+      console.log(data);
+    })
+    .catch(e => {
+      console.log(e.message);
+  });
 
     }
   }

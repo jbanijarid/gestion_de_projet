@@ -31,3 +31,19 @@ export async function findAllUsers() {
         return [];
     }
 }
+
+// Controller to get a user by Username
+export async function getUserByUsername (username) {
+    try {
+        const user = await User.findOne({ username: username });      
+        if (!user) {
+            return { success: false, message: 'User not found' };
+        }
+      return { success: true, data: user };
+  
+    } catch (error) {
+      return { success: false, message: 'Error getting user: ' + error };
+    }
+  };
+
+

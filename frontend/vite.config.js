@@ -20,6 +20,9 @@ export default defineConfig({
       },
       '^/api/tasks': {
         target: 'http://localhost:8080' 
+      },
+      '^/api/login': {
+        target: 'http://localhost:8080' 
       }
     }
   },
