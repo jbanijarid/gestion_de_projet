@@ -13,6 +13,12 @@ const routes = [
         name: "test",
         component: () => import("./pages/Test.vue"),
         props: true
+    },
+    {
+        path: "/kanban",
+        name: "kanban",
+        component: () => import("./pages/KanbanTest.vue"),
+        props: true
     }
 ];
 
