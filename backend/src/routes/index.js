@@ -248,11 +248,81 @@ router.route('/tasks').post(taskController.addTask);
 
 // ****************************************************** SPRINTS : 
 
+/**
+ * @openapi
+ * /sprints:
+ *   get:
+ *     summary: Get all sprints
+ *     description: Get a list of all sprints.
+ *     responses:
+ *       200:
+ *         description: Successful response with a list of sprints.
+ *       404:
+ *         description: sprints not found.
+ *     tags:
+ *       - Sprints
+ */
+router.route('/sprints').get(sprintController.getAllSprints);
+
+/**
+ * @openapi
+ * /sprints:
+ *   post:
+ *     summary: Create a new sprint.
+ *     description: Creates a new sprint with the provided data.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               project:
+ *                 type: string
+ *               start_date:
+ *                 type: string
+ *                 format: date  
+ *               end_date:
+ *                 type: string
+ *                 format: date 
+ *               tasks:
+ *                  type: array
+ *                  items:
+ *                   type: string
+ *     responses:
+ *       200:
+ *         description: The new sprint.
+ *       404:
+ *         description: Error.
+ *     tags:
+ *       - Sprints
+ */
 router.route('/sprints').post(sprintController.addSprint);
 
+/**
+ * @openapi
+ * /sprints/{id}:
+ *   get:
+ *     summary: Get a sprint by ID.
+ *     description: Returns a single sprint by its ID.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the sprint to retrieve.
+ *     responses:
+ *       200:
+ *         description: The sprint with the specified ID.
+ *       404:
+ *         description: sprint not found.
+ *     tags:
+ *       - Sprints
+ */
 router.route('/sprints/:id').get(sprintController.getSprint);
-
-router.route('/sprints').get(sprintController.getAllSprints);
 
 
 export default router;
