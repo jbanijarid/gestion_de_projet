@@ -1,41 +1,30 @@
-import Task from '../models/task.js';
-import {findTasksInProject ,countTasksInProject } from "../models/task.js";
+import { createTask, getTaskById, findTasksByProject, countTasksByProject } from "../models/task.js";
 
-export async function getAllTasksInProject(projectId) {
+// Controller to create a new task within a project
+export const addTask = async (req, res) => {
   try {
-    const tasks = await findTasksInProject(projectId);
-    const taskCount = await countTasksInProject(projectId);
-
-    return {
-      success: true,
-      data: tasks,
-      totalTasks: taskCount.toString(),
-    };
-  } catch (err) {
-    return { success: false, message: 'Failed to fetch tasks in the project ' + err };
-  }
-}
-
-// Controller to get a task by ID
-export const getTaskById = async (id) => {
-  try {
-    const task = await Task.findById(id);
-    if (!task) {
-      return { success: false, message: 'Task not found' };
-    }
-    return { success: true, data: task };
+    const response = await createTask(req.body);
+    res.status(response.success ? 200 : 404).json(response);
   } catch (error) {
-    return { success: false, message: 'Error getting task: ' + err };
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 };
 
-// Controller to create a new task within a project
-export const addTask = async (body) => {
+export const getTask = async (req, res) => {
   try {
-    const task = new Task(body);
-    const result = await task.save();
-    return { success: true, data: result };
+    const response = await getTaskById(req.params.id);
+    res.status(response.success ? 200 : 404).json(response);
   } catch (error) {
-    return { success: false, message: 'Task not added ' + err };
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+}
+
+export const getAllTasksByProject = async (req, res) => {
+  try {
+    const tasks = await findTasksByProject(projectId);
+    const total = await countTasksByProject(projectId);
+    res.status(total.success && tasks.success ? 200 : 404).json({ total: total.data, data: tasks.data });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 };

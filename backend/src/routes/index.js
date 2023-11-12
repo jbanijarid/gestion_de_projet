@@ -1,8 +1,9 @@
 import { Router } from 'express';
 // import { getAllContacts, getContactById, updateContact, removeContact, addContact } from '../controllers/contactController.js';
-import * as user from '../controllers/userController.js';
-import * as project from '../controllers/projectController.js';
-import * as task from "../controllers/taskController.js";
+import * as userController from '../controllers/userController.js';
+import * as projectController from '../controllers/projectController.js';
+import * as taskController from "../controllers/taskController.js";
+import * as sprintController from '../controllers/sprintController.js';
 const router = Router();
 
 
@@ -26,16 +27,7 @@ router.get('/', function (req, res) {
  *     tags:
  *       - Users
  */
-
-router.route('/users').get(async (req, res) => {
-    let response = await user.getAllUsers();
-    if (response.success == true) {
-        res.status(200).json(response);
-    } else {
-        res.status(404).json(response);
-    }
-});
-
+router.route('/users').get(userController.getAllUsers);
 
 /**
  * @openapi
@@ -58,14 +50,7 @@ router.route('/users').get(async (req, res) => {
  *     tags:
  *       - Users
  */
-router.route('/users/:id').get(async (req, res) => {
-    let response = await user.getUserById(req.params.id);
-    if (response.success == true) {
-        res.status(200).json(response);
-    } else {
-        res.status(404).json(response);
-    }
-});
+router.route('/users/:id').get(userController.getUser);
 
 /**
  * @openapi
@@ -94,19 +79,9 @@ router.route('/users/:id').get(async (req, res) => {
  *     tags:
  *       - Users
  */
-router.route('/users').post(async (req, res) => {
-    let response = await user.addUser(req.body);
-    if (response.success == true) {
-        res.status(200).json(response);
-    } else {
-        res.status(404).json(response);
-    }
-});
-
-
+router.route('/users').post(userController.addUser);
 
 // ****************************************************** Project : 
- 
 
 /**
  * @openapi
@@ -120,16 +95,7 @@ router.route('/users').post(async (req, res) => {
  *     tags:
  *       - Projects
  */
-
-router.route('/projects').get(async (req, res) => {
-    let response = await project.getAllProjects();
-    if (response.success == true) {
-        res.status(200).json(response);
-    } else {
-        res.status(404).json(response);
-    }
-});
-
+router.route('/projects').get(projectController.getAllProjects);
 
 /**
  * @openapi
@@ -152,14 +118,7 @@ router.route('/projects').get(async (req, res) => {
  *     tags:
  *       - Projects
  */
-router.route('/projects/:id').get(async (req, res) => {
-    let response = await project.getProjectById(req.params.id);
-    if (response.success == true) {
-        res.status(200).json(response);
-    } else {
-        res.status(404).json(response);
-    }
-});
+router.route('/projects/:id').get(projectController.getProject);
 
 /**
  * @openapi
@@ -190,20 +149,10 @@ router.route('/projects/:id').get(async (req, res) => {
  *     tags:
  *       - Projects
  */
-router.route('/projects').post(async (req, res) => {
-    let response = await project.addProject(req.body);
-    if (response.success == true) {
-        res.status(200).json(response);
-    } else {
-        res.status(404).json(response);
-    }
-});
-
-
+router.route('/projects').post(projectController.getProject);
 
 // ****************************************************** TASKS : 
  
-
 /**
  * @openapi
  * /tasks/{projectId}:
@@ -223,16 +172,7 @@ router.route('/projects').post(async (req, res) => {
  *     tags:
  *       - Tasks
  */
-
-router.route('/tasks/:projectId').get(async (req, res) => {
-    let response = await task.getAllTasksInProject(req.params.projectId);
-    if (response.success == true) {
-        res.status(200).json(response);
-    } else {
-        res.status(404).json(response);
-    }
-});
-
+router.route('/tasks/:projectId').get(taskController.getAllTasksByProject);
 
 /**
  * @openapi
@@ -255,14 +195,7 @@ router.route('/tasks/:projectId').get(async (req, res) => {
  *     tags:
  *       - Tasks
  */
-router.route('/tasks/:id').get(async (req, res) => {
-    let response = await task.getTaskById(req.params.id);
-    if (response.success == true) {
-        res.status(200).json(response);
-    } else {
-        res.status(404).json(response);
-    }
-});
+router.route('/tasks/:id').get(taskController.getTask);
 
 /**
  * @openapi
@@ -291,15 +224,15 @@ router.route('/tasks/:id').get(async (req, res) => {
  *     tags:
  *       - Tasks
  */
-router.route('/tasks').post(async (req, res) => {
-    let response = await task.addTask(req.body);
-    if (response.success == true) {
-        res.status(200).json(response);
-    } else {
-        res.status(404).json(response);
-    }
-});
+router.route('/tasks').post(taskController.addTask);
 
+// ****************************************************** SPRINTS : 
+
+router.route('/sprints').post(sprintController.addSprint);
+
+router.route('/sprints/:id').get(sprintController.getSprint);
+
+router.route('/sprints').get(sprintController.getAllSprintsHandler);
 
 
 export default router;

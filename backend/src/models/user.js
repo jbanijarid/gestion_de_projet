@@ -40,20 +40,24 @@ export const getUserById = async (id) => {
 export const countAllUsers = async () => {
     try {
         const count = await User.countDocuments();
-        return count;
-    } catch (err) {
-        console.error('Error counting users:', err);
-        return 0;
+        if (!count) {
+            return { success: false, message: "can't count Projects" };
+        }
+        return { success: true, data: count };
+    } catch (error) {
+        return { success: false, message: 'Error counting documents' + error };
     }
 }
 
 export const findAllUsers = async () => {
     try {
         const users = await User.find();
-        return users;
-    } catch (err) {
-        console.error('Error finding users:', err);
-        return [];
+        if (!users) {
+            return { success: false, message: 'users not found' };
+        }
+        return { success: true, data: users };
+    } catch (error) {
+        return { success: false, message: 'Error finding users:' + error };
     }
 }
 

@@ -24,7 +24,7 @@ export const getAllUsers = async (req, res) => {
   try {
     const total = await countAllUsers();
     const users = await findAllUsers();
-    res.status(response.success ? 200 : 404).json({total: total,data:users});
+    res.status(total.success && users.success? 200 : 404).json({total: total.data,data:users.data});
   } catch (error) {
     res.status(500).json({ success: false, message: 'Internal Server Error' });
   }

@@ -1,4 +1,4 @@
-import { createSprint, getSprintById, getAllSprints } from '../models/sprint.js';
+import { createSprint, getSprintById, findAllSprints } from '../models/sprint.js';
 
 export const addSprint = async (req, res) => {
   try {
@@ -18,9 +18,10 @@ export const getSprint = async (req, res) => {
   }
 }
 
-export const getAllSprintsHandler = async (req, res) => {
+export const getAllSprints = async (req, res) => {
   try {
-    const response = await getAllSprints();
+    //TODO : add cunter sprints
+    const response = await findAllSprints();
     res.status(response.success ? 200 : 404).json(response);
   } catch (error) {
     res.status(500).json({ success: false, message: 'Internal Server Error' });

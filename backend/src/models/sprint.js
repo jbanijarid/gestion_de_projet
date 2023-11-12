@@ -32,7 +32,7 @@ const Sprint = mongoose.model('Sprint', sprintSchema);
 
 export default Sprint;
 
-export async function createSprint(data) {
+export const createSprint = async (data) => {
   try {
     const sprint = new Sprint(data);
     const result = await sprint.save();
@@ -42,7 +42,7 @@ export async function createSprint(data) {
   }
 }
 
-export async function getSprintById(id) {
+export const getSprintById = async (id) => {
   try {
     const sprint = await Sprint.findById(id).populate('tasks');
     if (!sprint) {
@@ -54,7 +54,7 @@ export async function getSprintById(id) {
   }
 }
 
-export async function findAllSprints() {
+export const findAllSprints = async () => {
   try {
     const sprints = await Sprint.find().populate('tasks');
     return { success: true, data: sprints };
