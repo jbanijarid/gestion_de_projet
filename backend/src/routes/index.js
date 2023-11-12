@@ -67,6 +67,8 @@ router.route('/users/:id').get(userController.getUser);
  *             properties:
  *               username:
  *                 type: string
+ *               email:
+ *                 type: string
  *               password:
  *                 type: string
  *               role:
@@ -138,9 +140,11 @@ router.route('/projects/:id').get(projectController.getProject);
  *               description:
  *                 type: string
  *               owner: 
- *                  type: string
+ *                 type: string
  *               teamMembers:
- *                  type: string
+ *                 type: array
+ *                 items:
+ *                   type: string
  *     responses:
  *       200:
  *         description: The new project.
@@ -232,7 +236,7 @@ router.route('/sprints').post(sprintController.addSprint);
 
 router.route('/sprints/:id').get(sprintController.getSprint);
 
-router.route('/sprints').get(sprintController.getAllSprintsHandler);
+router.route('/sprints').get(sprintController.getAllSprints);
 
 
 export default router;

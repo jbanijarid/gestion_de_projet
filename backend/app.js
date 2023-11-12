@@ -23,7 +23,7 @@ const options = {
         },
         servers: [
             {
-                url: 'http://localhost:3000/api',
+                url: 'http://localhost:8080/api',
                 description: 'Development server',
             },
         ],
@@ -33,7 +33,7 @@ const options = {
 
 const openapiSpecification = swaggerJsDoc(options);
 
-app.use(express.json())
+app.use(express.json());
 app.use('/api', router);
 app.use('/docs', serve, setup(openapiSpecification));
 
