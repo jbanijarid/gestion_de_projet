@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
-import Task from './task.js';  // Adjust the path based on your project structure
+import Task from './task.js';
+
 const sprintSchema = new mongoose.Schema({
   name: {
     type: String,
@@ -124,3 +125,28 @@ export const countTasksBySprint = async (sprintId) => {
   }
 }
 
+export const updateSprint = async (sprintId, newData)=> {
+  try {
+    const sprint = await Sprint.findById(sprintId).populate('tasks');
+
+    // If tasks are provided in the request, add them to the existing tasks
+    if (newData.tasks && newData.tasks.length > 0) {
+      const existingTaskIds = sprint.tasks.map(task => task.toString());
+      const newTaskIds = newData.tasks.map(task => task.toString());
+
+      // Add only the tasks that are not already in the sprint
+      const tasksToAdd = newTaskIds.filter(taskId => !existingTaskIds.includes(taskId));
+      sprint.tasks = sprint.tasks.concat(tasksToAdd);
+
+    }
+
+    // Update other properties if needed
+    if (newData.name) sprint.name = newData.name;
+
+    // Save the updated sprint
+    const updatedSprint = await sprint.save();
+    return { success: true, data: updatedSprint, message: 'Sprint updated successfully' };
+  } catch (error) {
+    return { success: false, message: 'Error updating sprint: ' + error };
+  }
+}

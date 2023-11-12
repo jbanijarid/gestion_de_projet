@@ -1,10 +1,11 @@
 import mongoose from 'mongoose';
+import Sprint from './sprint.js';
 
 const taskSchema = new mongoose.Schema({
     name: { type: String, required: true },
     description: { type: String },
     project: { type: mongoose.Schema.Types.ObjectId, ref: 'Project', required: true },
-    state: { type: String, required: true },
+    state: { type: String,  enum: ['todo', 'progress','done'], default: 'todo'  },
 });
 
 const Task = mongoose.model('Task', taskSchema);
@@ -82,3 +83,30 @@ export const findAllTasks = async () => {
         return { success: false, message: 'Error finding tasks:' + error };
     }
 }
+
+
+export const deleteTask = async (taskId) => {
+    try {
+        const task = await Task.findByIdAndRemove(taskId);
+        if (!task) {
+            return { success: false, message: 'Task not found to be deleted' };
+        }
+        return { success: true, message: 'Task deleted successfully' };
+    } catch (error) {
+        return { success: false, message: 'Error deleting task: ' + error };
+    }
+}
+
+
+export const updateTask = async (taskId, newData) => {
+    try {
+        const task = await Task.findByIdAndUpdate(taskId, newData, { new: true });
+        return { success: true, data: task, message: 'Task updated successfully' };
+    } catch (error) {
+        return { success: false, message: 'Error updating task: ' + error };
+    }
+}
+
+
+
+  

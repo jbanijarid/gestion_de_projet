@@ -1,12 +1,13 @@
 import {
-  createSprint, 
-  getSprintById, 
-  countAllSprints, 
-  findAllSprints, 
+  createSprint,
+  getSprintById,
+  countAllSprints,
+  findAllSprints,
   findSprintsByProject,
   findTasksBySprint,
   countTasksBySprint,
   countSprintsByProject,
+  updateSprint
 } from '../models/sprint.js';
 
 export const addSprint = async (req, res) => {
@@ -57,3 +58,11 @@ export const getTasksBySprint = async (req, res) => {
   }
 }
 
+export const modifySprint = async (req, res) => {
+  try {
+    const response = await updateSprint(req.params.id, req.body);
+    res.status(response.success ? 200 : 404).json(response);
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+}

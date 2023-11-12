@@ -246,6 +246,81 @@ router.route('/tasks/:id').get(taskController.getTask);
  */
 router.route('/tasks').post(taskController.addTask);
 
+/**
+ * @openapi
+ * /tasks/{id}:
+ *   delete:
+ *     summary: delete a task by ID.
+ *     description: none
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the task to retrieve.
+ *     responses:
+ *       200:
+ *         description: Task deleted successfully
+ *       404:
+ *         description: Error deleting task
+ *     tags:
+ *       - Tasks
+ */
+router.route('/tasks/:id').delete(taskController.removeTask);
+
+/**
+ * @openapi
+ * /tasks/{id}:
+ *   put:
+ *     summary: Update a task by ID.
+ *     description: Updates a task with the provided data.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the task to update.
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               state:
+ *                  type: string
+ *     responses:
+ *       200:
+ *         description: Task updated successfully.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               data:
+ *                 _id: taskID
+ *                 name: updatedName
+ *                 description: updatedDescription
+ *                 state: updatedState
+ *               message: Task updated successfully.
+ *       404:
+ *         description: Task not found or error updating task.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Task not found or error updating task.
+ *     tags:
+ *       - Tasks
+ */
+router.route('/tasks/:id').put(taskController.modifyTask);
+
+
 // ****************************************************** SPRINTS : 
 
 /**
@@ -368,5 +443,64 @@ router.route('/sprints/project/:projectId').get(sprintController.getAllSprintsBy
  */
 router.route('/sprints/:id/tasks').get(sprintController.getTasksBySprint);
 
+// TODO : put to add tasks !
+/**
+ * @openapi
+ * /sprints/{id}:
+ *   put:
+ *     summary: Update a sprint by ID.
+ *     description: Updates a sprint with the provided data.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the sprint to update.
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               start_date:
+ *                  type: string
+ *                  format: date
+ *               end_date:
+ *                  type: string
+ *                  format: date
+ *               tasks:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *     responses:
+ *       200:
+ *         description: Sprint updated successfully.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               data:
+ *                 _id: sprintID
+ *                 name: updatedName
+ *                 project: updatedProjectID
+ *                 start_date: updatedStartDate
+ *                 end_date: updatedEndDate
+ *                 tasks: [updatedTaskID1, updatedTaskID2]
+ *               message: Sprint updated successfully.
+ *       404:
+ *         description: Sprint not found or error updating sprint.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Sprint not found or error updating sprint.
+ *     tags:
+ *       - Sprints
+ */
+router.route('/sprints/:id').put(sprintController.modifySprint);
 
 export default router;

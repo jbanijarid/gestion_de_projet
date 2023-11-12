@@ -1,4 +1,13 @@
-import { createTask, getTaskById, findTasksByProject, countTasksByProject, findAllTasks, countAllTasks } from "../models/task.js";
+import {
+  createTask,
+  getTaskById,
+  findTasksByProject,
+  countTasksByProject,
+  findAllTasks,
+  countAllTasks,
+  deleteTask,
+  updateTask
+} from "../models/task.js";
 
 // Controller to create a new task within a project
 export const addTask = async (req, res) => {
@@ -38,3 +47,21 @@ export const getAllTasksByProject = async (req, res) => {
     res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 };
+
+export const removeTask = async (req, res) => {
+  try {
+    const response = await deleteTask(req.params.id);
+    res.status(response.success ? 200 : 404).json(response);
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+}
+
+export const modifyTask = async (req, res) => {
+  try {
+    const response = await updateTask(req.params.id, req.body);
+    res.status(response.success ? 200 : 404).json(response);
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+}
