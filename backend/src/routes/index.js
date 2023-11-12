@@ -153,7 +153,7 @@ router.route('/projects/:id').get(projectController.getProject);
  *     tags:
  *       - Projects
  */
-router.route('/projects').post(projectController.getProject);
+router.route('/projects').post(projectController.addProject);
 
 // ****************************************************** TASKS : 
  
