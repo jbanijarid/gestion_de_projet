@@ -29,7 +29,6 @@ export const getAllTasks = async (req, res) => {
   }
 };
 
-
 export const getAllTasksByProject = async (req, res) => {
   try {
     const tasks = await findTasksByProject(req.params.projectId);

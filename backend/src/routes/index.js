@@ -324,5 +324,26 @@ router.route('/sprints').post(sprintController.addSprint);
  */
 router.route('/sprints/:id').get(sprintController.getSprint);
 
+/**
+ * @openapi
+ * /sprints/project/{projectId}:
+ *   get:
+ *     summary: Get all sprints
+ *     description: Get a list of all sprints.
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The projectId of the project to get all it's sprints.
+ *     responses:
+ *       '200':
+ *         description: Successful response with a list of sprints of a gevin project.
+ *     tags:
+ *       - Sprints
+ */
+router.route('/sprints/project/:projectId').get(sprintController.getAllSprintsByProject);
+
 
 export default router;

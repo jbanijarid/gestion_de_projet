@@ -54,6 +54,42 @@ export const getSprintById = async (id) => {
   }
 }
 
+export const countSprintsByProject = async (projectId) => {
+  try {
+      const count = await Sprint.countDocuments({ project: projectId });
+      if (!count) {
+          return { success: false, message: "can't count Sprints in " + projectId };
+      }
+      return { success: true, data: count };
+  } catch (error) {
+      return { success: false, message: 'Error counting documents' + error };
+  }
+}
+
+export const findSprintsByProject = async (projectId) => {
+  try {
+      const sprints = await Sprint.find({ project: projectId }).populate('tasks');
+      if (!sprints) {
+          return { success: false, message: 'sprints not found' };
+      }
+      return { success: true, data: sprints };
+  } catch (error) {
+      return { success: false, message: 'Error finding sprints:' + error };
+  }
+}
+
+export const countAllSprints = async () => {
+  try {
+      const count = await Sprint.countDocuments();
+      if (!count) {
+          return { success: false, message: "can't count Sprint" };
+      }
+      return { success: true, data: count };
+  } catch (error) {
+      return { success: false, message: 'Error counting documents' + error };
+  }
+}
+
 export const findAllSprints = async () => {
   try {
     const sprints = await Sprint.find().populate('tasks');
