@@ -17,29 +17,29 @@ export const createTask = async (body) => {
         const result = await task.save();
         return { success: true, data: result };
     } catch (error) {
-        return { success: false, message: 'Task not added ' + err };
+        return { success: false, message: 'Task not added ' + error };
     }
 };
 
 // Controller to get a task by ID
 export const getTaskById = async (id) => {
     try {
-      const task = await Task.findById(id);
-      if (!task) {
-        return { success: false, message: 'Task not found' };
-      }
-      return { success: true, data: task };
+        const task = await Task.findById(id);
+        if (!task) {
+            return { success: false, message: 'Task not found' };
+        }
+        return { success: true, data: task };
     } catch (error) {
-      return { success: false, message: 'Error getting task: ' + err };
+        return { success: false, message: 'Error getting task: ' + error };
     }
-  };
+};
 
 
 export const countTasksByProject = async (projectId) => {
     try {
         const count = await Task.countDocuments({ project: projectId });
         if (!count) {
-            return { success: false, message: "can't count Tasks in " + projectId};
+            return { success: false, message: "can't count Tasks in " + projectId };
         }
         return { success: true, data: count };
     } catch (error) {
@@ -50,6 +50,30 @@ export const countTasksByProject = async (projectId) => {
 export const findTasksByProject = async (projectId) => {
     try {
         const tasks = await Task.find({ project: projectId });
+        if (!tasks) {
+            return { success: false, message: 'tasks not found' };
+        }
+        return { success: true, data: tasks };
+    } catch (error) {
+        return { success: false, message: 'Error finding tasks:' + error };
+    }
+}
+
+export const countAllTasks = async () => {
+    try {
+        const count = await Task.countDocuments();
+        if (!count) {
+            return { success: false, message: "can't count Tasks" };
+        }
+        return { success: true, data: count };
+    } catch (error) {
+        return { success: false, message: 'Error counting documents' + error };
+    }
+}
+
+export const findAllTasks = async () => {
+    try {
+        const tasks = await Task.find();
         if (!tasks) {
             return { success: false, message: 'tasks not found' };
         }

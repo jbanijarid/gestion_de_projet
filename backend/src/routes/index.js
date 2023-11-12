@@ -156,10 +156,24 @@ router.route('/projects/:id').get(projectController.getProject);
 router.route('/projects').post(projectController.addProject);
 
 // ****************************************************** TASKS : 
- 
+
 /**
  * @openapi
- * /tasks/{projectId}:
+ * /tasks:
+ *   get:
+ *     summary: Get all tasks
+ *     description: Get a list of all tasks.
+ *     responses:
+ *       '200':
+ *         description: Successful response with a list of tasks.
+ *     tags:
+ *       - Tasks
+ */
+router.route('/tasks').get(taskController.getAllTasks);
+
+/**
+ * @openapi
+ * /tasks/project/{projectId}:
  *   get:
  *     summary: Get all tasks
  *     description: Get a list of all tasks.
@@ -176,7 +190,7 @@ router.route('/projects').post(projectController.addProject);
  *     tags:
  *       - Tasks
  */
-router.route('/tasks/:projectId').get(taskController.getAllTasksByProject);
+router.route('/tasks/project/:projectId').get(taskController.getAllTasksByProject);
 
 /**
  * @openapi
@@ -219,6 +233,8 @@ router.route('/tasks/:id').get(taskController.getTask);
  *               description:
  *                 type: string
  *               project: 
+ *                  type: string
+ *               state:
  *                  type: string
  *     responses:
  *       200:
