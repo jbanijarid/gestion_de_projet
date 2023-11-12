@@ -345,5 +345,28 @@ router.route('/sprints/:id').get(sprintController.getSprint);
  */
 router.route('/sprints/project/:projectId').get(sprintController.getAllSprintsByProject);
 
+/**
+ * @openapi
+ * /sprints/{id}/tasks:
+ *   get:
+ *     summary: Get the tasks of a specific sprint by ID.
+ *     description: Returns the tasks of a sprint by its ID.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the sprint to retrieve.
+ *     responses:
+ *       200:
+ *         description: The sprint with the specified ID.
+ *       404:
+ *         description: sprint not found.
+ *     tags:
+ *       - Sprints
+ */
+router.route('/sprints/:id/tasks').get(sprintController.getTasksBySprint);
+
 
 export default router;

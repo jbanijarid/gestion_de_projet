@@ -1,6 +1,12 @@
 import {
-  createSprint, getSprintById, countAllSprints, findAllSprints, findSprintsByProject
-  , countSprintsByProject
+  createSprint, 
+  getSprintById, 
+  countAllSprints, 
+  findAllSprints, 
+  findSprintsByProject,
+  findTasksBySprint,
+  countTasksBySprint,
+  countSprintsByProject,
 } from '../models/sprint.js';
 
 export const addSprint = async (req, res) => {
@@ -40,3 +46,14 @@ export const getAllSprintsByProject = async (req, res) => {
     res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 };
+
+export const getTasksBySprint = async (req, res) => {
+  try {
+    const tasks = await findTasksBySprint(req.params.id);
+    const total = await countTasksBySprint(req.params.id);
+    res.status(total.success && tasks.success ? 200 : 404).json({ total: total.data, data: tasks.data });
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+}
+
