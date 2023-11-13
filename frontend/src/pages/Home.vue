@@ -1,70 +1,19 @@
 
 <script setup>
-import TaskCard from '../components/TaskCard.vue';
-import Draggable from 'vuedraggable';
 import { ref } from 'vue';
-import tasksData from '../data/tasks.js';
 
-const tasks = ref(tasksData);
+// const tasks = ref(tasksData);
 
-const onDrop = (etat) => (event) => {
-    const taskId = event.dataTransfer.getData('task-id');
-    const taskIndex = tasks.value.findIndex((task) => task.id === parseInt(taskId, 10));
-
-    if (taskIndex !== -1) {
-        if (tasks.value[taskIndex].etat !== etat) {
-            // Change the etat only if the task is dropped into a different column
-            tasks.value[taskIndex].etat = etat;
-        }
-    }
-};
-
-const onDragEnd = () => {
-    // Handle drag end if needed
-};
 </script>
 <template>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="task-column" @drop="onDrop('todo')">
-                    <h3>To Do</h3>
-                    <draggable :list="tasks.filter(task => task.etat === 'todo')" @end="onDragEnd">
-                        <template #item="{ element }">
-                            <task-card :id="element.id" :name="element.name" :description="element.description"
-                                :project-id="element.projectId" :etat="element.etat" />
-                        </template>
-                    </draggable>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="task-column" @drop="onDrop('progress')">
-                    <h3>In Progress</h3>
-                    <draggable :list="tasks.filter(task => task.etat === 'progress')" @end="onDragEnd">
-                        <template #item="{ element }">
-                            <task-card :id="element.id" :name="element.name" :description="element.description"
-                                :project-id="element.projectId" :etat="element.etat" />
-                        </template>
-                    </draggable>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="task-column" @drop="onDrop('done')">
-                    <h3>Done</h3>
-                    <draggable :list="tasks.filter(task => task.etat === 'done')" @end="onDragEnd">
-                        <template #item="{ element }">
-                            <task-card :id="element.id" :name="element.name" :description="element.description"
-                                :project-id="element.projectId" :etat="element.etat" />
-                        </template>
-                    </draggable>
-                </div>
-            </div>
-        </div>
-    </div>
+    <h1>Home Page</h1>
+    <h6>Welcome to our Project Maneger</h6>
+    <b-button variant="outline-secondary">signin</b-button>
+    <b-button variant="outline-secondary">signup</b-button>
 </template>
   
 
-  
+
 <style>
 .task-column {
     border: 1px solid #ddd;
