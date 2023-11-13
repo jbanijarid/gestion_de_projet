@@ -1,6 +1,48 @@
+
+<script setup>
+import { api } from '../../http-api';
+import { reactive } from 'vue';
+
+const emit = defineEmits(['closeIt', 'bienConnecte'])
+
+const data = reactive({
+  username: '',
+  email: '',
+  password: '',
+  options: ['manager', 'team member'],
+  selectedOption: '',
+});
+
+const register = () => {
+  const userData = {
+    username: data.username,
+    email: data.email,
+    password: data.password,
+    role: data.selectedOption,
+  };
+
+  api.addUSer(userData)
+    .then((data) => {
+      // userList.value = data.data ;
+      // console.log(data);
+      emit("closeIt");
+      emit('bienConnecte');
+    })
+    .catch((e) => {
+      console.log(e.message);
+    });
+};
+const closeModal = () => {
+  emit('closeIt');
+}
+</script>
+
 <template>
   <div class="signin-container">
-    <h2>Page d'inscription</h2>
+    <div class="header">
+      <h5>Inscription</h5>
+      <button @click="closeModal" class="exit-button">X</button>
+    </div>
     <form @submit.prevent="register" class="signin-form">
       <div class="form-group">
         <label for="username">Nom d'utilisateur:</label>
@@ -32,36 +74,6 @@
   </div>
 </template>
 
-<script setup>
-import { api } from '../../http-api';
-import { reactive } from 'vue';
-const data = reactive({
-  username: '',
-  email: '',
-  password: '',
-  options: ['manager', 'team member'],
-  selectedOption: '',
-});
-
-const register = () => {
-  const userData = {
-    username: data.username,
-    email: data.email,
-    password: data.password,
-    role: data.selectedOption,
-  };
-
-  api.addUSer(userData)
-    .then((data) => {
-      // userList.value = data.data ;
-      console.log(data);
-    })
-    .catch((e) => {
-      console.log(e.message);
-    });
-};
-</script>
-
 <style scoped>
 .signin-container {
   max-width: 400px;
@@ -71,7 +83,23 @@ const register = () => {
   border-radius: 8px;
   box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
 }
+.header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+}
 
+.exit-button {
+  background: none;
+  border: none;
+  color: rgb(57, 57, 57);
+  font-size: 1em;
+  cursor: pointer;
+}
+.exit-button:hover {
+  color: rgb(245, 110, 110);
+
+}
 .signin-form {
   display: grid;
   gap: 20px;
@@ -110,7 +138,7 @@ const register = () => {
   margin-right: 8px;
 }
 
-button {
+form button {
   background-color: #4caf50;
   color: white;
   border: none;
@@ -119,7 +147,7 @@ button {
   cursor: pointer;
 }
 
-button:hover {
+form button:hover {
   background-color: #45a049;
 }
 </style>

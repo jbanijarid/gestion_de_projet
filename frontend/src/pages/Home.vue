@@ -2,32 +2,52 @@
 <script setup>
 import { ref } from 'vue';
 import SignIn from '../components/SignIn.vue';
+import SignUpVue from '../components/SignUp.vue';
+const connected = ref(false); 
 
-const isSignInModalOpen = ref(false);
-const connected = ref(false); // Added 'connected' variable
-const open = ref(false); // Added 'connected' variable
-const myClose = ()=>{
-  open.value = false ; 
-}
-const MyOpen = ()=>{
-  open.value = true ;
-  console.log(open.value);
+const open = ref({
+  signin: false,
+  signup: false,
+});
+
+const ablebtn = ref(true);
+
+const openModal = (type) => {
+  open.value[type] = true;
+  ablebtn.value = false;
 }
 
-const bienConnecte = ()=>{
-  connected.value = true ; 
+const closeModal = (type) => {
+  open.value[type] = false;
+  ablebtn.value = true;
+}
+
+const bienConnecte = () => {
+  connected.value = true;
 }
 </script>
 
 <template>
-  <div id="truc">
-    <h1>Home Page</h1>
+  <div>
+    <b-row>
+      <b-col>
+        <h1>Home Page</h1>
+      </b-col>
+      <b-col>
+        <b-button-group>
+          <b-button variant="outline-secondary" @click="openModal('signin')" :disabled="!ablebtn">Sign In</b-button>
+          <b-button variant="outline-secondary" @click="openModal('signup')" :disabled="!ablebtn">Sign Up</b-button>
+        </b-button-group>
+      </b-col>
+    </b-row>
     <h6>Welcome to our Project Manager</h6>
-    <b-button  variant="outline-secondary" @click="MyOpen">Sign In</b-button>
-    <div class="signin" v-if="open">
-      <SignIn @close-it="myClose" @bien-connecte="bienConnecte" />
+    <div class="signin" v-if="open.signin">
+      <SignIn @close-it="closeModal('signin')" @bien-connecte="bienConnecte" />
     </div>
-    <div v-if="connected"> coool </div>
+    <div class="signup" v-if="open.signup">
+      <SignUpVue @close-it="closeModal('signup')" @bien-connecte="bienConnecte" />
+    </div>
+    <div v-if="connected"> bien connecte </div>
   </div>
 </template>
   
