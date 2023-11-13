@@ -322,7 +322,6 @@ router.route('/tasks/:id').delete(taskController.removeTask);
  */
 router.route('/tasks/:id').put(taskController.modifyTask);
 
-
 // ****************************************************** SPRINTS : 
 
 /**
@@ -445,7 +444,6 @@ router.route('/sprints/project/:projectId').get(sprintController.getAllSprintsBy
  */
 router.route('/sprints/:id/tasks').get(sprintController.getTasksBySprint);
 
-// TODO : put to add tasks !
 /**
  * @openapi
  * /sprints/{id}:

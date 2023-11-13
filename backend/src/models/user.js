@@ -23,7 +23,6 @@ export const createUser = async (body) => {
     }
 };
 
-// To get a user by ID
 export const getUserById = async (id) => {
     try {
         const user = await User.findById(id);
@@ -61,7 +60,6 @@ export const findAllUsers = async () => {
     }
 }
 
-// Controller to get a user by Username
 export const getUserByUsername = async (username) => {
     try {
         const user = await User.findOne({ username: username });
