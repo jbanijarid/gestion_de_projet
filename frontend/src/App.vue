@@ -3,6 +3,7 @@
     <div class="sidenav">
       <router-link class="link" to="/">home</router-link>
       <router-link class="link" to="/test">test</router-link>
+      <router-link class="link" to="/sprints">sprints</router-link>
     </div>
 
     <div class="main">
