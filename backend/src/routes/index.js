@@ -1,8 +1,9 @@
 import { Router } from 'express';
 // import { getAllContacts, getContactById, updateContact, removeContact, addContact } from '../controllers/contactController.js';
-import * as user from '../controllers/userController.js';
-import * as project from '../controllers/projectController.js';
-import * as task from "../controllers/taskController.js";
+import * as userController from '../controllers/userController.js';
+import * as projectController from '../controllers/projectController.js';
+import * as taskController from "../controllers/taskController.js";
+import * as sprintController from '../controllers/sprintController.js';
 const router = Router();
 
 
@@ -26,16 +27,7 @@ router.get('/', function (req, res) {
  *     tags:
  *       - Users
  */
-
-router.route('/users').get(async (req, res) => {
-    let response = await user.getAllUsers();
-    if (response.success == true) {
-        res.status(200).json(response);
-    } else {
-        res.status(404).json(response);
-    }
-});
-
+router.route('/users').get(userController.getAllUsers);
 
 /**
  * @openapi
@@ -58,14 +50,7 @@ router.route('/users').get(async (req, res) => {
  *     tags:
  *       - Users
  */
-router.route('/users/:id').get(async (req, res) => {
-    let response = await user.getUserById(req.params.id);
-    if (response.success == true) {
-        res.status(200).json(response);
-    } else {
-        res.status(404).json(response);
-    }
-});
+router.route('/users/:id').get(userController.getUser);
 
 /**
  * @openapi
@@ -82,6 +67,8 @@ router.route('/users/:id').get(async (req, res) => {
  *             properties:
  *               username:
  *                 type: string
+ *               email:
+ *                 type: string
  *               password:
  *                 type: string
  *               role:
@@ -94,19 +81,11 @@ router.route('/users/:id').get(async (req, res) => {
  *     tags:
  *       - Users
  */
-router.route('/users').post(async (req, res) => {
-    let response = await user.addUser(req.body);
-    if (response.success == true) {
-        res.status(200).json(response);
-    } else {
-        res.status(404).json(response);
-    }
-});
+router.route('/users').post(userController.addUser);
 
-
+router.route('/users/login').post(userController.loginUser);
 
 // ****************************************************** Project : 
- 
 
 /**
  * @openapi
@@ -120,16 +99,7 @@ router.route('/users').post(async (req, res) => {
  *     tags:
  *       - Projects
  */
-
-router.route('/projects').get(async (req, res) => {
-    let response = await project.getAllProjects();
-    if (response.success == true) {
-        res.status(200).json(response);
-    } else {
-        res.status(404).json(response);
-    }
-});
-
+router.route('/projects').get(projectController.getAllProjects);
 
 /**
  * @openapi
@@ -152,14 +122,7 @@ router.route('/projects').get(async (req, res) => {
  *     tags:
  *       - Projects
  */
-router.route('/projects/:id').get(async (req, res) => {
-    let response = await project.getProjectById(req.params.id);
-    if (response.success == true) {
-        res.status(200).json(response);
-    } else {
-        res.status(404).json(response);
-    }
-});
+router.route('/projects/:id').get(projectController.getProject);
 
 /**
  * @openapi
@@ -179,9 +142,11 @@ router.route('/projects/:id').get(async (req, res) => {
  *               description:
  *                 type: string
  *               owner: 
- *                  type: string
+ *                 type: string
  *               teamMembers:
- *                  type: string
+ *                 type: array
+ *                 items:
+ *                   type: string
  *     responses:
  *       200:
  *         description: The new project.
@@ -190,23 +155,27 @@ router.route('/projects/:id').get(async (req, res) => {
  *     tags:
  *       - Projects
  */
-router.route('/projects').post(async (req, res) => {
-    let response = await project.addProject(req.body);
-    if (response.success == true) {
-        res.status(200).json(response);
-    } else {
-        res.status(404).json(response);
-    }
-});
-
-
+router.route('/projects').post(projectController.addProject);
 
 // ****************************************************** TASKS : 
- 
 
 /**
  * @openapi
- * /tasks/{projectId}:
+ * /tasks:
+ *   get:
+ *     summary: Get all tasks
+ *     description: Get a list of all tasks.
+ *     responses:
+ *       '200':
+ *         description: Successful response with a list of tasks.
+ *     tags:
+ *       - Tasks
+ */
+router.route('/tasks').get(taskController.getAllTasks);
+
+/**
+ * @openapi
+ * /tasks/project/{projectId}:
  *   get:
  *     summary: Get all tasks
  *     description: Get a list of all tasks.
@@ -223,16 +192,7 @@ router.route('/projects').post(async (req, res) => {
  *     tags:
  *       - Tasks
  */
-
-router.route('/tasks/:projectId').get(async (req, res) => {
-    let response = await task.getAllTasksInProject(req.params.projectId);
-    if (response.success == true) {
-        res.status(200).json(response);
-    } else {
-        res.status(404).json(response);
-    }
-});
-
+router.route('/tasks/project/:projectId').get(taskController.getAllTasksByProject);
 
 /**
  * @openapi
@@ -255,14 +215,7 @@ router.route('/tasks/:projectId').get(async (req, res) => {
  *     tags:
  *       - Tasks
  */
-router.route('/tasks/:id').get(async (req, res) => {
-    let response = await task.getTaskById(req.params.id);
-    if (response.success == true) {
-        res.status(200).json(response);
-    } else {
-        res.status(404).json(response);
-    }
-});
+router.route('/tasks/:id').get(taskController.getTask);
 
 /**
  * @openapi
@@ -283,6 +236,8 @@ router.route('/tasks/:id').get(async (req, res) => {
  *                 type: string
  *               project: 
  *                  type: string
+ *               state:
+ *                  type: string
  *     responses:
  *       200:
  *         description: The new task.
@@ -291,15 +246,261 @@ router.route('/tasks/:id').get(async (req, res) => {
  *     tags:
  *       - Tasks
  */
-router.route('/tasks').post(async (req, res) => {
-    let response = await task.addTask(req.body);
-    if (response.success == true) {
-        res.status(200).json(response);
-    } else {
-        res.status(404).json(response);
-    }
-});
+router.route('/tasks').post(taskController.addTask);
 
+/**
+ * @openapi
+ * /tasks/{id}:
+ *   delete:
+ *     summary: delete a task by ID.
+ *     description: none
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the task to retrieve.
+ *     responses:
+ *       200:
+ *         description: Task deleted successfully
+ *       404:
+ *         description: Error deleting task
+ *     tags:
+ *       - Tasks
+ */
+router.route('/tasks/:id').delete(taskController.removeTask);
 
+/**
+ * @openapi
+ * /tasks/{id}:
+ *   put:
+ *     summary: Update a task by ID.
+ *     description: Updates a task with the provided data.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the task to update.
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               description:
+ *                 type: string
+ *               state:
+ *                  type: string
+ *     responses:
+ *       200:
+ *         description: Task updated successfully.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               data:
+ *                 _id: taskID
+ *                 name: updatedName
+ *                 description: updatedDescription
+ *                 state: updatedState
+ *               message: Task updated successfully.
+ *       404:
+ *         description: Task not found or error updating task.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Task not found or error updating task.
+ *     tags:
+ *       - Tasks
+ */
+router.route('/tasks/:id').put(taskController.modifyTask);
+
+// ****************************************************** SPRINTS : 
+
+/**
+ * @openapi
+ * /sprints:
+ *   get:
+ *     summary: Get all sprints
+ *     description: Get a list of all sprints.
+ *     responses:
+ *       200:
+ *         description: Successful response with a list of sprints.
+ *       404:
+ *         description: sprints not found.
+ *     tags:
+ *       - Sprints
+ */
+router.route('/sprints').get(sprintController.getAllSprints);
+
+/**
+ * @openapi
+ * /sprints:
+ *   post:
+ *     summary: Create a new sprint.
+ *     description: Creates a new sprint with the provided data.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               project:
+ *                 type: string
+ *               start_date:
+ *                 type: string
+ *                 format: date  
+ *               end_date:
+ *                 type: string
+ *                 format: date 
+ *               tasks:
+ *                  type: array
+ *                  items:
+ *                   type: string
+ *     responses:
+ *       200:
+ *         description: The new sprint.
+ *       404:
+ *         description: Error.
+ *     tags:
+ *       - Sprints
+ */
+router.route('/sprints').post(sprintController.addSprint);
+
+/**
+ * @openapi
+ * /sprints/{id}:
+ *   get:
+ *     summary: Get a sprint by ID.
+ *     description: Returns a single sprint by its ID.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the sprint to retrieve.
+ *     responses:
+ *       200:
+ *         description: The sprint with the specified ID.
+ *       404:
+ *         description: sprint not found.
+ *     tags:
+ *       - Sprints
+ */
+router.route('/sprints/:id').get(sprintController.getSprint);
+
+/**
+ * @openapi
+ * /sprints/project/{projectId}:
+ *   get:
+ *     summary: Get all sprints
+ *     description: Get a list of all sprints.
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The projectId of the project to get all it's sprints.
+ *     responses:
+ *       '200':
+ *         description: Successful response with a list of sprints of a gevin project.
+ *     tags:
+ *       - Sprints
+ */
+router.route('/sprints/project/:projectId').get(sprintController.getAllSprintsByProject);
+
+/**
+ * @openapi
+ * /sprints/{id}/tasks:
+ *   get:
+ *     summary: Get the tasks of a specific sprint by ID.
+ *     description: Returns the tasks of a sprint by its ID.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the sprint to retrieve.
+ *     responses:
+ *       200:
+ *         description: The sprint with the specified ID.
+ *       404:
+ *         description: sprint not found.
+ *     tags:
+ *       - Sprints
+ */
+router.route('/sprints/:id/tasks').get(sprintController.getTasksBySprint);
+
+/**
+ * @openapi
+ * /sprints/{id}:
+ *   put:
+ *     summary: Update a sprint by ID.
+ *     description: Updates a sprint with the provided data.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the sprint to update.
+ *     requestBody:
+ *       required: false
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               name:
+ *                 type: string
+ *               start_date:
+ *                  type: string
+ *                  format: date
+ *               end_date:
+ *                  type: string
+ *                  format: date
+ *               tasks:
+ *                 type: array
+ *                 items:
+ *                   type: string
+ *     responses:
+ *       200:
+ *         description: Sprint updated successfully.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               data:
+ *                 _id: sprintID
+ *                 name: updatedName
+ *                 project: updatedProjectID
+ *                 start_date: updatedStartDate
+ *                 end_date: updatedEndDate
+ *                 tasks: [updatedTaskID1, updatedTaskID2]
+ *               message: Sprint updated successfully.
+ *       404:
+ *         description: Sprint not found or error updating sprint.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Sprint not found or error updating sprint.
+ *     tags:
+ *       - Sprints
+ */
+router.route('/sprints/:id').put(sprintController.modifySprint);
 
 export default router;

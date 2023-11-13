@@ -16,17 +16,28 @@ const routes = [
     }
     ,
     {
-        path: "/sprints",
-        name: "sprints",
-        component: () => import("./pages/Sprints.vue"),
-        props: true
+      path : "/docs",   
+      name : "docs",
+      component : () => import("./components/Docs.vue"),
+      props : true
+    },
+    {
+      path : "/signin",
+      name : "signin",
+      component : () => import("./components/SignIn.vue"),
+      props : true
+    },
+    {
+      path : "/signup",
+      name : "signup",
+      component : () => import("./components/SignUp.vue"),
+      props : true
     }
-];
-
-const router = createRouter({
-    history: createWebHistory(),
-    linkActiveClass: "active",
-    linkExactActiveClass: "active",
+  
+  ];
+  
+  const router = createRouter({
+    history : createWebHistory(),
     routes,
 });
 
