@@ -20,6 +20,8 @@
 </template>
 
 <script>
+import {api} from '../../http-api';
+
 export default {
   data() {
     return {
@@ -29,7 +31,21 @@ export default {
   },
   methods: {
     login() {
+
+      const userData = {
+        username: this.username,
+        password: this.password
+      };
+
       // Logique de connexion
+      api.login(userData)
+        .then((data) => {
+      // userList.value = data.data ;
+      console.log(data);
+    })
+    .catch(e => {
+      console.log(e.message);
+  });
       console.log('Connexion avec', this.username, this.password);
     }
   }

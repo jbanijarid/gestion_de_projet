@@ -29,6 +29,17 @@ router.get('/', function (req, res) {
  */
 router.route('/users').get(userController.getAllUsers);
 
+router.route('/login').post(async (req, res) => {
+    let response = await user.loginUser(req.body.username, req.body.password);
+
+    if (response.success == true) {
+        res.status(200).json(response);
+    } else {
+        res.status(404).json(response);
+    }
+});
+
+
 /**
  * @openapi
  * /users/{id}:

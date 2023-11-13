@@ -16,6 +16,7 @@ export const api = {
   getAllUsers: () => requests.get('users', {}),
   getUserById: (id) => requests.get(`users/${id}`),
   addUSer: (body) => requests.post('users', body),
+  login: (body) => requests.post('login',body),
   getAllProjects: () => requests.get('projects', {}),
   getProjectById: (id) => requests.get(`projects/${id}`),
   addProject: (body) => requests.post('projects', body),
