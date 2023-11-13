@@ -1,58 +1,63 @@
-<script setup>
-
-</script>
-
 <template>
-  <div id="app">
-    <nav>
-      <ul>
-        <li>
-          <router-link to="/" > Home</router-link>
-        </li>
-        <li>
-          <router-link to="/user">User</router-link>
-        </li>
-        <li>
-          <router-link to="/docs">Docs</router-link>
-        </li>
-      </ul>
-    </nav>
+  <div class="container">
+    <div class="sidenav">
+      <router-link class="link" to="/">home</router-link>
+      <router-link class="link" to="/test">test</router-link>
+      <router-link class="link" to="/sprints">sprints</router-link>
+    </div>
 
-    <div>
-      <h1>Conduite de projet</h1>
+    <div class="main">
       <router-view />
     </div>
   </div>
 </template>
 
-<style>
-#app {
-  text-align: center;
-  font-family: Arial, Helvetica, sans-serif;
-  color: #2c3e50;
+<style scoped>
+.container {
+  /* display: flex; */
+  height: 100%;
 }
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-  background-color: #333;
+
+.sidenav {
+  width: 12vW;
+  height: 100%;
+  background-color: #c3c1c1;
+  border-right: 1px solid #a9a8a8;
+  padding-top: 12em;
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  left: 0;
+  overflow-x: hidden;
+  box-shadow: 5px 0 5px rgba(0, 0, 0, 0.1); /* Add a subtle shadow to the right side */
 }
-li {
-  float: left;
-}
-li a {
-  display: block;
-  color: white;
-  text-align: center;
-  padding: 14px 16px;
+
+.link {
+  padding: 6px 8px 6px 16px;
   text-decoration: none;
+  font-size: 25px;
+  color: #000000;
+  display: block;
 }
-.error {
-  color: red;
-  font-weight: bold;
-  list-style-type: none;
-  margin-top: 1em;
+
+.link:hover {
+  color: #f1f1f1;
+}
+
+.main {
+  margin-left: 12vw; /* Adjusted to match the sidebar width */
+  font-size: 28px;
+  padding: 0px 10px;
+}
+
+/* Media query for smaller screens */
+@media screen and (max-height: 450px) {
+  .sidenav {
+    padding-top: 15px;
+  }
+  .sidenav .link {
+    font-size: 18px;
+  }
 }
 </style>
 

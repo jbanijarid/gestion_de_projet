@@ -1,19 +1,20 @@
-import {createRouter, createWebHistory} from "vue-router";
-
+import {createWebHistory, createRouter} from "vue-router";
+// import {RouteRecordRaw} from "vue-router";
 
 const routes = [
     {
-      path : "/",
-      name : "home",
-      component : () => import("./components/Home.vue"),
-      props : true
+        path: "/",
+        name: "home",
+        component: () => import("./pages/Home.vue"),
+        props: true
     },
     {
-      path : "/user",   
-      name : "user",
-      component : () => import("./components/User.vue"),
-      props : true
-    },
+        path: "/test",
+        name: "test",
+        component: () => import("./pages/Test.vue"),
+        props: true
+    }
+    ,
     {
       path : "/docs",   
       name : "docs",
@@ -38,7 +39,6 @@ const routes = [
   const router = createRouter({
     history : createWebHistory(),
     routes,
-  });
-  
-  export default router;
-  
+});
+
+export default router;

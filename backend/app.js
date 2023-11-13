@@ -4,7 +4,6 @@ import router  from "./src/routes/index.js";
 import { config } from "dotenv";
 import swaggerJsDoc from 'swagger-jsdoc';
 import { serve, setup } from 'swagger-ui-express';
-//import cors from 'cors';
 
 config();
 const host = process.env.HOST;
@@ -36,13 +35,6 @@ const openapiSpecification = swaggerJsDoc(options);
 app.use(express.json())
 app.use('/api', router);
 app.use('/docs', serve, setup(openapiSpecification));
-
-/*const corsOptions = {
-    origin: 'http://localhost:5173/signup',
-    optionsSuccessStatus: 200,
-  };
-  
-app.use(cors(corsOptions));*/
 
 app.listen(port, host, () => {
     console.log(`Server is running on http://${host}:${port}`)

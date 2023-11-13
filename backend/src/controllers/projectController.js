@@ -1,41 +1,30 @@
-import Project from '../models/project.js';
-import {countAllDocuments,findAllProjects} from "../models/project.js";
+import { countAllProjects, findAllProjects, createProject, getProjectById } from "../models/project.js";
+
+export const addProject = async (req, res) => {
+    try {
+        const response = await createProject(req.body);
+        res.status(response.success ? 200 : 404).json(response);
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+}
+
+export const getProject = async (req, res) => {
+    try {
+        const response = await getProjectById(req.params.id);
+        res.status(response.success ? 200 : 404).json(response);
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+}
+
 // Controller to get a list of all projects
-export const getAllProjects = async () => {
+export const getAllProjects = async (req, res) => {
     try {
-        const total = await countAllDocuments();
-        const projects = await findAllProjects();
-        return {
-            success: true,
-            data: projects,
-            total: total.toString(),
-        };
-    } catch (err) {
-        return { success: false, message: 'Projects not found ' + err };
-    }
-};
-
-// Controller to get a project by ID
-export const getProjectById = async (id) => {
-    try {
-        const project = await Project.findById(id);
-        if (!project) {
-            return { success: false, message: 'Project not found' };
-        }
-        return { success: true, data: project};
+        const total = await countAllProjects();
+        const project = await findAllProjects();
+        res.status(total.success && project.success ? 200 : 404).json({ total: total.data, data: project.data });
     } catch (error) {
-        return { success: false, message: 'Error getting Project' + error };
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
-};
-
-
-// Controller to create a new project
-export const addProject = async (body) => {
-    try {
-        const project = new Project(body);
-        const result = await project.save();
-        return { success: true, data: result };
-    } catch (error) {
-        return { success: false, message: 'Project not added ' + error };
-    }
-};
+}

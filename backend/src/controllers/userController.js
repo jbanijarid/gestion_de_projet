@@ -1,61 +1,56 @@
-import  User from '../models/user.js';
-import { countAllUsers,findAllUsers, getUserByUsername } from '../models/user.js';
+import {
+  countAllUsers,
+  findAllUsers,
+  createUser,
+  getUserById,
+  getUserByUsername
+} from '../models/user.js';
+
+
+export const addUser = async (req, res) => {
+  try {
+    const response = await createUser(req.body);
+    res.status(response.success ? 200 : 404).json(response);
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
+export const getUser = async (req, res) => {
+  try {
+    const response = await getUserById(req.params.id);
+    res.status(response.success ? 200 : 404).json(response);
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
+
 // Controller to get a list of all users
-export async function getAllUsers() {
+export const getAllUsers = async (req, res) => {
   try {
     const total = await countAllUsers();
     const users = await findAllUsers();
-    return {
-      success: true,
-      data: users,
-      total: total.toString(),
-    };
-  } catch (err) {
-    return { success: false, message: 'Users not found ' + err };
-  }
-}
-
-// Controller to get a user by ID
-export const getUserById = async (id) => {
-  try {
-    const user = await User.findById(id);
-    if (!user) {
-      return { success: false, message: 'User not found' };
-    }
-    return { success: true, data: user };
-
+    res.status(total.success && users.success ? 200 : 404).json({ total: total.data, data: users.data });
   } catch (error) {
-    return { success: false, message: 'Error getting user: ' + error };
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 };
 
-// Controller to create a new user
-export const addUser = async (body) => {
+export const loginUser = async (req, res) => {
   try {
-    const user = new User(body);
-    const result = await user.save();
-    return { success: true, data: result };
-  } catch (error) {
-    return { success: false, message: 'User not added ' + error };
-  }
-};
-
-export const loginUser = async (username, password) => {
-    try {
-      const user = await getUserByUsername(username);
-      //console.log(username);
-      console.log(user.data.username);
+    const user = await getUserByUsername(req.body.username);
+    //console.log(username);
+    // console.log(user.data.username);
     if (!user) {
-      return { success: false, message: 'User not found' };
+      res.status(500).json({ success: false, message: 'User not found' });
     }
-    if(password === user.data.password){
-      return{success :true ,data :user};
+    if (req.body.password === user.data.password) {
+      // return { success: true, data: user };
+      res.status(user.success ? 200 : 404).json(user);
     } else {
-      return { success: false, message: 'wrong password' };
+      res.status(500).json({ success: false, message: 'wrong password' });
     }
-
   } catch (error) {
-    return { success: false, message: 'Error getting user: ' + error };
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
-
 };
