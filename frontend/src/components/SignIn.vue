@@ -1,6 +1,8 @@
 <script setup>
 import { api } from '../../http-api';
 import { reactive } from 'vue';
+
+const emit = defineEmits(['closeIt','bienConnecte'])
 const data = reactive({
   username: '',
   password: '',
@@ -17,8 +19,12 @@ const login = async () => {
     const response = await api.login(userData);
     // userList.value = data.data ;
     console.log(response);
+
     // Reset error message on successful login
     data.errorMessage = '';
+    emit('closeIt');
+    emit('bienConnecte');
+
   } catch (error) {
     console.error(error.message);
     data.errorMessage = 'Nom d\'utilisateur ou mot de passe incorrect.';
@@ -41,10 +47,9 @@ const login = async () => {
         <input type="password" id="password" v-model="data.password" required />
       </div>
 
-      <button type="submit">Se connecter</button>
+      <button type="submit" >Se connecter</button>
 
       <router-link to="/signup">Vous n'avez pas un compte ?</router-link>
-
       <p v-if="data.errorMessage" class="error-message">{{ data.errorMessage }}</p>
     </form>
   </div>
@@ -52,8 +57,14 @@ const login = async () => {
 
 <style scoped>
 .signin-container {
+  position: fixed;
+  z-index: 999;
+  top: 20%;
+  left: 40%;
+  width: 30%;
+  margin-left: -150px;
   max-width: 400px;
-  margin: auto;
+  /* margin: auto; */
   padding: 20px;
   border: 1px solid #ccc;
   border-radius: 5px;

@@ -14,25 +14,25 @@ const routes = [
         component: () => import("./pages/Test.vue"),
         props: true
     }
-    ,
-    {
-      path : "/docs",   
-      name : "docs",
-      component : () => import("./components/Docs.vue"),
-      props : true
-    },
-    {
-      path : "/signin",
-      name : "signin",
-      component : () => import("./components/SignIn.vue"),
-      props : true
-    },
-    {
-      path : "/signup",
-      name : "signup",
-      component : () => import("./components/SignUp.vue"),
-      props : true
-    }
+    // ,
+    // {
+    //   path : "/docs",   
+    //   name : "docs",
+    //   component : () => import("./components/Docs.vue"),
+    //   props : true
+    // }
+    // {
+    //   path : "/signin",
+    //   name : "signin",
+    //   component : () => import("./components/SignIn.vue"),
+    //   props : true
+    // },
+    // {
+    //   path : "/signup",
+    //   name : "signup",
+    //   component : () => import("./components/SignUp.vue"),
+    //   props : true
+    // }
   
   ];
   
