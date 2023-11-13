@@ -69,7 +69,7 @@ const closeModal =()=>{
   left: 40%;
   width: 30%;
   margin-left: -150px;
-  max-width: 400px;
+  max-width: 20%;
   /* margin: auto; */
   padding: 20px;
   border: 1px solid #ccc;

@@ -76,8 +76,13 @@ const closeModal = () => {
 
 <style scoped>
 .signin-container {
-  max-width: 400px;
-  margin: auto;
+  position: fixed;
+  z-index: 999;
+  top: 20%;
+  left: 40%;
+  width: 30%;
+  margin-left: -150px;
+  max-width: 20%;
   padding: 20px;
   border: 1px solid #ddd;
   border-radius: 8px;
