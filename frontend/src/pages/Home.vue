@@ -1,81 +1,55 @@
-
+<!-- Home.vue -->
 <script setup>
-import TaskCard from '../components/TaskCard.vue';
-import Draggable from 'vuedraggable';
 import { ref } from 'vue';
-import tasksData from '../data/tasks.js';
+import SignIn from '../components/SignIn.vue';
+import SignUpVue from '../components/SignUp.vue';                 
+const userInfo = ref(null);
 
-const tasks = ref(tasksData);
+const open = ref({
+  signin: false,
+  signup: false,
+});
 
-const onDrop = (etat) => (event) => {
-    const taskId = event.dataTransfer.getData('task-id');
-    const taskIndex = tasks.value.findIndex((task) => task.id === parseInt(taskId, 10));
+const ablebtn = ref(true);
 
-    if (taskIndex !== -1) {
-        if (tasks.value[taskIndex].etat !== etat) {
-            // Change the etat only if the task is dropped into a different column
-            tasks.value[taskIndex].etat = etat;
-        }
-    }
-};
+const openModal = (type) => {
+  open.value[type] = true;
+  ablebtn.value = false;
+}
 
-const onDragEnd = () => {
-    // Handle drag end if needed
-};
+const closeModal = (type) => {
+  open.value[type] = false;
+  ablebtn.value = true;
+}
+
 </script>
+
 <template>
-    <div class="container-fluid">
-        <div class="row">
-            <div class="col-md-4">
-                <div class="task-column" @drop="onDrop('todo')">
-                    <h3>To Do</h3>
-                    <draggable :list="tasks.filter(task => task.etat === 'todo')" @end="onDragEnd">
-                        <template #item="{ element }">
-                            <task-card :id="element.id" :name="element.name" :description="element.description"
-                                :project-id="element.projectId" :etat="element.etat" />
-                        </template>
-                    </draggable>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="task-column" @drop="onDrop('progress')">
-                    <h3>In Progress</h3>
-                    <draggable :list="tasks.filter(task => task.etat === 'progress')" @end="onDragEnd">
-                        <template #item="{ element }">
-                            <task-card :id="element.id" :name="element.name" :description="element.description"
-                                :project-id="element.projectId" :etat="element.etat" />
-                        </template>
-                    </draggable>
-                </div>
-            </div>
-            <div class="col-md-4">
-                <div class="task-column" @drop="onDrop('done')">
-                    <h3>Done</h3>
-                    <draggable :list="tasks.filter(task => task.etat === 'done')" @end="onDragEnd">
-                        <template #item="{ element }">
-                            <task-card :id="element.id" :name="element.name" :description="element.description"
-                                :project-id="element.projectId" :etat="element.etat" />
-                        </template>
-                    </draggable>
-                </div>
-            </div>
-        </div>
+  <div>
+    <b-row>
+      <b-col>
+        <h1>Home Page </h1>
+      </b-col>
+      <b-col>
+        <b-button-group>
+          <b-button variant="outline-secondary" @click="openModal('signin')" :disabled="!ablebtn">Sign In</b-button>
+          <b-button variant="outline-secondary" @click="openModal('signup')" :disabled="!ablebtn">Sign Up</b-button>
+        </b-button-group>
+      </b-col>
+    </b-row>
+    <h6>Welcome to our Project Manager</h6>
+    <div class="signin" v-if="open.signin">
+      <SignIn @close-it="closeModal('signin')"/>
     </div>
+    <div class="signup" v-if="open.signup">
+      <SignUpVue @close-it="closeModal('signup')"/>
+    </div>
+  </div>
 </template>
   
 
   
 <style>
-.task-column {
-    border: 1px solid #ddd;
-    padding: 10px;
-    margin: 10px;
-    border-radius: 8px;
-    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-}
-
-.task-card {
-    margin-bottom: 10px;
-}
+/* Add your styles here */
 </style>
   
