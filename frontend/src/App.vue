@@ -21,8 +21,10 @@
 .sidenav {
   width: 12vW;
   height: 100%;
-  background-color: #c3c1c1;
-  border-right: 1px solid #a9a8a8;
+  background-color: #e2e2e2;
+  /* color: rgba(25, 23, 17, 0.6); */
+  color: inherit;
+  border-right: 1px solid #d7d7d7;
   padding-top: 12em;
   position: fixed;
   z-index: 1;
@@ -36,12 +38,12 @@
   padding: 6px 8px 6px 16px;
   text-decoration: none;
   font-size: 25px;
-  color: #000000;
+  color: rgba(25, 23, 17, 0.6);
   display: block;
 }
 
 .link:hover {
-  color: #f1f1f1;
+  color: rgba(25, 23, 17, 0.889);
 }
 
 .main {
