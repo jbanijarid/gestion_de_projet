@@ -14,13 +14,13 @@ const routes = [
         component: () => import("./pages/Test.vue"),
         props: true
     }
-    // ,
-    // {
-    //   path : "/docs",   
-    //   name : "docs",
-    //   component : () => import("./components/Docs.vue"),
-    //   props : true
-    // }
+    ,
+    {
+      path : "/projects",   
+      name : "projects",
+      component : () => import("./components/Projects.vue"),
+      props : true
+    }
     // {
     //   path : "/signin",
     //   name : "signin",

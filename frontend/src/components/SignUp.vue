@@ -2,8 +2,8 @@
 <script setup>
 import { api } from '../../http-api';
 import { reactive } from 'vue';
-
-const emit = defineEmits(['closeIt', 'bienConnecte'])
+import emitter from '../eventBus';
+const emit = defineEmits(['closeIt'])
 
 const data = reactive({
   username: '',
@@ -13,24 +13,21 @@ const data = reactive({
   selectedOption: '',
 });
 
-const register = () => {
+const register = async () => {
   const userData = {
     username: data.username,
     email: data.email,
     password: data.password,
     role: data.selectedOption,
   };
-
-  api.addUSer(userData)
-    .then((data) => {
-      // userList.value = data.data ;
-      // console.log(data);
-      emit("closeIt");
-      emit('bienConnecte');
-    })
-    .catch((e) => {
-      console.log(e.message);
-    });
+  try {
+    const response = await api.addUSer(userData); 
+      closeModal();
+      emitter.emit('set-user-info', response.data);
+      emitter.emit('set-connection');
+  }catch (error){
+    console.log(error.message);
+  }
 };
 const closeModal = () => {
   emit('closeIt');
@@ -46,17 +43,17 @@ const closeModal = () => {
     <form @submit.prevent="register" class="signin-form">
       <div class="form-group">
         <label for="username">Nom d'utilisateur:</label>
-        <input type="text" id="username" v-model="username" required />
+        <input type="text" id="username" v-model="data.username" required />
       </div>
 
       <div class="form-group">
         <label for="email">Adresse e-mail:</label>
-        <input type="email" id="email" v-model="email" required />
+        <input type="email" id="email" v-model="data.email" required />
       </div>
 
       <div class="form-group">
         <label for="password">Mot de passe:</label>
-        <input type="password" id="password" v-model="password" required />
+        <input type="password" id="password" v-model="data.password" required />
       </div>
 
       <div class="form-group">
@@ -122,25 +119,27 @@ const closeModal = () => {
 
 .form-group input {
   width: 100%;
-  padding: 10px;
+  padding: 2px;
   box-sizing: border-box;
   border: 1px solid #ddd;
   border-radius: 4px;
 }
 
 .options-container {
+  margin-left: 1px;
   display: flex;
   flex-direction: column;
 }
 
 .option {
+  margin-left: 1px;
   display: flex;
   align-items: center;
   margin-bottom: 10px;
 }
 
 .option input {
-  margin-right: 8px;
+  margin-right: 2px;
 }
 
 form button {

@@ -1,8 +1,9 @@
 <script setup>
 import { api } from '../../http-api';
 import { reactive } from 'vue';
+import emitter from '../eventBus';
 
-const emit = defineEmits(['closeIt', 'bienConnecte'])
+const emit = defineEmits(['closeIt']);
 const data = reactive({
   username: '',
   password: '',
@@ -22,8 +23,10 @@ const login = async () => {
 
     // Reset error message on successful login
     data.errorMessage = '';
-    emit('closeIt');
-    emit('bienConnecte');
+    closeModal();
+    emitter.emit('set-user-info', response.data);
+    emitter.emit('set-connection');
+
   } catch (error) {
     console.error(error.message);
     data.errorMessage = 'Nom d\'utilisateur ou mot de passe incorrect.';
@@ -31,9 +34,11 @@ const login = async () => {
   console.log('Connexion avec', data.username, data.password);
 };
 
-const closeModal =()=>{
+const closeModal = () => {
   emit('closeIt');
 }
+
+
 </script>
 
 <template>
@@ -91,10 +96,12 @@ const closeModal =()=>{
   font-size: 1em;
   cursor: pointer;
 }
+
 .exit-button:hover {
   color: rgb(245, 110, 110);
 
 }
+
 .signin-form {
   display: flex;
   flex-direction: column;

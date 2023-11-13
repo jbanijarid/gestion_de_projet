@@ -1,11 +1,34 @@
+
+<script setup>
+import { ref, onMounted } from 'vue';
+import emitter from './eventBus';
+
+const userInfo = ref(null);
+const isConnected = ref(false);
+
+onMounted(() => {
+  emitter.on('set-user-info', (user) => {
+    console.log("app ...");
+    console.log(user);
+    console.log("end app");
+    userInfo.value = user;
+  });
+  emitter.on("set-connection", () => {
+    isConnected.value = true;
+
+  })
+});
+</script>
+
 <template>
   <div class="container">
     <div class="sidenav">
+      <div class="userName">{{ isConnected ? userInfo.username : "" }}</div>
       <router-link class="link" to="/">home</router-link>
-      <router-link class="link" to="/test">test</router-link>
+      <router-link v-if="isConnected" class="link" to="/projects">Projects</router-link>
+      <router-link v-if="isConnected" class="link" to="/test">test</router-link>
       <!-- <router-link class="link" to="/sprints">sprints</router-link> -->
     </div>
-
     <div class="main">
       <router-view />
     </div>
@@ -31,10 +54,16 @@
   top: 0;
   left: 0;
   overflow-x: hidden;
-  box-shadow: 5px 0 5px rgba(0, 0, 0, 0.1); /* Add a subtle shadow to the right side */
+  box-shadow: 5px 0 5px rgba(0, 0, 0, 0.1);
+  /* Add a subtle shadow to the right side */
 }
 
-.link {
+.sidenav .active {
+  color: rgba(25, 23, 17, 0.6);
+}
+
+.link,
+.userName {
   padding: 6px 8px 6px 16px;
   text-decoration: none;
   font-size: 25px;
@@ -47,7 +76,8 @@
 }
 
 .main {
-  margin-left: 12vw; /* Adjusted to match the sidebar width */
+  margin-left: 12vw;
+  /* Adjusted to match the sidebar width */
   font-size: 28px;
   padding: 0px 10px;
 }
@@ -57,6 +87,7 @@
   .sidenav {
     padding-top: 15px;
   }
+
   .sidenav .link {
     font-size: 18px;
   }

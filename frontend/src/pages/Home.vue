@@ -2,8 +2,8 @@
 <script setup>
 import { ref } from 'vue';
 import SignIn from '../components/SignIn.vue';
-import SignUpVue from '../components/SignUp.vue';
-const connected = ref(false); 
+import SignUpVue from '../components/SignUp.vue';                 
+const userInfo = ref(null);
 
 const open = ref({
   signin: false,
@@ -22,16 +22,13 @@ const closeModal = (type) => {
   ablebtn.value = true;
 }
 
-const bienConnecte = () => {
-  connected.value = true;
-}
 </script>
 
 <template>
   <div>
     <b-row>
       <b-col>
-        <h1>Home Page</h1>
+        <h1>Home Page </h1>
       </b-col>
       <b-col>
         <b-button-group>
@@ -42,12 +39,11 @@ const bienConnecte = () => {
     </b-row>
     <h6>Welcome to our Project Manager</h6>
     <div class="signin" v-if="open.signin">
-      <SignIn @close-it="closeModal('signin')" @bien-connecte="bienConnecte" />
+      <SignIn @close-it="closeModal('signin')"/>
     </div>
     <div class="signup" v-if="open.signup">
-      <SignUpVue @close-it="closeModal('signup')" @bien-connecte="bienConnecte" />
+      <SignUpVue @close-it="closeModal('signup')"/>
     </div>
-    <div v-if="connected"> bien connecte </div>
   </div>
 </template>
   
