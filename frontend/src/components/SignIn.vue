@@ -1,56 +1,54 @@
+<script setup>
+import { api } from '../../http-api';
+import { reactive } from 'vue';
+const data = reactive({
+  username: '',
+  password: '',
+  errorMessage: ''
+});
+
+const login = async () => {
+  const userData = {
+    username: data.username,
+    password: data.password
+  };
+  try {
+    // Logique de connexion
+    const response = await api.login(userData);
+    // userList.value = data.data ;
+    console.log(response);
+    // Reset error message on successful login
+    data.errorMessage = '';
+  } catch (error) {
+    console.error(error.message);
+    data.errorMessage = 'Nom d\'utilisateur ou mot de passe incorrect.';
+  }
+  console.log('Connexion avec', data.username, data.password);
+};
+</script>
+
 <template>
   <div class="signin-container">
     <h2>Page de connexion</h2>
     <form @submit.prevent="login" class="signin-form">
       <div class="form-group">
         <label for="username">Nom d'utilisateur:</label>
-        <input type="text" id="username" v-model="username" required />
+        <input type="text" id="username" v-model="data.username" required />
       </div>
 
       <div class="form-group">
         <label for="password">Mot de passe:</label>
-        <input type="password" id="password" v-model="password" required />
+        <input type="password" id="password" v-model="data.password" required />
       </div>
 
       <button type="submit">Se connecter</button>
 
       <router-link to="/signup">Vous n'avez pas un compte ?</router-link>
+
+      <p v-if="data.errorMessage" class="error-message">{{ data.errorMessage }}</p>
     </form>
   </div>
 </template>
-
-<script>
-import {api} from '../../http-api';
-
-export default {
-  data() {
-    return {
-      username: '',
-      password: ''
-    };
-  },
-  methods: {
-    login() {
-
-      const userData = {
-        username: this.username,
-        password: this.password
-      };
-
-      // Logique de connexion
-      api.login(userData)
-        .then((data) => {
-      // userList.value = data.data ;
-      console.log(data);
-    })
-    .catch(e => {
-      console.log(e.message);
-  });
-      console.log('Connexion avec', this.username, this.password);
-    }
-  }
-};
-</script>
 
 <style scoped>
 .signin-container {
@@ -65,17 +63,17 @@ export default {
 
 .signin-form {
   display: flex;
-  flex-direction: column; /* Aligner les éléments en colonne */
+  flex-direction: column;
   gap: 10px;
 }
 
 .form-group {
   display: flex;
-  flex-direction: column; /* Aligner les éléments en colonne */
+  flex-direction: column;
 }
 
 .form-group label {
-  align-self: flex-start; /* Aligner les labels à gauche */
+  align-self: flex-start;
 }
 
 .form-group input {
@@ -97,5 +95,10 @@ button {
 
 button:hover {
   background-color: #45a049;
+}
+
+.error-message {
+  color: red;
+  margin-top: 10px;
 }
 </style>
