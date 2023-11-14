@@ -8,29 +8,36 @@ import Kanban from '../components/Kanban.vue';
 
 const tasks = ref(tasksData);
 
-const onDrop = (etat) => (event) => {
-    const taskId = event.dataTransfer.getData('task-id');
-    const taskIndex = tasks.value.findIndex((task) => task.id === parseInt(taskId, 10));
 
-    if (taskIndex !== -1) {
-        if (tasks.value[taskIndex].etat !== etat) {
-            // Change the etat only if the task is dropped into a different column
-            tasks.value[taskIndex].etat = etat;
+const onDragEnd = (etat, movedTask) => {
+    // console.log(movedTask.item.__draggable_context.element.id)
+    const taskId = movedTask.item.__draggable_context.element.id;
+
+console.log(etat);
+    tasks.value.forEach((task, index) => {
+        if (task.id === taskId) {
+            tasks.value[index].etat = etat;
+            // console.log(tasks.value[index].etat);
         }
-    }
+    });
+
+    // Assurez la réactivité en forçant une mise à jour
+    // tasks.value = [...tasks.value];
 };
 
-const onDragEnd = () => {
-    // Handle drag end if needed
-};
+
+
+
+
+
 </script>
 <template>
     <div class="container-fluid">
         <div class="row">
             <div class="col-md-4">
-                <div class="task-column" @drop="onDrop('todo')">
+                <div class="task-column" >
                     <h3>To Do</h3>
-                    <draggable :list="tasks.filter(task => task.etat === 'todo')" @end="onDragEnd">
+                    <draggable :list="tasks.filter(task => task.etat === 'todo')" itemKey="task => task.id" @end="movedTask => onDragEnd('todo', movedTask)">>
                         <template #item="{ element }">
                             <task-card :id="element.id" :name="element.name" :description="element.description"
                                 :project-id="element.projectId" :etat="element.etat" />
@@ -39,9 +46,9 @@ const onDragEnd = () => {
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="task-column" @drop="onDrop('progress')">
+                <div class="task-column" >
                     <h3>In Progress</h3>
-                    <draggable :list="tasks.filter(task => task.etat === 'progress')" @end="onDragEnd">
+                    <draggable :list="tasks.filter(task => task.etat === 'progress')" itemKey="task => task.id" @end="movedTask => onDragEnd('progress', movedTask)">
                         <template #item="{ element }">
                             <task-card :id="element.id" :name="element.name" :description="element.description"
                                 :project-id="element.projectId" :etat="element.etat" />
@@ -50,9 +57,9 @@ const onDragEnd = () => {
                 </div>
             </div>
             <div class="col-md-4">
-                <div class="task-column" @drop="onDrop('done')">
+                <div class="task-column" >
                     <h3>Done</h3>
-                    <draggable :list="tasks.filter(task => task.etat === 'done')" @end="onDragEnd">
+                    <draggable :list="tasks.filter(task => task.etat === 'done')" itemKey="task => task.id" @end="movedTask => onDragEnd('done', movedTask)">>
                         <template #item="{ element }">
                             <task-card :id="element.id" :name="element.name" :description="element.description"
                                 :project-id="element.projectId" :etat="element.etat" />
@@ -62,7 +69,7 @@ const onDragEnd = () => {
             </div>
         </div>
     </div>
-    <kanban :tasks="tasks" />
+    <!-- <kanban :tasks="tasks" /> -->
 </template>
   
 
