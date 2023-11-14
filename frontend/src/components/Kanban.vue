@@ -1,12 +1,29 @@
 <script setup>
 import TaskCard from '../components/TaskCard.vue';
 import Draggable from 'vuedraggable';
+import Sortable from 'vuedraggable';
 
 const kanbanProps = defineProps({
     tasks: Array
 });
 
+let todo = kanbanProps.tasks.filter(task => task.etat === "todo");
+let progress = kanbanProps.tasks.filter(task => task.etat === "progress");
+let done = kanbanProps.tasks.filter(task => task.etat === "done");
+
+/*const sortable = new Sortable(
+    document.querySelectorAll('[sortable]'), {
+        draggable: '[sortItem]',
+        delay: 0,
+    }
+);
+
+sortable.on('drag:stop', () => {
+	console.log('drag:stop')
+})*/
+
 const onDrop = (etat) => (event) => {
+    console.log("test");
     const taskId = event.dataTransfer.getData('task-id');
     const taskIndex = kanbanProps.tasks.value.findIndex((task) => task.id === parseInt(taskId, 10));
 
@@ -18,10 +35,12 @@ const onDrop = (etat) => (event) => {
     }
 };
 
-const onDragEnd = () => {
+const onDragEnd = (event) => {
     // Handle drag end if needed
 };
 </script>
+
+
 
 <template>
     <div class="container-fluid">
@@ -29,10 +48,12 @@ const onDragEnd = () => {
             <div class="col-md-4">
                 <div class="task-column" @drop="onDrop('todo')">
                     <h3>To Do</h3>
-                    <draggable :list="kanbanProps.tasks.filter(task => task.etat === 'todo')" @end="onDragEnd">
+                    <draggable :list="todo" :group="{name: 'my-group', put: true}">
                         <template #item="{ element }">
-                            <task-card :id="element.id" :name="element.name" :description="element.description"
-                                :project-id="element.projectId" :etat="element.etat" />
+                            <div>
+                                <task-card :id="element.id" :name="element.name" :description="element.description"
+                                :project-id="element.projectId" :etat="element.etat" sortItem/>
+                            </div>
                         </template>
                     </draggable>
                 </div>
@@ -40,10 +61,12 @@ const onDragEnd = () => {
             <div class="col-md-4">
                 <div class="task-column" @drop="onDrop('progress')">
                     <h3>In Progress</h3>
-                    <draggable :list="kanbanProps.tasks.filter(task => task.etat === 'progress')" @end="onDragEnd">
+                    <draggable :list="progress" :group="{name: 'my-group', put: true}">
                         <template #item="{ element }">
-                            <task-card :id="element.id" :name="element.name" :description="element.description"
-                                :project-id="element.projectId" :etat="element.etat" />
+                            <div>
+                                <task-card :id="element.id" :name="element.name" :description="element.description"
+                                :project-id="element.projectId" :etat="element.etat" sortItem/>
+                            </div>
                         </template>
                     </draggable>
                 </div>
@@ -51,10 +74,12 @@ const onDragEnd = () => {
             <div class="col-md-4">
                 <div class="task-column" @drop="onDrop('done')">
                     <h3>Done</h3>
-                    <draggable :list="kanbanProps.tasks.filter(task => task.etat === 'done')" @end="onDragEnd">
+                    <draggable :list="done" :group="{name: 'my-group', put: true}">
                         <template #item="{ element }">
-                            <task-card :id="element.id" :name="element.name" :description="element.description"
-                                :project-id="element.projectId" :etat="element.etat" />
+                            <div>
+                                <task-card :id="element.id" :name="element.name" :description="element.description"
+                                :project-id="element.projectId" :etat="element.etat" sortItem/>
+                            </div>
                         </template>
                     </draggable>
                 </div>
