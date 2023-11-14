@@ -3,7 +3,7 @@ import { api } from '../../http-api';
 import { reactive } from 'vue';
 import emitter from '../eventBus';
 
-const emit = defineEmits(['closeIt']);
+const emit = defineEmits(['closeIt', 'openSignup']);
 const data = reactive({
   username: '',
   password: '',
@@ -36,8 +36,12 @@ const login = async () => {
 
 const closeModal = () => {
   emit('closeIt');
-}
 
+}
+const closeSigninAndOpenSginup = () => {
+  closeModal();
+  emit("openSignup");
+}
 
 </script>
 
@@ -60,7 +64,7 @@ const closeModal = () => {
 
       <button type="submit">Se connecter</button>
 
-      <router-link to="/signup">Vous n'avez pas un compte ?</router-link>
+      <h5 class="creatCompte" @click="closeSigninAndOpenSginup"> Vous n'avez pas un compte ? </h5>
       <p v-if="data.errorMessage" class="error-message">{{ data.errorMessage }}</p>
     </form>
   </div>
@@ -141,5 +145,13 @@ form button:hover {
 .error-message {
   color: red;
   margin-top: 10px;
+}
+
+.creatCompte {
+  color: rgb(9, 68, 68);
+  cursor: pointer;
+}
+.creatCompte:hover {
+  color: rgba(9, 68, 68, 0.455);
 }
 </style>
