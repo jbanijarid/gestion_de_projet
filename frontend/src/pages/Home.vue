@@ -39,10 +39,10 @@ const closeModal = (type) => {
     </b-row>
     <h6>Welcome to our Project Manager</h6>
     <div class="signin" v-if="open.signin">
-      <SignIn @close-it="closeModal('signin')"/>
+      <SignIn @close-it="closeModal('signin')" @open-signup="openModal('signup')"/>
     </div>
     <div class="signup" v-if="open.signup">
-      <SignUpVue @close-it="closeModal('signup')"/>
+      <SignUpVue @close-it="closeModal('signup')" />
     </div>
   </div>
 </template>
