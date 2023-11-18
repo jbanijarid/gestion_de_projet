@@ -1,35 +1,33 @@
 <script setup>
 import { ref, computed, defineProps } from 'vue';
-import userProject from '../data/projects.js'; 
+import userProjects from '../data/projects.js'; 
 import userList from '../data/users.js';
 
 
-const userProjects = ref(userProject);
 
 const props = defineProps({
     id: String,
     name: String,
     description: String,
-    projectId: String,
-    etat: String,
+    owner: String,
 });
 
-const project = computed(() => {
-    return userProjects.value.find((p) => p._id === props.projectId) || {};
-});
+// const project = computed(() => {
+//     return userProjects.find((p) => p._id === props.projectId) || {};
+// });
 
-const owner = computed(() => {
-    return userList.find((user) => user._id === project.value.owner) || {};
-});
+// const owner = computed(() => {
+//     return userList.find((user) => user._id === project.value.owner) || {};
+// });
 
-const teamMembers = computed(() => project.value.teamMembers || []);
+// const teamMembers = computed(() => project.value.teamMembers || []);
 
-const teamMembersNames = computed(() => {
-    return teamMembers.value.map((userId) => {
-        const user = userList.find((u) => u._id === userId);
-        return user ? user.name : '';
-    });
-});
+// const teamMembersNames = computed(() => {
+//     return teamMembers.value.map((userId) => {
+//         const user = userList.find((u) => u._id === userId);
+//         return user ? user.name : '';
+//     });
+// });
 </script>
 
 <template>
@@ -42,10 +40,10 @@ const teamMembersNames = computed(() => {
         </div>
         <div class="footer">
             <div class="info">
-                <p>Project: {{ project.name }}</p>
+                <!-- <p>Project: {{ project.name }}</p>
                 <p>Owner: {{ owner.name }}</p>
                 <p>etat: {{ props.etat }}</p>
-                <p>Team Members: {{ teamMembersNames.join(', ') }}</p>
+                <p>Team Members: {{ teamMembersNames.join(', ') }}</p> -->
             </div>
         </div>
     </div>

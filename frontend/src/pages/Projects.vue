@@ -1,13 +1,25 @@
 <script setup>
 import ProjectCard from '../components/ProjectCard.vue';
-import userProject from '../data/projects.js'; 
-import { ref} from 'vue';
+// import userProject from '../data/projects.js'; 
+import { onMounted, ref} from 'vue';
+import { useUserStore } from '../stores/userConection';
+import {api} from '../../http-api';
 
 
-const userProjects = ref(userProject);
+const store = useUserStore();
 
+const userProjects = ref(null);
 
-console.log(userProjects);
+onMounted ( 
+  async () =>{
+    try {
+      const reponse = await api.getAllProjectsByUsername(store.getUserName);
+      userProjects.value = reponse.data; 
+    } catch (error) {
+      console.error(error);
+    }
+  }
+) ;
 
 </script>
 
@@ -17,7 +29,7 @@ console.log(userProjects);
     <!-- <div v-if="userProjects.value.length === 0">No projects found.</div> -->
     <!-- <div v-else> -->
       <div v-for="project in userProjects" :key="project._id">
-        <project-card :id="project._id" :name="project.name" :description="project.description" :projectId="project.owner" :etat="project.etat" />
+        <project-card :id="project._id" :name="project.name" :description="project.description" :owner="project.owner" />
       </div>
     <!-- </div> -->
   </div>
