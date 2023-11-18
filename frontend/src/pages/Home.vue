@@ -2,7 +2,7 @@
 <script setup>
 import { ref } from 'vue';
 import SignIn from '../components/SignIn.vue';
-import SignUpVue from '../components/SignUp.vue';                 
+import SignUp from '../components/SignUp.vue';
 const userInfo = ref(null);
 
 const open = ref({
@@ -39,10 +39,10 @@ const closeModal = (type) => {
     </b-row>
     <h6>Welcome to our Project Manager</h6>
     <div class="signin" v-if="open.signin">
-      <SignIn @close-it="closeModal('signin')" @open-signup="openModal('signup')"/>
+      <SignIn @close-it="closeModal('signin')"/>
     </div>
     <div class="signup" v-if="open.signup">
-      <SignUpVue @close-it="closeModal('signup')" />
+      <SignUp @close-it="closeModal('signup')" />
     </div>
   </div>
 </template>
