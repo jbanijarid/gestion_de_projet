@@ -41,11 +41,11 @@ const exitEditMode = async () => {
     <div class="task-card">
         <div class="header">
             <b-row>
-                <b-col cols="10">
+                <b-col cols="9">
                     <h3 v-if="!isEditMode">{{ editedName }}</h3>
                     <input v-else v-model="editedName" />
                 </b-col>
-                <b-col cols="2">
+                <b-col cols="3">
                     <p v-if="!isEditMode" @click="enterEditMode" class="icon">
                         <font-awesome-icon icon="pen-to-square" size="xs" />
                     </p>
@@ -64,7 +64,7 @@ const exitEditMode = async () => {
                 <!-- <p>Project: {{ project.name }}</p> -->
                 <!-- <p>Owner: {{ owner.name }}</p> -->
                 <p v-if="!isEditMode">{{ editedEtat }}</p>
-                <textarea v-else v-model="editedEtat"></textarea>
+                <input v-else v-model="editedEtat" />
             </div>
             <!-- Uncomment the following line to display team members -->
             <!-- <p>Team Members: {{ teamMembersNames.join(', ') }}</p> -->
@@ -94,16 +94,19 @@ const exitEditMode = async () => {
     color: #fff;
     padding: 12px;
     border-bottom: 1px solid #2980b9;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
 }
 
-.header h2 {
+.header h3 {
     margin: 0;
+    font-size: 1.5rem;
 }
 
 .icon {
-    margin: 0;
     cursor: pointer;
-    size: 1px;
+    font-size: 1.2rem;
 }
 
 .content {
@@ -122,6 +125,19 @@ const exitEditMode = async () => {
     margin: 0;
     font-size: 14px;
     color: #555;
+}
+
+input,
+textarea {
+    width: 100%;
+    height: 3em;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    padding: 8px;
+    margin-top: 8px;
+    font-size: 16px;
+    background-color: #ffffff;
+    color: #2c3e50;
 }
 
 @media screen and (min-width: 600px) {
