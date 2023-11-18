@@ -10,6 +10,8 @@ import {
     faLayerGroup,
     faSquarePollHorizontal,
     faClock,
+    faPenToSquare,
+    faFloppyDisk,
 
 } from "@fortawesome/free-solid-svg-icons";
 
@@ -32,6 +34,8 @@ library.add(
     faLayerGroup,
     faSquarePollHorizontal,
     faClock,
+    faPenToSquare,
+    faFloppyDisk,
     faFacebookF,
     faYoutube,
     faTwitter,
