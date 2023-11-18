@@ -116,7 +116,8 @@ const exitEditMode = async () => {
 }
 
 .content {
-    padding: 16px;
+    padding: 1rem;
+    font-size: 16px;
 }
 
 .footer {
