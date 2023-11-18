@@ -1,9 +1,12 @@
 
 <script setup>
 import { api } from '../../http-api';
-import { reactive } from 'vue';
-import emitter from '../eventBus';
-const emit = defineEmits(['closeIt'])
+import { reactive, defineEmits } from 'vue';
+import { useUserStore } from "../stores/userConection";
+import MyModal from './MyModal.vue';
+const store = useUserStore();
+
+const emit = defineEmits(['closeIt']);
 
 const data = reactive({
   username: '',
@@ -21,87 +24,63 @@ const register = async () => {
     role: data.selectedOption,
   };
   try {
-    const response = await api.addUSer(userData); 
-      closeModal();
-      emitter.emit('set-user-info', response.data);
-      emitter.emit('set-connection');
-  }catch (error){
+    const response = await api.addUSer(userData);
+    closeModal();
+    setUserData(response.data)
+    connect();
+  } catch (error) {
     console.log(error.message);
   }
 };
 const closeModal = () => {
   emit('closeIt');
 }
+
+const connect = () => {
+  store.connecte();
+};
+
+const setUserData = (data) => {
+  store.setUser(data);
+}
 </script>
 
+<!-- SignUp.vue -->
 <template>
-  <div class="signin-container">
-    <div class="header">
-      <h5>Inscription</h5>
-      <button @click="closeModal" class="exit-button">X</button>
-    </div>
-    <form @submit.prevent="register" class="signin-form">
-      <div class="form-group">
-        <label for="username">Nom d'utilisateur:</label>
-        <input type="text" id="username" v-model="data.username" required />
-      </div>
+  <my-modal title="Sign Up" @close-it="closeModal">
+    <div class="signin-container">
+      <form @submit.prevent="register" class="signin-form">
+        <div class="form-group">
+          <label for="username">Nom d'utilisateur:</label>
+          <input type="text" id="username" v-model="data.username" required />
+        </div>
+        <div class="form-group">
+          <label for="email">Adresse e-mail:</label>
+          <input type="email" id="email" v-model="data.email" required />
+        </div>
 
-      <div class="form-group">
-        <label for="email">Adresse e-mail:</label>
-        <input type="email" id="email" v-model="data.email" required />
-      </div>
+        <div class="form-group">
+          <label for="password">Mot de passe:</label>
+          <input type="password" id="password" v-model="data.password" required />
+        </div>
 
-      <div class="form-group">
-        <label for="password">Mot de passe:</label>
-        <input type="password" id="password" v-model="data.password" required />
-      </div>
-
-      <div class="form-group">
-        <h2>Choisissez une option :</h2>
-        <div class="options-container">
-          <div v-for="(option, index) in data.options" :key="index" class="option">
-            <input type="radio" :id="'option' + index" :value="option" v-model="data.selectedOption" />
-            <label :for="'option' + index">{{ option }}</label>
+        <div class="form-group">
+          <h2>Choisissez une option :</h2>
+          <div class="options-container">
+            <div v-for="(option, index) in data.options" :key="index" class="option">
+              <input type="radio" :id="'option' + index" :value="option" v-model="data.selectedOption" />
+              <label :for="'option' + index">{{ option }}</label>
+            </div>
           </div>
         </div>
-      </div>
-
-      <button type="submit">S'inscrire</button>
-    </form>
-  </div>
+        <button type="submit">S'inscrire</button>
+      </form>
+    </div>
+  </my-modal>
 </template>
 
+
 <style scoped>
-.signin-container {
-  position: fixed;
-  z-index: 999;
-  top: 20%;
-  left: 40%;
-  width: 30%;
-  margin-left: -150px;
-  max-width: 20%;
-  padding: 20px;
-  border: 1px solid #ddd;
-  border-radius: 8px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-}
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.exit-button {
-  background: none;
-  border: none;
-  color: rgb(57, 57, 57);
-  font-size: 1em;
-  cursor: pointer;
-}
-.exit-button:hover {
-  color: rgb(245, 110, 110);
-
-}
 .signin-form {
   display: grid;
   gap: 20px;
@@ -126,20 +105,21 @@ const closeModal = () => {
 }
 
 .options-container {
-  margin-left: 1px;
+  width: 60%;
+  margin-left: 0;
   display: flex;
   flex-direction: column;
 }
 
 .option {
-  margin-left: 1px;
+  margin-left: 0;
   display: flex;
   align-items: center;
   margin-bottom: 10px;
 }
 
 .option input {
-  margin-right: 2px;
+  margin-right: 0;
 }
 
 form button {

@@ -1,9 +1,11 @@
 <script setup>
 import { api } from '../../http-api';
 import { reactive } from 'vue';
-import emitter from '../eventBus';
+import { useUserStore } from "../stores/userConection";
+import MyModal from './MyModal.vue';
+const store = useUserStore();
 
-const emit = defineEmits(['closeIt', 'openSignup']);
+const emit = defineEmits(['closeIt']);
 const data = reactive({
   username: '',
   password: '',
@@ -24,9 +26,8 @@ const login = async () => {
     // Reset error message on successful login
     data.errorMessage = '';
     closeModal();
-    emitter.emit('set-user-info', response.data);
-    emitter.emit('set-connection');
-
+    connect();
+    setUserData(response.data);
   } catch (error) {
     console.error(error.message);
     data.errorMessage = 'Nom d\'utilisateur ou mot de passe incorrect.';
@@ -43,68 +44,45 @@ const closeSigninAndOpenSginup = () => {
   emit("openSignup");
 }
 
+const connect = () => {
+  store.connecte();
+};
+
+const setUserData = (data) => {
+  store.setUser(data);
+}
+
+// const disconnect = () => {
+//   store.deConnecte();
+// };
+
 </script>
 
 <template>
-  <div class="signin-container">
-    <div class="header">
-      <h5>Connexion</h5>
-      <button @click="closeModal" class="exit-button">X</button>
+  <my-modal title="Sign In" @close-it="closeModal">
+    <div class="signin-container">
+      <form @submit.prevent="login" class="signin-form">
+        <div class="form-group">
+          <label for="username">Nom d'utilisateur:</label>
+          <input type="text" id="username" v-model="data.username" required />
+        </div>
+
+        <div class="form-group">
+          <label for="password">Mot de passe:</label>
+          <input type="password" id="password" v-model="data.password" required />
+        </div>
+
+        <b-button type="submit">Se connecter</b-button>
+
+        <h5 class="creatCompte" @click="closeSigninAndOpenSginup"> Vous n'avez pas un compte ? </h5>
+        <p v-if="data.errorMessage" class="error-message">{{ data.errorMessage }}</p>
+      </form>
     </div>
-    <form @submit.prevent="login" class="signin-form">
-      <div class="form-group">
-        <label for="username">Nom d'utilisateur:</label>
-        <input type="text" id="username" v-model="data.username" required />
-      </div>
-
-      <div class="form-group">
-        <label for="password">Mot de passe:</label>
-        <input type="password" id="password" v-model="data.password" required />
-      </div>
-
-      <button type="submit">Se connecter</button>
-
-      <h5 class="creatCompte" @click="closeSigninAndOpenSginup"> Vous n'avez pas un compte ? </h5>
-      <p v-if="data.errorMessage" class="error-message">{{ data.errorMessage }}</p>
-    </form>
-  </div>
+  </my-modal>
 </template>
 
 <style scoped>
-.signin-container {
-  position: fixed;
-  z-index: 999;
-  top: 20%;
-  left: 40%;
-  width: 30%;
-  margin-left: -150px;
-  max-width: 20%;
-  /* margin: auto; */
-  padding: 20px;
-  border: 1px solid #ccc;
-  border-radius: 5px;
-  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
-  text-align: center;
-}
 
-.header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-}
-
-.exit-button {
-  background: none;
-  border: none;
-  color: rgb(57, 57, 57);
-  font-size: 1em;
-  cursor: pointer;
-}
-
-.exit-button:hover {
-  color: rgb(245, 110, 110);
-
-}
 
 .signin-form {
   display: flex;
@@ -129,18 +107,16 @@ const closeSigninAndOpenSginup = () => {
   border-radius: 4px;
 }
 
-form button {
+button {
   background-color: #4caf50;
   color: white;
   border: none;
-  padding: 10px;
-  border-radius: 4px;
+  padding: 12px;
+  border-radius: 6px;
   cursor: pointer;
 }
 
-form button:hover {
-  background-color: #45a049;
-}
+
 
 .error-message {
   color: red;
@@ -151,6 +127,7 @@ form button:hover {
   color: rgb(9, 68, 68);
   cursor: pointer;
 }
+
 .creatCompte:hover {
   color: rgba(9, 68, 68, 0.455);
 }

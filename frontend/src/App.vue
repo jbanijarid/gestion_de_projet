@@ -1,23 +1,11 @@
 
 <script setup>
-import { ref, onMounted } from 'vue';
-import emitter from './eventBus';
+import { ref, onMounted ,toRefs} from 'vue';
+import { useUserStore } from "./stores/userConection";
+const store = useUserStore();
+const { isConnected } = toRefs(store);
+const {userInfo} = toRefs(store);
 
-const userInfo = ref(null);
-const isConnected = ref(false);
-
-onMounted(() => {
-  emitter.on('set-user-info', (user) => {
-    console.log("app ...");
-    console.log(user);
-    console.log("end app");
-    userInfo.value = user;
-  });
-  emitter.on("set-connection", () => {
-    isConnected.value = true;
-
-  })
-});
 </script>
 
 <template>
