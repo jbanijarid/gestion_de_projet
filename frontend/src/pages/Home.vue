@@ -3,7 +3,9 @@
 import { ref } from 'vue';
 import SignIn from '../components/SignIn.vue';
 import SignUp from '../components/SignUp.vue';
-const userInfo = ref(null);
+import { useUserStore } from "../stores/userConection";
+
+const store = useUserStore();
 
 const open = ref({
   signin: false,
@@ -22,6 +24,10 @@ const closeModal = (type) => {
   ablebtn.value = true;
 }
 
+const signout = ()=>{
+  store.deConnecte();
+  store.setUser(null);
+}
 </script>
 
 <template>
@@ -31,11 +37,16 @@ const closeModal = (type) => {
         <h1>Home Page </h1>
       </b-col>
       <b-col>
-        <b-button-group>
-          <b-button variant="outline-secondary" @click="openModal('signin')" :disabled="!ablebtn">Sign In</b-button>
-          <b-button variant="outline-secondary" @click="openModal('signup')" :disabled="!ablebtn">Sign Up</b-button>
-        </b-button-group>
-      </b-col>
+        <dev class="inup" v-if="!store.isConnected">
+          <b-button-group>
+            <b-button variant="outline-secondary" @click="openModal('signin')" :disabled="!ablebtn">Sign In</b-button>
+            <b-button variant="outline-secondary" @click="openModal('signup')" :disabled="!ablebtn">Sign Up</b-button>
+          </b-button-group>
+        </dev>
+        <div class="signout" v-else>
+          <b-button variant="outline-secondary" @click="signout">Sign Out</b-button>
+        </div>
+        </b-col>
     </b-row>
     <h6>Welcome to our Project Manager</h6>
     <div class="signin" v-if="open.signin">
