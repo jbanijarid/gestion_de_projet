@@ -86,7 +86,7 @@ router.route('/users').post(userController.addUser);
 router.route('/users/login').post(userController.loginUser);
 
 // ****************************************************** Project : 
-
+router.route('/projectsUser/:username').get(projectController.getAllProjectsByUsername);
 /**
  * @openapi
  * /projects:

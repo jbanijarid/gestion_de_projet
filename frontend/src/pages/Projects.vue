@@ -1,19 +1,29 @@
 <script setup>
-import { ref, onMounted } from 'vue';
-import emitter from '../eventBus';
+import ProjectCard from '../components/ProjectCard.vue';
+import userProject from '../data/projects.js'; 
+import { ref} from 'vue';
 
-const userInfo = ref(null);
-onMounted(() => {
-  emitter.on('set-user-info', (user) => {
-    userInfo.value = user;
-  });
-});
+
+const userProjects = ref(userProject);
+
+
+console.log(userProjects);
+
 </script>
 
 <template>
-    Project 
-<!-- //TODO : display all the project that has userInfo.userName as an owner or teamMembers -->
+  <div>
+    <h2>Your Projects</h2>
+    <!-- <div v-if="userProjects.value.length === 0">No projects found.</div> -->
+    <!-- <div v-else> -->
+      <div v-for="project in userProjects" :key="project._id">
+        <project-card :id="project._id" :name="project.name" :description="project.description" :projectId="project.owner" :etat="project.etat" />
+      </div>
+    <!-- </div> -->
+  </div>
 </template>
 
 <style>
+
 </style>
+

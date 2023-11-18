@@ -22,7 +22,8 @@ export const api = {
   addProject: (body) => requests.post('projects', body),
   getAllTasksByProjectId: (id) => requests.get(`tasks/${id}`),
   getTaskById: (id) => requests.get(`tasks/${id}`),
-  addTask: (body) => requests.post('tasks', body)
+  addTask: (body) => requests.post('tasks', body),
+  getAllProjectsByUsername : (username) => requests.get(`/projectsUser/${username}`)
 };
 
 
