@@ -10,6 +10,7 @@ const responseBody = (response) => response.data;
 const requests = {
   get: (url, params) => instance.get(url, { params }).then(responseBody),
   post: (url, body) => instance.post(url, body).then(responseBody),
+  put:(url,body)=> instance.put(url,body).then(responseBody),
 };
 
 export const api = {
@@ -22,7 +23,9 @@ export const api = {
   addProject: (body) => requests.post('projects', body),
   getAllTasksByProjectId: (id) => requests.get(`tasks/${id}`),
   getTaskById: (id) => requests.get(`tasks/${id}`),
-  addTask: (body) => requests.post('tasks', body)
+  addTask: (body) => requests.post('tasks', body),
+  getTasks: () => requests.get(`tasks`,{}),
+  updateTask:(id,body)=>requests.put(`tasks/${id}`,body)
 };
 
 

@@ -1,60 +1,79 @@
-
 <script setup>
 import { ref, computed } from 'vue';
-import projects from '../data/projects.js';
-import users from '../data/users.js';
 import { defineProps } from 'vue';
-
+import { api } from '../../http-api.js'
 const props = defineProps({
     id: Number,
     name: String,
     description: String,
     projectId: Number,
-    etat : String
-
+    etat: String
 });
 
+const isEditMode = ref(false);
+const editedName = ref(props.name);
+const editedDescription = ref(props.description);
+const editedEtat = ref(props.etat);
 
-const project = computed(() => {
-    return projects.find((p) => p.id === props.projectId) || {};
-});
+const enterEditMode = () => {
+    isEditMode.value = true;
+};
 
-const owner = computed(() => {
-    return users.find((user) => user.id === project.value.ownerId) || {};
-});
+const exitEditMode = async () => {
+    isEditMode.value = false;
+    // Update the task in the database
+    try {
+        await api.updateTask(props.id, {
+            name: editedName.value,
+            description: editedDescription.value,
+            stat: editedEtat.value
+        });
+        // Optional: You can emit an event or perform other actions after a successful update
+    } catch (error) {
+        console.error('Failed to update task:', error);
+        // Handle the error (e.g., show a notification to the user)
+    }
+};
 
-const teamMembers = computed(() => project.value.teamMembers || []);
-
-const teamMembersNames = computed(() => {
-    return teamMembers.value.map((userId) => {
-        const user = users.find((u) => u.id === userId);
-        return user ? user.name : '';
-    });
-});
 </script>
 
 <template>
     <div class="task-card">
         <div class="header">
-            <h3>{{ props.name }}</h3>
+            <b-row>
+                <b-col cols="10">
+                    <h3 v-if="!isEditMode">{{ editedName }}</h3>
+                    <input v-else v-model="editedName" />
+                </b-col>
+                <b-col cols="2">
+                    <p v-if="!isEditMode" @click="enterEditMode" class="icon">
+                        <font-awesome-icon icon="pen-to-square" size="xs" />
+                    </p>
+                    <p v-if="isEditMode" @click="exitEditMode" class="icon">
+                        <font-awesome-icon icon="floppy-disk" size="xs" />
+                    </p>
+                </b-col>
+            </b-row>
         </div>
         <div class="content">
-            <p>{{ props.description }}</p>
+            <p v-if="!isEditMode">{{ editedDescription }}</p>
+            <textarea v-else v-model="editedDescription"></textarea>
         </div>
         <div class="footer">
             <div class="info">
-                <p>Project: {{ project.name }}</p>
-                <p>Owner: {{ owner.name }}</p>
-                <p>etat: {{ props.etat }}</p>
-
-                
+                <!-- <p>Project: {{ project.name }}</p> -->
+                <!-- <p>Owner: {{ owner.name }}</p> -->
+                <p v-if="!isEditMode">{{ editedEtat }}</p>
+                <textarea v-else v-model="editedEtat"></textarea>
             </div>
             <!-- Uncomment the following line to display team members -->
             <!-- <p>Team Members: {{ teamMembersNames.join(', ') }}</p> -->
         </div>
     </div>
 </template>
-  
+
+
+
 <style scoped>
 .task-card {
     background-color: #fff;
@@ -79,6 +98,12 @@ const teamMembersNames = computed(() => {
 
 .header h2 {
     margin: 0;
+}
+
+.icon {
+    margin: 0;
+    cursor: pointer;
+    size: 1px;
 }
 
 .content {
