@@ -1,19 +1,24 @@
 <script setup>
-import { ref, computed } from 'vue';
+import { ref } from 'vue';
 import { defineProps } from 'vue';
-import { api } from '../../http-api.js'
+import { api } from '../../http-api.js';
+
 const props = defineProps({
     id: Number,
     name: String,
     description: String,
     projectId: Number,
-    etat: String
+    state: String
 });
-
+const states = ref([
+    { text: 'todo', value: 'todo' },
+    { text: 'progress', value: 'progress' },
+    { text: 'done', value: 'done' }
+])
 const isEditMode = ref(false);
 const editedName = ref(props.name);
 const editedDescription = ref(props.description);
-const editedEtat = ref(props.etat);
+const editedState = ref(props.state);
 
 const enterEditMode = () => {
     isEditMode.value = true;
@@ -26,7 +31,7 @@ const exitEditMode = async () => {
         await api.updateTask(props.id, {
             name: editedName.value,
             description: editedDescription.value,
-            stat: editedEtat.value
+            state: editedState.value
         });
         // Optional: You can emit an event or perform other actions after a successful update
     } catch (error) {
@@ -40,15 +45,15 @@ const exitEditMode = async () => {
 <template>
     <div class="task-card">
         <div class="header">
+            <p v-if="!isEditMode" @click="enterEditMode" class="icon">
+                <font-awesome-icon icon="pen-to-square" size="xs" />
+            </p>
             <b-row>
                 <b-col cols="9">
                     <h3 v-if="!isEditMode">{{ editedName }}</h3>
                     <input v-else v-model="editedName" />
                 </b-col>
                 <b-col cols="3">
-                    <p v-if="!isEditMode" @click="enterEditMode" class="icon">
-                        <font-awesome-icon icon="pen-to-square" size="xs" />
-                    </p>
                     <p v-if="isEditMode" @click="exitEditMode" class="icon">
                         <font-awesome-icon icon="floppy-disk" size="xs" />
                     </p>
@@ -61,18 +66,17 @@ const exitEditMode = async () => {
         </div>
         <div class="footer">
             <div class="info">
-                <!-- <p>Project: {{ project.name }}</p> -->
-                <!-- <p>Owner: {{ owner.name }}</p> -->
-                <p v-if="!isEditMode">{{ editedEtat }}</p>
-                <input v-else v-model="editedEtat" />
+                <p v-if="!isEditMode">{{ editedState }}</p>
+                <select v-else v-model="editedState">
+                    <option v-for="option in states" :value="option.value">
+                        {{ option.text }}
+                    </option>
+                </select>
+
             </div>
-            <!-- Uncomment the following line to display team members -->
-            <!-- <p>Team Members: {{ teamMembersNames.join(', ') }}</p> -->
         </div>
     </div>
 </template>
-
-
 
 <style scoped>
 .task-card {
@@ -83,6 +87,7 @@ const exitEditMode = async () => {
     margin: 10px;
     overflow: hidden;
     transition: box-shadow 0.3s ease;
+    position: relative;
 }
 
 .task-card:hover {
@@ -94,19 +99,20 @@ const exitEditMode = async () => {
     color: #fff;
     padding: 12px;
     border-bottom: 1px solid #2980b9;
-    display: flex;
-    justify-content: space-between;
-    align-items: center;
-}
-
-.header h3 {
-    margin: 0;
-    font-size: 1.5rem;
+    position: relative;
 }
 
 .icon {
     cursor: pointer;
     font-size: 1.2rem;
+    position: absolute;
+    top: 1rem;
+    right: 1rem;
+}
+
+.header h3 {
+    margin: 0;
+    font-size: 1.5rem;
 }
 
 .content {
@@ -128,7 +134,7 @@ const exitEditMode = async () => {
 }
 
 input,
-textarea {
+textarea,select {
     width: 100%;
     height: 3em;
     border: 1px solid #ddd;
@@ -146,4 +152,4 @@ textarea {
     }
 }
 </style>
-  
+
