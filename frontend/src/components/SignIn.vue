@@ -5,7 +5,7 @@ import { useUserStore } from "../stores/userConection";
 import MyModal from './MyModal.vue';
 const store = useUserStore();
 
-const emit = defineEmits(['closeIt']);
+const emit = defineEmits(['closeIt',"openSignup"]);
 const data = reactive({
   username: '',
   password: '',
