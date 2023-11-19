@@ -11,9 +11,9 @@ const {userInfo} = toRefs(store);
 <template>
   <div class="container">
     <div class="sidenav">
-      <div class="userName">{{ isConnected ? userInfo.username : "" }}</div>
-      <router-link class="link" to="/">home</router-link>
-      <router-link v-if="isConnected" class="link" to="/projects">Projects</router-link>
+      <div class="userName">{{ isConnected ?  "&#128125; "+ userInfo.username : "" }}</div>
+      <router-link class="link" to="/"> &#127968; home</router-link>
+      <router-link v-if="isConnected" class="link" to="/projects"> &#128203; Projects</router-link>
       <router-link v-if="isConnected" class="link" to="/test">test</router-link>
       <!-- <router-link class="link" to="/sprints">sprints</router-link> -->
     </div>

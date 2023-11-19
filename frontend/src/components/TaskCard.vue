@@ -45,9 +45,7 @@ const exitEditMode = async () => {
 <template>
     <div class="task-card">
         <div class="header">
-            <p v-if="!isEditMode" @click="enterEditMode" class="icon">
-                <font-awesome-icon icon="pen-to-square" size="xs" />
-            </p>
+
             <b-row>
                 <b-col cols="9">
                     <h3 v-if="!isEditMode">{{ editedName }}</h3>
@@ -55,7 +53,12 @@ const exitEditMode = async () => {
                 </b-col>
                 <b-col cols="3">
                     <p v-if="isEditMode" @click="exitEditMode" class="icon">
+                        <!-- &#128190; -->
                         <font-awesome-icon icon="floppy-disk" size="xs" />
+                    </p>
+                    <p v-else @click="enterEditMode" class="icon">
+                        <font-awesome-icon icon="pen-to-square" size="xs" />
+                        <!-- &#128221; -->
                     </p>
                 </b-col>
             </b-row>
@@ -135,7 +138,8 @@ const exitEditMode = async () => {
 }
 
 input,
-textarea,select {
+textarea,
+select {
     width: 100%;
     height: 3em;
     border: 1px solid #ddd;
