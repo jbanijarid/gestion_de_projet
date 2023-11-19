@@ -28,3 +28,17 @@ export const getAllProjects = async (req, res) => {
         res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
 }
+
+export const getAllProjectsByUserId = async (req, res) => {
+    try {
+        const userId = req.params.userId;
+        const projects = await findAllProjects(); 
+        const filteredProjects = projects.data.filter(
+            (project) => project.owner.toString() === userId || project.teamMembers.includes(userId)
+        );
+        res.status(projects.success ? 200 : 404).json({ success:projects.success, data: filteredProjects });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+};

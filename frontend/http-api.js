@@ -25,7 +25,8 @@ export const api = {
   getTaskById: (id) => requests.get(`tasks/${id}`),
   addTask: (body) => requests.post('tasks', body),
   getTasks: () => requests.get(`tasks`,{}),
-  updateTask:(id,body)=>requests.put(`tasks/${id}`,body)
+  updateTask:(id,body)=>requests.put(`tasks/${id}`,body),
+  getAllProjectsByUserId : (id) => requests.get(`/projects/user/${id}`)
 };
 
 

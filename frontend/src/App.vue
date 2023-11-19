@@ -32,10 +32,10 @@ const {userInfo} = toRefs(store);
 .sidenav {
   width: 12vW;
   height: 100%;
-  background-color: #e2e2e2;
+  background-color: var(--background-light);
   /* color: rgba(25, 23, 17, 0.6); */
   color: inherit;
-  border-right: 1px solid #d7d7d7;
+  border-right: 1px solid var(--border-light);
   padding-top: 12em;
   position: fixed;
   z-index: 1;
@@ -47,20 +47,23 @@ const {userInfo} = toRefs(store);
 }
 
 .sidenav .active {
-  color: rgba(25, 23, 17, 0.6);
+  color: var(--text-primary);
 }
 
 .link,
 .userName {
   padding: 6px 8px 6px 16px;
   text-decoration: none;
-  font-size: 25px;
-  color: rgba(25, 23, 17, 0.6);
+  font-size: var(--font-size-max) ;
+  color: var(--text-light) ;
   display: block;
+}
+.link {
+  font-weight: bold;
 }
 
 .link:hover {
-  color: rgba(25, 23, 17, 0.889);
+  color: var(--text-primary);
 }
 
 .main {

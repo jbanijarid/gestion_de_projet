@@ -5,8 +5,10 @@ import { ref ,computed } from 'vue';
 export const useUserStore = defineStore('user-connection', () => {
     const user = ref(null);
     const connected = ref(false);
-
+    
     const userInfo = computed(() =>user.value);
+    const getUseeId = computed(() =>user.value?._id);
+
     const setUser = (userData) => {
         user.value = userData ;
     }
@@ -19,5 +21,7 @@ export const useUserStore = defineStore('user-connection', () => {
     const deConnecte = () => {
         connected.value = false;
     }
-    return { user, connected,userInfo,setUser, isConnected, connecte, deConnecte }
+
+    
+    return {getUseeId, user, connected,userInfo,setUser, isConnected, connecte, deConnecte }
 });

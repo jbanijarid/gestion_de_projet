@@ -157,6 +157,27 @@ router.route('/projects/:id').get(projectController.getProject);
  */
 router.route('/projects').post(projectController.addProject);
 
+/**
+ * @openapi
+ * /projects/user/{userId}:
+ *   get:
+ *     summary: Get all projects of a gevin user ID 
+ *     description: Get a list of all projects of the user.
+ *     parameters:
+ *       - in: path
+ *         name: userId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The userId of the project to get all it's tasks.
+ *     responses:
+ *       '200':
+ *         description: Successful response with a list of tasks of a gevin project.
+ *     tags:
+ *       - Projects
+ */
+router.route('/projects/user/:userId').get(projectController.getAllProjectsByUserId);
+
 // ****************************************************** TASKS : 
 
 /**
@@ -177,8 +198,8 @@ router.route('/tasks').get(taskController.getAllTasks);
  * @openapi
  * /tasks/project/{projectId}:
  *   get:
- *     summary: Get all tasks
- *     description: Get a list of all tasks.
+ *     summary: Get all tasks of a project
+ *     description: Get a list of all project.
  *     parameters:
  *       - in: path
  *         name: projectId
