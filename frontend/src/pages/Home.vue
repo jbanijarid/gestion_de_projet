@@ -60,7 +60,10 @@ const signout = ()=>{
   
 
   
-<style>
+<style scoped>
+h1 {
+  font-size: var(--font-size-title);
+}
 /* Add your styles here */
 </style>
   

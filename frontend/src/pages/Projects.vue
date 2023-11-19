@@ -71,7 +71,7 @@ const filteredProjects = computed(() => {
   border: 1px solid #ccc;
   border-radius: 5px;
   background-color: white;
-  color: #666;
+  color: var(--text-light);
 }
 
 .project-list {
@@ -81,8 +81,8 @@ const filteredProjects = computed(() => {
 }
 
 .project-item {
-  background-color: #f5f5f5;
-  border: 1px solid #ddd;
+  background-color: var(--background-light);
+  border: 1px solid var(--border-light);
   border-radius: 5px;
   margin-bottom: 10px;
   padding: 10px;
@@ -101,18 +101,18 @@ const filteredProjects = computed(() => {
 }
 
 .project-name {
-  font-size: 18px;
+  font-size: var(--font-size-max);
   font-weight: bold;
 }
 
 .owner-info {
-  font-size: 14px;
-  color: #666;
+  font-size: var(--font-size-min);
+  color: var(--text-light);
 }
 
 .no-projects-message {
-  margin-top: 15px;
-  color: #888;
+  margin-top: var(--font-size-min);
+  color: var(--text-light);
 }
 </style>
 

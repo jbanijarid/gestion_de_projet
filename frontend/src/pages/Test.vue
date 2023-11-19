@@ -2,8 +2,13 @@
 </script>
 
 <template>
-Test
+    <h1>
+        Test
+    </h1>
 </template>
 
-<style>
+<style scoped>
+h1 {
+    font-size: var(--font-size-title);
+}
 </style>
