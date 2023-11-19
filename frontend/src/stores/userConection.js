@@ -7,7 +7,7 @@ export const useUserStore = defineStore('user-connection', () => {
     const connected = ref(false);
     
     const userInfo = computed(() =>user.value);
-    const getUserName = computed(() =>user.value?.username);
+    const getUseeId = computed(() =>user.value?._id);
 
     const setUser = (userData) => {
         user.value = userData ;
@@ -23,5 +23,5 @@ export const useUserStore = defineStore('user-connection', () => {
     }
 
     
-    return {getUserName, user, connected,userInfo,setUser, isConnected, connecte, deConnecte }
+    return {getUseeId, user, connected,userInfo,setUser, isConnected, connecte, deConnecte }
 });
