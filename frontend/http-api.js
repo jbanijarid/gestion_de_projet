@@ -11,6 +11,7 @@ const requests = {
   get: (url, params) => instance.get(url, { params }).then(responseBody),
   post: (url, body) => instance.post(url, body).then(responseBody),
   put:(url,body)=> instance.put(url,body).then(responseBody),
+  delete:(url)=>{instance.delete(url).then(responseBody)}
 };
 
 export const api = {
@@ -22,11 +23,12 @@ export const api = {
   getProjectById: (id) => requests.get(`projects/${id}`),
   addProject: (body) => requests.post('projects', body),
   getAllTasksByProjectId: (id) => requests.get(`tasks/${id}`),
+  getAllProjectsByUserId : (id) => requests.get(`/projects/user/${id}`),
   getTaskById: (id) => requests.get(`tasks/${id}`),
   addTask: (body) => requests.post('tasks', body),
   getTasks: () => requests.get(`tasks`,{}),
   updateTask:(id,body)=>requests.put(`tasks/${id}`,body),
-  getAllProjectsByUserId : (id) => requests.get(`/projects/user/${id}`)
+  deleteTask:(id)=> requests.delete(`tasks/${id}`),
 };
 
 

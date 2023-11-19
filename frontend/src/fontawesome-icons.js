@@ -1,5 +1,5 @@
-import {FontAwesomeIcon} from "@fortawesome/vue-fontawesome";
-import {library} from "@fortawesome/fontawesome-svg-core";
+import { FontAwesomeIcon } from "@fortawesome/vue-fontawesome";
+import { library } from "@fortawesome/fontawesome-svg-core";
 
 
 import {
@@ -10,13 +10,15 @@ import {
     faLayerGroup,
     faSquarePollHorizontal,
     faClock,
+
     faPenToSquare,
     faFloppyDisk,
+    faTrash
 
 } from "@fortawesome/free-solid-svg-icons";
 
 import {
-    faFacebookF ,
+    faFacebookF,
     faYoutube,
     faTwitter,
     faTwitch,
@@ -24,7 +26,7 @@ import {
     faInstagram,
     faGithub,
 
-} from "@fortawesome/free-brands-svg-icons" ;
+} from "@fortawesome/free-brands-svg-icons";
 
 library.add(
     faHome,
@@ -34,8 +36,11 @@ library.add(
     faLayerGroup,
     faSquarePollHorizontal,
     faClock,
+
     faPenToSquare,
     faFloppyDisk,
+    faTrash,
+    
     faFacebookF,
     faYoutube,
     faTwitter,
