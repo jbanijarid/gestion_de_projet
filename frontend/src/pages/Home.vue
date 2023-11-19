@@ -53,7 +53,7 @@ const signout = ()=>{
       <SignIn @close-it="closeModal('signin')" @open-signup="openModal('signup')"/>
     </div>
     <div class="signup" v-if="open.signup">
-      <SignUp @close-it="closeModal('signup')" />
+      <SignUp @close-it="closeModal('signup')" @open-signin="openModal('signin')"/>
     </div>
   </div>
 </template>
