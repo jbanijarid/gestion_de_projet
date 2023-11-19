@@ -1,19 +1,18 @@
 <script setup>
 import { ref, onMounted } from 'vue';
-import emitter from '../eventBus';
+import { api } from '../../http-api';
 
-const userInfo = ref(null);
-onMounted(() => {
-  emitter.on('set-user-info', (user) => {
-    userInfo.value = user;
-  });
-});
 </script>
 
 <template>
-    Project 
-<!-- //TODO : display all the project that has userInfo.userName as an owner or teamMembers -->
+    <div class="allTasks">
+project
+    </div>
 </template>
 
-<style>
+<style scoped>
+.allTasks {
+    margin: 0;
+}
+
 </style>

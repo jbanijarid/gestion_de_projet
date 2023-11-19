@@ -6,7 +6,7 @@ import { useUserStore } from "../stores/userConection";
 import MyModal from './MyModal.vue';
 const store = useUserStore();
 
-const emit = defineEmits(['closeIt']);
+const emit = defineEmits(['closeIt',"openSignin"]);
 
 const data = reactive({
   username: '',
@@ -26,8 +26,9 @@ const register = async () => {
   try {
     const response = await api.addUSer(userData);
     closeModal();
-    setUserData(response.data)
-    connect();
+    // setUserData(response.data)
+    // connect();
+    closeSignupAndOpenSginin();
   } catch (error) {
     console.log(error.message);
   }
@@ -36,15 +37,12 @@ const closeModal = () => {
   emit('closeIt');
 }
 
-const connect = () => {
-  store.connecte();
-};
-
-const setUserData = (data) => {
-  store.setUser(data);
+const closeSignupAndOpenSginin = () => {
+  closeModal();
+  emit("openSignin");
 }
-</script>
 
+</script>
 <!-- SignUp.vue -->
 <template>
   <my-modal title="Sign Up" @close-it="closeModal">
