@@ -20,20 +20,13 @@ const routes = [
       name : "projects",
       component : () => import("./pages/Projects.vue"),
       props : true
-    }
-    // {
-    //   path : "/signin",
-    //   name : "signin",
-    //   component : () => import("./components/SignIn.vue"),
-    //   props : true
-    // },
-    // {
-    //   path : "/signup",
-    //   name : "signup",
-    //   component : () => import("./components/SignUp.vue"),
-    //   props : true
-    // }
-  
+    },
+    {
+      path: '/project/:projectId',
+      name: 'project',
+      component:  () => import("./components/Project.vue"),
+      props: true, // Enable route params as props
+    },
   ];
   
   const router = createRouter({
