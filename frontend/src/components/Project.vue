@@ -4,18 +4,21 @@ import { api } from '../../http-api';
 
 const props = defineProps(['projectId']);
 const project = ref(null);
-
+const newMemberUsername = ref('');
+const message = ref(null);
 onMounted(async () => {
     try {
-        const response = await api.getProjectById(props.projectId);
-        project.value = response.data;
+        await fetchProjectDetails();
     } catch (error) {
         console.error('Failed to fetch project details:', error);
         // Handle error (e.g., show a notification to the user)
     }
 });
 
-
+const fetchProjectDetails = async () => {
+    const response = await api.getProjectById(props.projectId);
+    project.value = response.data;
+};
 const getRandomEmoji = () => {
     // TODO: Get a random number between 128512 and 129488
     const min = 128512;
@@ -23,43 +26,124 @@ const getRandomEmoji = () => {
     const randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
     return `&#${randomNum}`;
 };
+
+const addMemberToProject = async () => {
+    try {
+        if(newMemberUsername.value !== ''){
+            const resp = await api.getUserByName(newMemberUsername.value);
+            console.log(resp.data._id);
+            const response = await api.addProjectMember(props.projectId, {memberId:resp.data._id});
+            newMemberUsername.value = '';
+            await fetchProjectDetails();
+        }
+    } catch (error) {
+        console.error('Failed to add a new member to the project:', error);
+        message.value = "error mesage "
+    }
+};
+
+const removeMemberFromProject = async (memberId) => {
+    try {
+        const response = await api.removeProjectMember(props.projectId, memberId );
+        // Fetch updated project details after removing a member
+        console.log(response);
+        await fetchProjectDetails();
+    } catch (error) {
+        console.error('Failed to remove a member from the project:', error);
+        // Handle error (e.g., show a notification to the user)
+    }
+};
 </script>
-
-
 <template>
-    <div class="project-details" v-if="project">
-        <h1>{{ project.name }}</h1>
-        <div class="details">
-            <!-- <p><strong>Owner:</strong> {{ project.owner }}</p> -->
-            <p><strong>Description:</strong> {{ project.description }}</p>
-            <!-- Add more details as needed -->
-        </div>
-        <!-- Display all teamMembers with a random emoji -->
-        <div v-for="member in project.teamMembers" :key="member._id" >
-            <div class="userInf">
-                <p v-html="getRandomEmoji()"> </p> {{ member.username }}
+    <div class="project-details-container">
+        <div v-if="project" class="project-details">
+            <h1>{{ project.name }}</h1>
+            <div class="details">
+                <p><strong>Description:</strong> {{ project.description }}</p>
             </div>
+
+            <!-- Display all teamMembers with a random emoji -->
+            <div class="team-members">
+                <div v-for="member in project.teamMembers" :key="member._id" class="member-card">
+                    <p v-html="getRandomEmoji()"></p>
+                    <span class="member-username">{{ member.username }}</span>
+                    <span class="remove-member-icon" @click="removeMemberFromProject(member._id)">❌</span>
+                </div>
+            </div>
+
+            <!-- Add a new member to the project -->
+            <div class="add-member-section">
+                <input v-model="newMemberUsername" placeholder="New Member Username" class="new-member-input" />
+                <b-button variant="success" class="btn" @click="addMemberToProject">Add Member</b-button>
+            </div>
+            <p v-if="message">{{message}}</p>
+
+            <h2 class="kanban-title">Ici le Kanban de Project &#128520;</h2>
         </div>
-        <h1>Ici le Kanban de Project &#128520;</h1>
-    </div>
-    <div v-else>
-        <!-- Handle loading or error state -->
-        <b-spinner type="grow" label="Loading..."></b-spinner>
+
+        <div v-else>
+            <!-- Handle loading or error state -->
+            <b-spinner type="grow" label="Loading..."></b-spinner>
+        </div>
     </div>
 </template>
-
+  
 <style scoped>
-.project-details {
+.project-details-container {
+    max-width: 800px;
     margin: 0 auto;
-    /* max-width: 600px; */
-    /* padding: 20px; */
+    padding: 20px;
+}
+
+.project-details {
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
 .details {
-    margin-top: 20px;
+    margin-bottom: 20px;
 }
-.userInf {
+
+.team-members {
     display: flex;
-    flex-direction: row;
+    flex-wrap: wrap;
+}
+
+.member-card {
+    margin: 0 10px 10px 0;
+    padding: 10px;
+    background-color: #ffffff;
+    border: 1px solid #dee2e6;
+    border-radius: 4px;
+    display: flex;
+    align-items: center;
+}
+
+.member-card p {
+    margin: 0;
+    margin-right: 10px;
+}
+
+.member-username {
+    font-weight: bold;
+}
+
+.add-member-section {
+    margin-top: 20px;
+    display: flex;
+    align-items: center;
+}
+
+.new-member-input {
+    flex-grow: 1;
+    margin-right: 10px;
+}
+
+.kanban-title {
+    margin-top: 20px;
+    font-size: 24px;
 }
 </style>
+  

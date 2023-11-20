@@ -83,8 +83,31 @@ router.route('/users/:id').get(userController.getUser);
  */
 router.route('/users').post(userController.addUser);
 
-router.route('/users/login').post(userController.loginUser);
 
+/**
+ * @openapi
+ * /users/name/{name}:
+ *   get:
+ *     summary: Get a user by name.
+ *     description: Returns a single user by its name.
+ *     parameters:
+ *       - in: path
+ *         name: name
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The name of the user to retrieve.
+ *     responses:
+ *       200:
+ *         description: The user with the specified name.
+ *       404:
+ *         description: user not found.
+ *     tags:
+ *       - Users
+ */
+router.route('/users/name/:name').get(userController.getUserByName);
+
+router.route('/users/login').post(userController.loginUser);
 // ****************************************************** Project : 
 
 /**

@@ -60,7 +60,7 @@ const creatProject = async () => {
   }
 };
 const goToProject = (id)=>{
-  console.log(id);
+  // console.log(id);
   router.push ({name: 'project', params: {projectId: id}});
 }
 </script>
