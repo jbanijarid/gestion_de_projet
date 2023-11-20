@@ -72,4 +72,16 @@ export const getUserByUsername = async (username) => {
     }
 };
 
+export const getUserByEmail = async (email) => {
+    try {
+        const user = await User.findOne({ email: email });
+        if (!user) {
+            return { success: false, message: 'User not found' };
+        }
+        return { success: true, data: user };
+    } catch (error) {
+        return { success: false, message: 'Error getting user: ' + error };
+    }
+};
+
 

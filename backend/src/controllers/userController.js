@@ -3,7 +3,8 @@ import {
   findAllUsers,
   createUser,
   getUserById,
-  getUserByUsername
+  getUserByUsername,
+  getUserByEmail
 } from '../models/user.js';
 
 
@@ -37,10 +38,10 @@ export const getAllUsers = async (req, res) => {
 };
 
 export const loginUser = async (req, res) => {
+  console.log(req.body.email);
   try {
-    const user = await getUserByUsername(req.body.username);
-    //console.log(username);
-    // console.log(user.data.username);
+    const user = await getUserByEmail(req.body.email);
+    //console.log(user.data.username);
     if (!user) {
       res.status(500).json({ success: false, message: 'User not found' });
     }
