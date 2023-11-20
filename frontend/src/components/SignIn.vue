@@ -7,14 +7,14 @@ const store = useUserStore();
 
 const emit = defineEmits(['closeIt',"openSignup"]);
 const data = reactive({
-  username: '',
+  email: '',
   password: '',
   errorMessage: ''
 });
 
 const login = async () => {
   const userData = {
-    username: data.username,
+    email: data.email,
     password: data.password
   };
   try {
@@ -30,9 +30,9 @@ const login = async () => {
     setUserData(response.data);
   } catch (error) {
     console.error(error.message);
-    data.errorMessage = 'Nom d\'utilisateur ou mot de passe incorrect.';
+    data.errorMessage = 'Email ou mot de passe incorrect.';
   }
-  console.log('Connexion avec', data.username, data.password);
+  console.log('Connexion avec', data.email, data.password);
 };
 
 const closeModal = () => {
@@ -63,8 +63,8 @@ const setUserData = (data) => {
     <div class="signin-container">
       <form @submit.prevent="login" class="signin-form">
         <div class="form-group">
-          <label for="username">Nom d'utilisateur:</label>
-          <input type="text" id="username" v-model="data.username" required />
+          <label for="email">Adresse e-mail:</label>
+          <input type="email" id="email" v-model="data.email" required />
         </div>
 
         <div class="form-group">
