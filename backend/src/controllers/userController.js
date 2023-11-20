@@ -55,3 +55,15 @@ export const loginUser = async (req, res) => {
     res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 };
+
+export const getUserByName = async (req, res) => {
+  try {
+    const user = await getUserByUsername(req.params.name);
+    if (!user) {
+      res.status(500).json({ success: false, message: 'User not found' });
+    }
+    res.status(user.success ? 200 : 404).json(user);
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
