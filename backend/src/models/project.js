@@ -26,7 +26,7 @@ export const createProject = async (body) => {
 // Controller to get a project by ID
 export const getProjectById = async (id) => {
     try {
-        const project = await Project.findById(id);
+        const project = await Project.findById(id).populate('teamMembers');
         if (!project) {
             return { success: false, message: 'Project not found' };
         }
