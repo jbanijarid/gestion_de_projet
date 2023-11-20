@@ -59,3 +59,45 @@ export const findAllProjects = async () => {
         return { success: false, message: 'Error finding Projects:' + error };
     }
 }
+
+export const deleteProject = async (projectId) => {
+    try {
+        const project = await Project.findByIdAndRemove(projectId);
+        if (!project) {
+            return { success: false, message: 'Project not found to be deleted' };
+        }
+        return { success: true, message: 'Project deleted successfully' };
+    } catch (error) {
+        return { success: false, message: 'Error deleting task: ' + error };
+    }
+}
+
+// Add a new member to the list of project members
+export const addTeamMember = async (projectId, memberId) => {
+    try {
+        // Check if the user is already a team member
+        const project = await Project.findOne({ _id: projectId, teamMembers: memberId });
+        if (project) {
+            return { success: false, message: 'User is already a team member in the project' };
+        }
+        // If the user is not a team member, add them to the project
+        const updatedProject = await Project.findByIdAndUpdate(
+            projectId,
+            { $push: { teamMembers: memberId } },
+            { new: true }
+        );
+        return { success: true, data: updatedProject, message: 'Member added to the project successfully' };
+    } catch (error) {
+        return { success: false, message: 'Error adding member to the project: ' + error };
+    }
+}
+
+// Remove a team member from the list
+export const removeTeamMember = async (projectId, memberId) => {
+    try {
+        const project = await Project.findByIdAndUpdate(projectId, { $pull: { teamMembers: memberId } }, { new: true });
+        return { success: true, data: project, message: 'Member removed from the project successfully' };
+    } catch (error) {
+        return { success: false, message: 'Error removing member from the project: ' + error };
+    }
+}

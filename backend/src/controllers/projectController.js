@@ -1,4 +1,12 @@
-import { countAllProjects, findAllProjects, createProject, getProjectById } from "../models/project.js";
+import {
+    countAllProjects,
+    findAllProjects,
+    createProject,
+    getProjectById,
+    deleteProject,
+    addTeamMember,
+    removeTeamMember
+} from "../models/project.js";
 
 export const addProject = async (req, res) => {
     try {
@@ -32,13 +40,48 @@ export const getAllProjects = async (req, res) => {
 export const getAllProjectsByUserId = async (req, res) => {
     try {
         const userId = req.params.userId;
-        const projects = await findAllProjects(); 
+        const projects = await findAllProjects();
         const filteredProjects = projects.data.filter(
             (project) => project.owner.toString() === userId || project.teamMembers.includes(userId)
         );
-        res.status(projects.success ? 200 : 404).json({ success:projects.success, data: filteredProjects });
+        res.status(projects.success ? 200 : 404).json({ success: projects.success, data: filteredProjects });
     } catch (error) {
         console.error(error);
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+};
+
+export const removeProject = async (req, res) => {
+    try {
+        const response = await deleteProject(req.params.id);
+        res.status(response.success ? 200 : 404).json(response);
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+}
+
+
+export const addMemberToProject = async (req, res) => {
+    try {
+        const projectId = req.params.projectId;
+        const memberId = req.body.memberId; // Assuming memberId is provided in the request body
+        const response = await addTeamMember(projectId, memberId);
+
+        res.status(response.success ? 200 : 400).json(response);
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+};
+
+export const removeMemberFromProject = async (req, res) => {
+    try {
+        const projectId = req.params.projectId;
+        const memberId = req.params.memberId; // Assuming memberId is provided in the request body
+
+        const response = await removeTeamMember(projectId, memberId);
+
+        res.status(response.success ? 200 : 400).json(response);
+    } catch (error) {
         res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
 };

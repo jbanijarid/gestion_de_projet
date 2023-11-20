@@ -20,10 +20,11 @@ onMounted(async () => {
     <div class="project-details" v-if="project">
         <h1>{{ project.name }}</h1>
         <div class="details">
-            <p><strong>Owner:</strong> {{ project.owner }}</p>
+            <!-- <p><strong>Owner:</strong> {{ project.owner }}</p> -->
             <p><strong>Description:</strong> {{ project.description }}</p>
             <!-- Add more details as needed -->
         </div>
+        <h1>Ici le Kanban de Project &#128520; </h1>
     </div>
     <div v-else>
         <!-- Handle loading or error state -->
