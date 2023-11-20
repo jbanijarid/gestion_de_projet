@@ -178,6 +178,91 @@ router.route('/projects').post(projectController.addProject);
  */
 router.route('/projects/user/:userId').get(projectController.getAllProjectsByUserId);
 
+/**
+ * @openapi
+ * /projects/{id}:
+ *   delete:
+ *     summary: delete a project by ID.
+ *     description: none
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the project to retrieve.
+ *     responses:
+ *       200:
+ *         description: project deleted successfully
+ *       404:
+ *         description: Error deleting project
+ *     tags:
+ *       - Projects
+ */
+router.route('/projects/:id').delete(projectController.removeProject);
+
+/**
+ * @openapi
+ * /projects/{projectId}/members:
+ *   put:
+ *     summary: Add Member To Project
+ *     description: Add a new member to the project.
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the project.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *          schema:
+ *              type: object
+ *              properties:
+ *                memberId:
+ *                  type: string
+ *                  description: The ID of the member to be added.
+ *     responses:
+ *       200:
+ *         description: Member added to the project successfully.
+ *       404:
+ *         description: Error adding member to the project.
+ *     tags:
+ *       - Projects
+ */
+router.route('/projects/:projectId/members').put(projectController.addMemberToProject);
+
+/**
+ * @openapi
+ * /projects/{projectId}/members/{memberId}:
+ *   delete:
+ *     summary: Remove Member From Project
+ *     description: Remove a member from the project.
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the project.
+ *       - in: path
+ *         name: memberId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the member to be removed.
+ *     responses:
+ *       200:
+ *         description: Member removed from the project successfully.
+ *       404:
+ *         description: Error removing member from the project.
+ *     tags:
+ *       - Projects
+ */
+router.route('/projects/:projectId/members/:memberId').delete(projectController.removeMemberFromProject);
+
 // ****************************************************** TASKS : 
 
 /**
