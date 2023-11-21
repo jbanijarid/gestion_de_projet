@@ -11,8 +11,12 @@ onMounted(async () => {
 });
 
 const fetchTasks = async () => {
-  const resp = await api.getTasks();
-  taskList.value = resp.data;
+  try {
+    const resp = await api.getTasks();
+    taskList.value = resp.data;
+  } catch (error) {
+    console.error('Erreur lors de la récupération des tâches:', error);
+  }
 };
 
 const handleTaskDeleted = (taskId) => {
@@ -21,26 +25,20 @@ const handleTaskDeleted = (taskId) => {
 };
 
 
-
-const onDragEnd = (etat, movedTask) => {
-    // const taskId = movedTask.originalTarget.__vnode.ctx.props.id;
+const onDragEnd = async (etat, movedTask) => {
+  try {
     const taskId = movedTask.target.__vnode.ctx.props.id;
-    taskList.value.forEach((task, index) => {
-        if (task._id === taskId) {
-          console.log(task.state);
-          taskList.value[index].state = etat;
-          console.log(task.name);
-          console.log(task.description);
-          console.log(task.state);
+    const taskIndex = taskList.value.findIndex(task => task._id === taskId);
 
-        }
-    });
-
+    if (taskIndex !== -1) {
+      taskList.value[taskIndex].state = etat;
+      await api.updateTask(taskId, { state: etat });
+    }
+  } catch (error) {
+    console.error('Erreur lors du déplacement de la tâche:', error);
+  }
 };
 
-const rowDrag = (movedTask) =>{
-
-};
 </script>
 
 <template>
@@ -49,7 +47,13 @@ const rowDrag = (movedTask) =>{
             <div class="col-md-4">
                 <div class="task-column" data-etat="todo">
                     <h3>To Do</h3>
-                    <draggable :list="taskList.filter(task => task.state === 'todo')" @drop="movedTask => onDragEnd('todo', movedTask)" group="taskList" tag="div">
+                    <draggable 
+                      :list="taskList.filter(task => task.state === 'todo')" 
+                      @drop="movedTask => onDragEnd('todo', movedTask)" 
+                      group="taskList" 
+                      tag="div"
+                      :item-key="task => task._id"
+                    >
                         <template #item="{ element }">
                           <TaskCard
                           :key="element._id"
@@ -67,7 +71,13 @@ const rowDrag = (movedTask) =>{
             <div class="col-md-4">
                 <div class="task-column" data-etat="progress">
                     <h3>In Progress</h3>
-                    <draggable :list="taskList.filter(task => task.state === 'progress')" @drop="movedTask => onDragEnd('progress', movedTask)" group="taskList" tag="div">
+                    <draggable 
+                      :list="taskList.filter(task => task.state === 'progress')" 
+                      @drop="movedTask => onDragEnd('progress', movedTask)" 
+                      group="taskList" 
+                      tag="div"
+                      :item-key="task => task._id"
+                    >
                         <template #item="{ element }">
                           <TaskCard
                           :key="element._id"
@@ -85,7 +95,13 @@ const rowDrag = (movedTask) =>{
             <div class="col-md-4">
                 <div class="task-column" data-etat="done">
                     <h3>Done</h3>
-                    <draggable :list="taskList.filter(task => task.state === 'done')" @drop="movedTask => onDragEnd('done', movedTask)" group="taskList" tag="div">
+                    <draggable 
+                      :list="taskList.filter(task => task.state === 'done')" 
+                      @drop="movedTask => onDragEnd('done', movedTask)" 
+                      group="taskList" 
+                      tag="div"
+                      :item-key="task => task._id"
+                    >
                       <template #item="{ element }">
                         <TaskCard
                           :key="element._id"

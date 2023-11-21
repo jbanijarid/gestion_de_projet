@@ -4,10 +4,10 @@ import { defineProps } from 'vue';
 import { api } from '../../http-api.js';
 const emit = defineEmits(['taskDeleted']);
 const props = defineProps({
-    id: Number,
+    id: String,
     name: String,
     description: String,
-    projectId: Number,
+    projectId: String,
     state: String
 });
 
@@ -63,7 +63,7 @@ const deleteTask = async () => {
 </script>
 
 <template>
-    <div class="task-card">
+    <div class="task-card" >
         <div class="header">
             <b-row v-if="!deleting">
                 <b-col cols="9">
