@@ -2,93 +2,99 @@
 import { onMounted, defineProps, ref } from 'vue';
 import { api } from '../../http-api';
 import Kanban from '../pages/Kanban.vue';
+import router from '../router';
 
 const props = defineProps(['projectId']);
 const project = ref(null);
 const newMemberUsername = ref('');
 const message = ref(null);
+
 onMounted(async () => {
-    try {
-        await fetchProjectDetails();
-    } catch (error) {
-        console.error('Failed to fetch project details:', error);
-        // Handle error (e.g., show a notification to the user)
-    }
+  try {
+    await fetchProjectDetails();
+  } catch (error) {
+    console.error('Failed to fetch project details:', error);
+    // Handle error (e.g., show a notification to the user)
+  }
 });
 
 const fetchProjectDetails = async () => {
-    const response = await api.getProjectById(props.projectId);
-    project.value = response.data;
+  const response = await api.getProjectById(props.projectId);
+  project.value = response.data;
 };
+
 const getRandomEmoji = () => {
-    // TODO: Get a random number between 128512 and 129488
-    const min = 128512;
-    const max = 128567;
-    const randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
-    return `&#${randomNum}`;
+  const min = 128512;
+  const max = 128567;
+  const randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
+  return `&#${randomNum}`;
 };
 
 const addMemberToProject = async () => {
-    try {
-        if(newMemberUsername.value !== ''){
-            const resp = await api.getUserByName(newMemberUsername.value);
-            console.log(resp.data._id);
-            const response = await api.addProjectMember(props.projectId, {memberId:resp.data._id});
-            newMemberUsername.value = '';
-            await fetchProjectDetails();
-        }
-    } catch (error) {
-        console.error('Failed to add a new member to the project:', error);
-        message.value = "error mesage "
+  try {
+    if (newMemberUsername.value !== '') {
+      const resp = await api.getUserByName(newMemberUsername.value);
+      console.log(resp.data._id);
+      const response = await api.addProjectMember(props.projectId, { memberId: resp.data._id });
+      newMemberUsername.value = '';
+      await fetchProjectDetails();
     }
+  } catch (error) {
+    console.error('Failed to add a new member to the project:', error);
+    message.value = 'error mesage ';
+  }
 };
 
 const removeMemberFromProject = async (memberId) => {
-    try {
-        const response = await api.removeProjectMember(props.projectId, memberId );
-        // Fetch updated project details after removing a member
-        console.log(response);
-        await fetchProjectDetails();
-    } catch (error) {
-        console.error('Failed to remove a member from the project:', error);
-        // Handle error (e.g., show a notification to the user)
-    }
+  try {
+    const response = await api.removeProjectMember(props.projectId, memberId);
+    console.log(response);
+    await fetchProjectDetails();
+  } catch (error) {
+    console.error('Failed to remove a member from the project:', error);
+  }
 };
+
+const goToSprints = () => {
+  router.push({ name: 'sprintProject', params: { projectId: props.projectId } });
+};
+
 </script>
+
 <template>
     <div class="project-details-container">
-        <div v-if="project" class="project-details">
-            <h1>{{ project.name }}</h1>
-            <div class="details">
-                <p><strong>Description:</strong> {{ project.description }}</p>
-            </div>
-
-            <!-- Display all teamMembers with a random emoji -->
-            <div class="team-members">
-                <div v-for="member in project.teamMembers" :key="member._id" class="member-card">
-                    <p v-html="getRandomEmoji()"></p>
-                    <span class="member-username">{{ member.username }}</span>
-                    <span class="remove-member-icon" @click="removeMemberFromProject(member._id)">❌</span>
-                </div>
-            </div>
-
-            <!-- Add a new member to the project -->
-            <div class="add-member-section">
-                <input v-model="newMemberUsername" placeholder="New Member Username" class="new-member-input" />
-                <b-button variant="success" class="btn" @click="addMemberToProject">Add Member</b-button>
-            </div>
-            <p v-if="message">{{message}}</p>
-
-            <!-- <h2 class="kanban-title">Ici le Kanban de Project &#128520;</h2> -->
-            <Kanban :id-project="props.projectId" />
+      <div v-if="project" class="project-details">
+        <h1>{{ project.name }}</h1>
+        <div class="create-sprint-container">
+          <button class="btn" @click="goToSprints">Go to Sprints</button>
         </div>
-
-        <div v-else>
-            <!-- Handle loading or error state -->
-            <b-spinner type="grow" label="Loading..."></b-spinner>
+        <div class="details">
+          <p><strong>Description:</strong> {{ project.description }}</p>
         </div>
+        <!-- Display all teamMembers with a random emoji -->
+        <div class="team-members">
+          <div v-for="member in project.teamMembers" :key="member._id" class="member-card">
+            <p v-html="getRandomEmoji()"></p>
+            <span class="member-username">{{ member.username }}</span>
+            <span class="remove-member-icon" @click="removeMemberFromProject(member._id)">❌</span>
+          </div>
+        </div>
+        <!-- Add a new member to the project -->
+        <div class="add-member-section">
+          <input v-model="newMemberUsername" placeholder="New Member Username" class="new-member-input" />
+          <button @click="addMemberToProject" class="btn">Add Member</button>
+        </div>
+        <p v-if="message">{{ message }}</p>
+        <Kanban :id-project="props.projectId" />
+      </div>
+  
+      <div v-else>
+        <!-- Handle loading or error state -->
+        <b-spinner type="grow" label="Loading..."></b-spinner>
+      </div>
     </div>
 </template>
+  
   
 <style scoped>
 .project-details-container {
@@ -146,6 +152,16 @@ const removeMemberFromProject = async (memberId) => {
 .kanban-title {
     margin-top: 20px;
     font-size: 24px;
+}
+.create-sprint-container {
+  position: relative;
+}
+
+.create-sprint-btn {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 20px;
 }
 </style>
   

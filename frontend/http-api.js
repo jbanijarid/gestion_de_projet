@@ -32,4 +32,7 @@ export const api = {
   getTasks: () => requests.get(`tasks`, {}),
   updateTask: (id, body) => requests.put(`tasks/${id}`, body),
   deleteTask: (id) => requests.delete(`tasks/${id}`),
+  getAllSprints:() => requests.get('sprints', {}),
+  getAllSprintsByProject:(id) => requests.get(`sprints/project/${id}`),
+
 };

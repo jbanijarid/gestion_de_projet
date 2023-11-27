@@ -27,6 +27,17 @@ const routes = [
       component:  () => import("./components/Project.vue"),
       props: true, // Enable route params as props
     },
+    {
+      path: '/sprints',
+      name: 'sprint',
+      component:  () => import("./pages/Sprints.vue"),
+      props: true, // Enable route params as props
+    },{
+      path: '/sprints/project/:projectId',
+      name: 'sprintProject',
+      component:  () => import("./pages/Sprints.vue"),
+      props: true, // Enable route params as props
+    }
   ];
   
   const router = createRouter({
