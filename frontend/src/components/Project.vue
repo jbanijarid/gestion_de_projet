@@ -1,6 +1,7 @@
 <script setup>
 import { onMounted, defineProps, ref } from 'vue';
 import { api } from '../../http-api';
+import Kanban from '../pages/Kanban.vue';
 
 const props = defineProps(['projectId']);
 const project = ref(null);
@@ -78,7 +79,8 @@ const removeMemberFromProject = async (memberId) => {
             </div>
             <p v-if="message">{{message}}</p>
 
-            <h2 class="kanban-title">Ici le Kanban de Project &#128520;</h2>
+            <!-- <h2 class="kanban-title">Ici le Kanban de Project &#128520;</h2> -->
+            <Kanban :id-project="props.projectId" />
         </div>
 
         <div v-else>
@@ -90,7 +92,7 @@ const removeMemberFromProject = async (memberId) => {
   
 <style scoped>
 .project-details-container {
-    max-width: 800px;
+    max-width: 10000px;
     margin: 0 auto;
     padding: 20px;
 }

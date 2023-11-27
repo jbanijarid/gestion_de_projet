@@ -11,7 +11,7 @@ const routes = [
     {
         path: "/test",
         name: "test",
-        component: () => import("./pages/Test.vue"),
+        component: () => import("./pages/Kanban.vue"),
         props: true
     }
     ,
