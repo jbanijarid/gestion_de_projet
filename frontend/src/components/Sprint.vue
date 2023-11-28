@@ -1,96 +1,98 @@
 <script setup>
-import { ref } from 'vue';
-import { defineProps } from 'vue';
+import { ref, onMounted, defineProps} from 'vue';
 import { api } from '../../http-api.js';
 
-const props = defineProps({
-  id: String,
-  name: String,
-  projectId: String,
-  start_date: String,
-  end_date: String, 
-  tasks: Array
+const props = defineProps(['sprintId']);
+const sprint = ref(null);
+
+
+onMounted(async () => {
+  try {
+    await fetchSprintDetails ();
+  } catch (error) {
+    console.error('Failed to fetch sprint details:', error);
+  }
 });
 
-const formatDate = (dateString) => {
-  const options = { year: 'numeric', month: '2-digit', day: '2-digit' };
-  const formattedDate = new Date(dateString).toLocaleDateString('en-US', options);
-  return formattedDate;
+const fetchSprintDetails = async () => {
+  const response = await api.getSprintById(props.sprintId);
+  sprint.value = response.data;
+  console.log(sprint.value);
+};
+
+const formatSprintDate = (date) => {
+  const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
+  return new Date(date).toLocaleDateString(undefined, options);
 };
 
 </script>
 
 <template>
-  <div class="sprint">
-    <div class="sprint-info">
-      <div class="name">
-        <h3>{{ props.name }}</h3>
+
+  <div class="sprint-details-container">
+      <div v-if="sprint" class="sprint-details">
+        <h1>{{ sprint.name }}</h1>
+        <div class="details">
+          <p><strong>Date of creation:</strong> {{ formatSprintDate(sprint.created_at) }}</p>
+          <p><strong>Start date:</strong> {{ formatSprintDate(sprint.start_date) }}</p>
+          <p><strong>End date:</strong> {{ formatSprintDate(sprint.end_date) }}</p>
+        </div>
+
+        <div class="tasks">
+          <p><strong>Tasks: </strong> </p>
+          <div v-for="task in sprint.tasks" :key="task._id" class="task">
+            <span class="task-name">Name: {{ task.name }}</span>
+            <span class="task-des">Description: {{ task.description }}</span>
+            <span class="task-state">State: {{ task.state }}</span>
+          </div>
+        </div>
       </div>
-      <div class="dates">
-        <p>Start Date: {{ formatDate(props.start_date) }}</p>
-        <p>End Date: {{ formatDate(props.end_date) }}</p>
+
+  
+      <div v-else>
+        <!-- Handle loading or error state -->
+        <b-spinner type="grow" label="Loading..."></b-spinner>
       </div>
-    </div>
-    <div class="tasks">
-      <div v-for="task in props.tasks" :key="task.id" class="task">
-        {{ task.name }}
-      </div>
-    </div>
   </div>
+
 </template>
   
-<style>
-.sprint {
-  background-color: #8c1919;
-  border: 1px solid #ddd;
+<style scoped>
+.sprint-details-container {
+  max-width: 10000px;
+  margin: 0 auto;
+  padding: 20px;
+} 
+
+.sprint-details {
+  background-color: #f8f9fa;
   border-radius: 8px;
-  box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
-  margin-bottom: 16px;
-  overflow: hidden;
+  padding: 20px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
 }
 
-.sprint-info {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  padding: 16px;
-  border-bottom: 1px solid #ddd;
+.details {
+  margin-bottom: 20px;
 }
 
-.name h3 {
-  margin: 0;
-  color: #333;
-}
-
-.dates {
-  color: #666;
-  display: flex;
-  flex-direction: column; /* Afficher les dates en colonne */
-}
 
 .tasks {
   display: flex;
   flex-wrap: wrap;
-  padding: 16px;
 }
 
 .task {
-  margin-right: 8px;
-  margin-bottom: 8px;
-  padding: 8px 16px;
-  background-color: #f0f0f0;
+  margin: 0 10px 10px 0;
+  padding: 10px;
+  background-color: #ffffff;
+  border: 1px solid #dee2e6;
   border-radius: 4px;
-  border: 1px solid #ddd;
-  color: #333;
-  font-size: 14px;
-  white-space: nowrap;
-  overflow: hidden;
-  text-overflow: ellipsis;
-  cursor: pointer;
-  transition: background-color 0.3s ease;
+  display: flex;
+  align-items: center;
 }
 
-.task:hover {
-  background-color: #e0e0e0;
+.task-name {
+  font-weight: bold;
 }
+
 </style>

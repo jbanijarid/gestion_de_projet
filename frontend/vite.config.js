@@ -23,6 +23,9 @@ export default defineConfig({
       },
       '^/api/login': {
         target: 'http://localhost:8080' 
+      },
+      '^/api/sprints': {
+        target: 'http://localhost:8080' 
       }
     }
   },

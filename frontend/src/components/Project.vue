@@ -3,6 +3,13 @@ import { onMounted, defineProps, ref } from 'vue';
 import { api } from '../../http-api';
 import Kanban from '../pages/Kanban.vue';
 import router from '../router';
+import { useProjectStore } from "../stores/project";
+
+
+const projectStore = useProjectStore();
+
+
+
 
 const props = defineProps(['projectId']);
 const project = ref(null);
@@ -20,6 +27,7 @@ onMounted(async () => {
 
 const fetchProjectDetails = async () => {
   const response = await api.getProjectById(props.projectId);
+  await projectStore.setProjectId(props.projectId);
   project.value = response.data;
 };
 
@@ -55,9 +63,11 @@ const removeMemberFromProject = async (memberId) => {
   }
 };
 
-const goToSprints = () => {
-  router.push({ name: 'sprintProject', params: { projectId: props.projectId } });
+const goToSprints = async () => {
+  // console.log(projectStore.getProjectId());
+  router.push({ name: 'sprints', params: { projectId: props.projectId } });
 };
+
 
 </script>
 
@@ -66,7 +76,7 @@ const goToSprints = () => {
       <div v-if="project" class="project-details">
         <h1>{{ project.name }}</h1>
         <div class="create-sprint-container">
-          <button class="btn" @click="goToSprints">Go to Sprints</button>
+          <button class="btn" @click="goToSprints()" id="sp">Go to Sprints</button>
         </div>
         <div class="details">
           <p><strong>Description:</strong> {{ project.description }}</p>
@@ -157,7 +167,7 @@ const goToSprints = () => {
   position: relative;
 }
 
-.create-sprint-btn {
+#sp {
   position: absolute;
   top: 0;
   right: 0;
