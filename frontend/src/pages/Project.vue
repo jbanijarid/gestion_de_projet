@@ -94,7 +94,6 @@ const goToSprints = async () => {
           <button @click="addMemberToProject" class="btn">Add Member</button>
         </div>
       </div>
-      <p v-if="message">{{ message }}</p>
       <Kanban :id-project="props.projectId" />
     </div>
 

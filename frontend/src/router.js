@@ -7,12 +7,6 @@ const routes = [
         name: "home",
         component: () => import("./pages/Home.vue"),
         props: true
-    },
-    {
-        path: "/test",
-        name: "test",
-        component: () => import("./pages/Kanban.vue"),
-        props: true
     }
     ,
     {
@@ -24,7 +18,7 @@ const routes = [
     {
       path: '/project/:projectId',
       name: 'project',
-      component:  () => import("./components/Project.vue"),
+      component:  () => import("./pages/Project.vue"),
       props: true, // Enable route params as props
     },
     {
