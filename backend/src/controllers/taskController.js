@@ -6,7 +6,8 @@ import {
   findAllTasks,
   countAllTasks,
   deleteTask,
-  updateTask
+  updateTask,
+  addMember
 } from "../models/task.js";
 
 // Controller to create a new task within a project
@@ -65,3 +66,15 @@ export const modifyTask = async (req, res) => {
     res.status(500).json({ success: false, message: 'Internal Server Error' });
   }
 }
+
+
+export const addMemberToTask = async (req, res) => {
+  try {
+      const taskId = req.params.taskId;
+      const memberId = req.body.memberId; // Assuming memberId is provided in the request body
+      const response = await addMember(taskId, memberId);
+      res.status(response.success ? 200 : 400).json(response);
+  } catch (error) {
+      res.status(500).json({ success: false, message: 'Internal Server Error' });
+  }
+};
