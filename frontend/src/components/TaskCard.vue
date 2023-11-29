@@ -31,8 +31,12 @@ const enterEditMode = () => {
 };
 
 const exitEditMode = async () => {
-    isEditMode.value = false;
     // Update the task in the database
+    if (editedName.value === ""){
+        alert("can't create or modify a task with a void name");
+        return ;
+    }
+    isEditMode.value = false;
     try {
         if (!props.id) {
             const body = {
@@ -41,7 +45,7 @@ const exitEditMode = async () => {
                 project:props.projectId,
                 state: editedState.value
             }
-            const resp =  await api.addTask(body);
+            await api.addTask(body);
         } else {
             console.log("not new !");
             await api.updateTask(props.id, {
@@ -65,7 +69,9 @@ const disableDeleteMode = () => {
 
 const deleteTask = async () => {
     try {
-        await api.deleteTask(props.id);
+        if(props.id){
+            await api.deleteTask(props.id);
+        }
         emit('taskDeleted', props.id);
 
     } catch (error) {
