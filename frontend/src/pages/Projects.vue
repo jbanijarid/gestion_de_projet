@@ -87,8 +87,7 @@ const goToProject = (id)=>{
         </div>
     </li>
   </ul>
-  
-
+  </div>
 
     <!-- Display a message if no projects are found -->
     <div v-if="filteredProjects.length === 0 && !isNewProjectMode" class="no-projects-message">No projects found.</div>
@@ -103,7 +102,6 @@ const goToProject = (id)=>{
         <b-button variant="outline-secondary" class="btn" @click="exitEditMode()">Cancel</b-button>
       </div>
     </div>
-  </div>
 </template>
 
 <style scoped>
