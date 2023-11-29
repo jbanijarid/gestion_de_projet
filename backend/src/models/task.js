@@ -26,7 +26,7 @@ export const createTask = async (body) => {
 // Controller to get a task by ID
 export const getTaskById = async (id) => {
     try {
-        const task = await Task.findById(id);
+        const task = await Task.findById(id).populate('distributeTo');;
         if (!task) {
             return { success: false, message: 'Task not found' };
         }

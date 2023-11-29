@@ -17,6 +17,7 @@ onMounted(async () => {
   try {
     const response = await api.getAllProjectsByUserId(userId);
     userProjectsList.value = response.data;
+    store.setOwner(false);
   } catch (error) {
     console.log("Error: " + error);
   }
@@ -38,6 +39,7 @@ const exitEditMode = async () => {
   newProject.value.name = '';
   newProject.value.description ='';
 }
+
 const creatProject = async () => {
 
   // Create a new project using the provided API endpoint

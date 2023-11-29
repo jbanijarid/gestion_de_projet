@@ -4,11 +4,12 @@ import { api } from '../../http-api';
 import Kanban from '../components/Kanban.vue';
 import router from '../router';
 import { useProjectStore } from "../stores/project";
+import { useUserStore } from '../stores/userConection';
 
 const projectStore = useProjectStore();
-
+const store = useUserStore();
 const props = defineProps(['projectId']);
-
+const isOwner = ref(false);
 const project = ref(null);
 const newMemberUsername = ref('');
 const message = ref(null);
@@ -26,6 +27,8 @@ const fetchProjectDetails = async () => {
   const response = await api.getProjectById(props.projectId);
   await projectStore.setProjectId(props.projectId);
   project.value = response.data;
+  isOwner.value = store.getUseeId == project.value.owner ; 
+  store.setOwner(isOwner.value);
 };
 
 const getRandomEmoji = () => {
@@ -85,11 +88,11 @@ const goToSprints = async () => {
           <div v-for="member in project.teamMembers" :key="member._id" class="member-card">
             <p v-html="getRandomEmoji()"></p>
             <span class="member-username">{{ member.username }}</span>
-            <span class="remove-member-icon" @click="removeMemberFromProject(member._id)">❌</span>
+            <span v-if="isOwner" class="remove-member-icon" @click="removeMemberFromProject(member._id)">❌</span>
           </div>
         </div>
         <!-- Add a new member to the project -->
-        <div class="add-member-section">
+        <div  v-if="isOwner" class="add-member-section">
           <input v-model="newMemberUsername" placeholder="New Member Username" class="new-member-input" />
           <button @click="addMemberToProject" class="btn">Add Member</button>
         </div>
