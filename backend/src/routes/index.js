@@ -149,6 +149,29 @@ router.route('/projects/:id').get(projectController.getProject);
 
 /**
  * @openapi
+ * /projects/{id}/owner:
+ *   get:
+ *     summary: Get a project owner .
+ *     description: Returns the id of the owner of the project .
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the project to find his owner.
+ *     responses:
+ *       200:
+ *         description: ID of the owner.
+ *       404:
+ *         description: project not found.
+ *     tags:
+ *       - Projects
+ */
+router.route('/projects/:id/owner').get(projectController.getProjectOwner);
+
+/**
+ * @openapi
  * /projects:
  *   post:
  *     summary: Create a new project.

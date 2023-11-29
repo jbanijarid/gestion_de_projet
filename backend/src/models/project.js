@@ -36,6 +36,19 @@ export const getProjectById = async (id) => {
     }
 };
 
+export const getProjectOwnerById = async (id) => {
+    try {
+        const project = await Project.findById(id) ;
+        if (!project) {
+            return { success: false, message: "Project not found to get it's owner" };
+        }
+        const owner = project.owner ; 
+        return { success: true, data: owner };
+    } catch (error) {
+        return { success: false, message: 'Error getting the owner of the Project' + error };
+    }
+};
+
 export const countAllProjects = async () => {
     try {
         const count = await Project.countDocuments();
