@@ -4,10 +4,10 @@ import { defineProps } from 'vue';
 import { api } from '../../http-api.js';
 const emit = defineEmits(['taskDeleted']);
 const props = defineProps({
-    id: Number,
+    id: String,
     name: String,
     description: String,
-    projectId: Number,
+    projectId: String,
     state: String
 });
 
@@ -34,7 +34,7 @@ const exitEditMode = async () => {
         await api.updateTask(props.id, {
             name: editedName.value,
             description: editedDescription.value,
-            state: editedState.value
+            // state: editedState.value
         });
         // Optional: You can emit an event or perform other actions after a successful update
     } catch (error) {
@@ -63,7 +63,7 @@ const deleteTask = async () => {
 </script>
 
 <template>
-    <div class="task-card">
+    <div class="task-card" >
         <div class="header">
             <b-row v-if="!deleting">
                 <b-col cols="9">
@@ -100,11 +100,11 @@ const deleteTask = async () => {
         <div class="footer">
             <div class="info" v-if="!deleting">
                 <p v-if="!isEditMode">{{ editedState }}</p>
-                <select v-else v-model="editedState">
+                <!-- <select v-else v-model="editedState">
                     <option v-for="option in states" :value="option.value">
                         {{ option.text }}
                     </option>
-                </select>
+                </select> -->
             </div>
             <div v-else class="conferm">
                 <b-button variant="danger" class="btn" @click="deleteTask"> delete </b-button>

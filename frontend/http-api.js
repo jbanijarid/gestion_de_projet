@@ -23,7 +23,7 @@ export const api = {
   getAllProjects: () => requests.get('projects', {}),
   getProjectById: (id) => requests.get(`projects/${id}`),
   addProject: (body) => requests.post('projects', body),
-  getAllTasksByProjectId: (id) => requests.get(`tasks/${id}`),
+  getAllTasksByProjectId: (id) => requests.get(`tasks/project/${id}`),
   getAllProjectsByUserId: (id) => requests.get(`/projects/user/${id}`),
   addProjectMember: (id, body) => requests.put(`/projects/${id}/members`, body),
   removeProjectMember: (projectId, memberId) => requests.delete(`/projects/${projectId}/members/${memberId}`),
@@ -32,4 +32,8 @@ export const api = {
   getTasks: () => requests.get(`tasks`, {}),
   updateTask: (id, body) => requests.put(`tasks/${id}`, body),
   deleteTask: (id) => requests.delete(`tasks/${id}`),
+  getAllSprints:() => requests.get('sprints', {}),
+  getAllSprintsByProject:(id) => requests.get(`sprints/project/${id}`),
+  getSprintById:(id) => requests.get(`sprints/${id}`)
+
 };
