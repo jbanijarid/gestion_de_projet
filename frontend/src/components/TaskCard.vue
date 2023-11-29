@@ -4,7 +4,7 @@ import { defineProps } from 'vue';
 import { api } from '../../http-api.js';
 import { useUserStore } from '../stores/userConection';
 const store = useUserStore();
-const isOwner = store.isOwner ; 
+const isOwner = store.isOwner;
 const emit = defineEmits(['taskDeleted']);
 const props = defineProps({
     id: String,
@@ -34,11 +34,22 @@ const exitEditMode = async () => {
     isEditMode.value = false;
     // Update the task in the database
     try {
-        await api.updateTask(props.id, {
-            name: editedName.value,
-            description: editedDescription.value,
-            // state: editedState.value
-        });
+        if (!props.id) {
+            const body = {
+                name: editedName.value,
+                description: editedDescription.value,
+                project:props.projectId,
+                state: editedState.value
+            }
+            const resp =  await api.addTask(body);
+        } else {
+            console.log("not new !");
+            await api.updateTask(props.id, {
+                name: editedName.value,
+                description: editedDescription.value,
+                // state: editedState.value
+            });
+        }
         // Optional: You can emit an event or perform other actions after a successful update
     } catch (error) {
         console.error('Failed to update task:', error);
@@ -66,7 +77,7 @@ const deleteTask = async () => {
 </script>
 
 <template>
-    <div class="task-card" >
+    <div class="task-card">
         <div class="header">
             <b-row v-if="!deleting">
                 <b-col cols="9">
@@ -74,7 +85,11 @@ const deleteTask = async () => {
                     <input v-else v-model="editedName" />
                 </b-col>
                 <b-col cols="3" v-if="isOwner">
-                    <div class="edit" v-if="isEditMode">
+                    <p v-if="!isEditMode" @click="enterEditMode">
+                        <font-awesome-icon icon="pen-to-square" class="icon" />
+                        <!-- &#128221; -->
+                    </p>
+                    <div class="edit" v-else>
                         <p @click="deleteTaskMode" id="trash">
                             <font-awesome-icon icon="trash" class="edit-icon" />
                         </p>
@@ -83,10 +98,6 @@ const deleteTask = async () => {
                             <font-awesome-icon icon="floppy-disk" class="edit-icon" />
                         </p>
                     </div>
-                    <p v-else @click="enterEditMode">
-                        <font-awesome-icon icon="pen-to-square" class="icon" />
-                        <!-- &#128221; -->
-                    </p>
                 </b-col>
             </b-row>
             <b-row v-else>
@@ -102,7 +113,7 @@ const deleteTask = async () => {
         </div>
         <div class="footer">
             <div class="info" v-if="!deleting">
-                <p v-if="!isEditMode">{{ editedState }}</p>
+                <!-- <p v-if="!isEditMode">{{ editedState }}</p> -->
                 <!-- <select v-else v-model="editedState">
                     <option v-for="option in states" :value="option.value">
                         {{ option.text }}
