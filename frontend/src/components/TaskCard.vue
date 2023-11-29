@@ -2,6 +2,9 @@
 import { ref } from 'vue';
 import { defineProps } from 'vue';
 import { api } from '../../http-api.js';
+import { useUserStore } from '../stores/userConection';
+const store = useUserStore();
+const isOwner = store.isOwner ; 
 const emit = defineEmits(['taskDeleted']);
 const props = defineProps({
     id: String,
@@ -70,7 +73,7 @@ const deleteTask = async () => {
                     <h3 v-if="!isEditMode">{{ editedName }}</h3>
                     <input v-else v-model="editedName" />
                 </b-col>
-                <b-col cols="3">
+                <b-col cols="3" v-if="isOwner">
                     <div class="edit" v-if="isEditMode">
                         <p @click="deleteTaskMode" id="trash">
                             <font-awesome-icon icon="trash" class="edit-icon" />

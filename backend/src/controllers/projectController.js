@@ -3,6 +3,7 @@ import {
     findAllProjects,
     createProject,
     getProjectById,
+    getProjectOwnerById,
     deleteProject,
     addTeamMember,
     removeTeamMember
@@ -25,6 +26,16 @@ export const getProject = async (req, res) => {
         res.status(500).json({ success: false, message: 'Internal Server Error' });
     }
 }
+
+export const getProjectOwner = async (req,res)=>{
+    try {
+        const response = await getProjectOwnerById(req.params.id);
+        res.status(response.success ? 200 : 404).json(response);
+    } catch (error) {
+        res.status(500).json({ success: false, message: 'Internal Server Error' });
+    }
+}
+
 
 // Controller to get a list of all projects
 export const getAllProjects = async (req, res) => {

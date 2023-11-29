@@ -6,6 +6,7 @@ const taskSchema = new mongoose.Schema({
     description: { type: String },
     project: { type: mongoose.Schema.Types.ObjectId, ref: 'Project', required: true },
     state: { type: String,  enum: ['todo', 'progress','done'], default: 'todo'  },
+    distributeTo: [{ type: mongoose.Schema.Types.ObjectId, ref: 'User' }],
 });
 
 const Task = mongoose.model('Task', taskSchema);
@@ -25,7 +26,7 @@ export const createTask = async (body) => {
 // Controller to get a task by ID
 export const getTaskById = async (id) => {
     try {
-        const task = await Task.findById(id);
+        const task = await Task.findById(id).populate('distributeTo');;
         if (!task) {
             return { success: false, message: 'Task not found' };
         }
@@ -108,5 +109,19 @@ export const updateTask = async (taskId, newData) => {
 }
 
 
-
-  
+export const addMember = async (taskId, memberId) => {
+    try {
+        const project = await Task.findOne({ _id: taskId, distributeTo: memberId });
+        if (project) {
+            return { success: false, message: 'User is already in this task ' };
+        }
+        const updatedProject = await Task.findByIdAndUpdate(
+            taskId,
+            { $push: { distributeTo: memberId } },
+            { new: true }
+        );
+        return { success: true, data: updatedProject, message: 'Member added to the task successfully' };
+    } catch (error) {
+        return { success: false, message: 'Error adding member to the task: ' + error };
+    }
+}

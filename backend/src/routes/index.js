@@ -149,6 +149,29 @@ router.route('/projects/:id').get(projectController.getProject);
 
 /**
  * @openapi
+ * /projects/{id}/owner:
+ *   get:
+ *     summary: Get a project owner .
+ *     description: Returns the id of the owner of the project .
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the project to find his owner.
+ *     responses:
+ *       200:
+ *         description: ID of the owner.
+ *       404:
+ *         description: project not found.
+ *     tags:
+ *       - Projects
+ */
+router.route('/projects/:id/owner').get(projectController.getProjectOwner);
+
+/**
+ * @openapi
  * /projects:
  *   post:
  *     summary: Create a new project.
@@ -450,6 +473,43 @@ router.route('/tasks/:id').delete(taskController.removeTask);
  *       - Tasks
  */
 router.route('/tasks/:id').put(taskController.modifyTask);
+
+
+
+/**
+ * @openapi
+ * /tasks/{taskId}/members:
+ *   put:
+ *     summary: Add Member To task
+ *     description: Add a new member to the task.
+ *     parameters:
+ *       - in: path
+ *         name: taskId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the task.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *          schema:
+ *              type: object
+ *              properties:
+ *                memberId:
+ *                  type: string
+ *                  description: The ID of the member to be added.
+ *     responses:
+ *       200:
+ *         description: Member added to the task successfully.
+ *       404:
+ *         description: Error adding member to the task.
+ *     tags:
+ *       - Tasks
+ */
+router.route('/tasks/:taskId/members').put(taskController.addMemberToTask);
+
+
 
 // ****************************************************** SPRINTS : 
 
