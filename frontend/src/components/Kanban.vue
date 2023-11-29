@@ -3,7 +3,9 @@ import { ref, onMounted } from 'vue';
 import { api } from '../../http-api';
 import TaskCard from '../components/TaskCard.vue';
 import Draggable from 'vuedraggable';
-
+import { useUserStore } from '../stores/userConection';
+const store = useUserStore();
+const isOwner = store.isOwner;
 const taskList = ref([]);
 
 const props = defineProps(['idProject']);
@@ -65,7 +67,7 @@ const addNewTask = (type) => {
                 :project-id="element.project" :state="element.state" @taskDeleted="handleTaskDeleted" />
             </template>
           </draggable>
-          <div class="addNewTask" @click="addNewTask('todo')">+ add new task</div>
+          <div v-if="isOwner"  class="addNewTask" @click="addNewTask('todo')">+ add new task</div>
         </div>
       </div>
       <div class="col-md-4">
@@ -78,8 +80,7 @@ const addNewTask = (type) => {
                 :project-id="element.project" :state="element.state" @taskDeleted="handleTaskDeleted" />
             </template>
           </draggable>
-          <div class="addNewTask" @click="addNewTask('progress')">+ add new task</div>
-
+          <div v-if="isOwner" class="addNewTask" @click="addNewTask('progress')">+ add new task</div>
         </div>
 
       </div>
@@ -93,7 +94,7 @@ const addNewTask = (type) => {
                 :project-id="element.project" :state="element.state" @taskDeleted="handleTaskDeleted" />
             </template>
           </draggable>
-          <div class="addNewTask" @click="addNewTask('done')">+ add new task</div>
+          <div v-if="isOwner"  class="addNewTask" @click="addNewTask('done')">+ add new task</div>
 
         </div>
       </div>

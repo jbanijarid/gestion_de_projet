@@ -110,7 +110,7 @@ const goToSprints = async () => {
   
 <style scoped>
 .project-details-container {
-  max-width: 10000px;
+  max-width: 100vw;
   margin: 0 auto;
   padding: 20px;
 }
