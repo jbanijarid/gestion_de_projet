@@ -14,7 +14,6 @@ const project = ref(null);
 const newMemberUsername = ref('');
 const removeMemberUsername = ref('');
 const message = ref(null);
-const showRemoveIconFor = ref(null);
 
 onMounted(async () => {
   try {
@@ -33,13 +32,6 @@ const fetchProjectDetails = async () => {
   store.setOwner(isOwner.value);
 };
 
-const getRandomEmoji = () => {
-  const min = 128512;
-  const max = 128567;
-  const randomNum = Math.floor(Math.random() * (max - min + 1)) + min;
-  return `&#${randomNum}`;
-};
-
 const addMemberToProject = async () => {
   try {
     if (newMemberUsername.value !== '') {
@@ -50,7 +42,7 @@ const addMemberToProject = async () => {
       await fetchProjectDetails();
     }
   } catch (error) {
-    console.error('Failed to add a new member to the project:', error);
+    console.error('Failed to add a new member to the project: ', error);
     message.value = 'error mesage ';
   }
 };
@@ -75,15 +67,6 @@ const goToSprints = async () => {
   router.push({ name: 'sprints', params: { projectId: props.projectId } });
 };
 
-
-
-const showRemoveIcon = (memberId) => {
-  showRemoveIconFor.value = memberId;
-};
-
-const hideRemoveIcon = (memberId) => {
-  showRemoveIconFor.value = null;
-};
 
 const getRandomType = () => {
   const type = ["secondary", "primary", "dark", "success", "info"];
@@ -129,11 +112,7 @@ const getFirstName = (userName) => {
 
                 <b-avatar-group>
                   <b-avatar v-for="member in project.teamMembers" :key="member._id" :variant="getRandomType()"
-                    :text="getFirstName(member.username)" size="4rem" @mouseover="showRemoveIcon(member._id)"
-                    @mouseleave="hideRemoveIcon()" @click="removeMemberFromProject(member._id)">
-                    <template v-slot:append>
-                      <span v-if="isOwner && member._id === selectedMemberId" class="delete-icon">&#10006;</span>
-                    </template>
+                    :text="getFirstName(member.username)" size="4rem">
                   </b-avatar>
                 </b-avatar-group>
               </div>

@@ -64,7 +64,7 @@ const addNewTask = (type) => {
             @drop="movedTask => onDragEnd('todo', movedTask)" group="taskList" tag="div" :item-key="task => task._id">
             <template #item="{ element }">
               <TaskCard :key="element._id" :id="element._id" :name="element.name" :description="element.description"
-                :project-id="element.project" :state="element.state" @taskDeleted="handleTaskDeleted" />
+                :project-id="element.project" :state="element.state" :members="element.distributeTo" @taskDeleted="handleTaskDeleted" />
             </template>
           </draggable>
           <div v-if="isOwner"  class="addNewTask" @click="addNewTask('todo')">+ add new task</div>
@@ -77,7 +77,7 @@ const addNewTask = (type) => {
             @drop="movedTask => onDragEnd('progress', movedTask)" group="taskList" tag="div" :item-key="task => task._id">
             <template #item="{ element }">
               <TaskCard :key="element._id" :id="element._id" :name="element.name" :description="element.description"
-                :project-id="element.project" :state="element.state" @taskDeleted="handleTaskDeleted" />
+                :project-id="element.project" :state="element.state" :members="element.distributeTo" @taskDeleted="handleTaskDeleted" />
             </template>
           </draggable>
           <div v-if="isOwner" class="addNewTask" @click="addNewTask('progress')">+ add new task</div>
@@ -91,7 +91,7 @@ const addNewTask = (type) => {
             @drop="movedTask => onDragEnd('done', movedTask)" group="taskList" tag="div" :item-key="task => task._id">
             <template #item="{ element }">
               <TaskCard :key="element._id" :id="element._id" :name="element.name" :description="element.description"
-                :project-id="element.project" :state="element.state" @taskDeleted="handleTaskDeleted" />
+                :project-id="element.project" :state="element.state" :members="element.distributeTo" @taskDeleted="handleTaskDeleted" />
             </template>
           </draggable>
           <div v-if="isOwner"  class="addNewTask" @click="addNewTask('done')">+ add new task</div>
