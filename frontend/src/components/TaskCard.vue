@@ -1,58 +1,87 @@
 <script setup>
-import { ref } from 'vue';
-import { defineProps } from 'vue';
+import { ref, onMounted, defineProps } from 'vue';
 import { api } from '../../http-api.js';
 import { useUserStore } from '../stores/userConection';
-const store = useUserStore();
-const isOwner = store.isOwner;
+
 const emit = defineEmits(['taskDeleted']);
 const props = defineProps({
     id: String,
     name: String,
     description: String,
     projectId: String,
-    state: String
+    state: String,
+    members: Array
 });
 
-const states = ref([
-    { text: 'todo', value: 'todo' },
-    { text: 'progress', value: 'progress' },
-    { text: 'done', value: 'done' }
-])
-
+const store = useUserStore();
+const isOwner = store.isOwner;
+const project = ref(null);
 const isEditMode = ref(false);
 const editedName = ref(props.name);
 const editedDescription = ref(props.description);
 const editedState = ref(props.state);
 const deleting = ref(false);
+const selectedMember = ref('');
+const memberList = ref(props.members);
+
+onMounted(async () => {
+    try {
+        await fetchProjectDetails();
+    } catch (error) {
+        console.error('Failed to fetch project details:', error);
+        // Handle error (e.g., show a notification to the user)
+    }
+});
+
+const fetchProjectDetails = async () => {
+    const response = await api.getProjectById(props.projectId);
+    project.value = response.data;
+
+};
 
 const enterEditMode = () => {
     isEditMode.value = true;
 };
 
+const addTaskTo = async () => {
+    try {
+        if (selectedMember.value !== '') {
+            const resp = await api.getUserByName(selectedMember.value);
+            const response = await api.distributeTaskTo(props.id, { memberId: resp.data._id });
+            memberList.value.push(resp.data);
+            selectedMember.value =''; 
+            console.log(response);
+        }
+    } catch (error) {
+        // console.error('Failed to add a new member to the task: ', error);
+
+    }
+}
+
 const exitEditMode = async () => {
     // Update the task in the database
-    if (editedName.value === ""){
+    if (editedName.value === "") {
         alert("can't create or modify a task with a void name");
-        return ;
+        return;
     }
     isEditMode.value = false;
     try {
         if (!props.id) {
+            await addTaskTo();
             const body = {
                 name: editedName.value,
                 description: editedDescription.value,
-                project:props.projectId,
+                project: props.projectId,
                 state: editedState.value
             }
             await api.addTask(body);
         } else {
-            console.log("not new !");
             await api.updateTask(props.id, {
                 name: editedName.value,
                 description: editedDescription.value,
                 // state: editedState.value
             });
+            await addTaskTo();
         }
         // Optional: You can emit an event or perform other actions after a successful update
     } catch (error) {
@@ -69,16 +98,23 @@ const disableDeleteMode = () => {
 
 const deleteTask = async () => {
     try {
-        if(props.id){
+        if (props.id) {
             await api.deleteTask(props.id);
         }
         emit('taskDeleted', props.id);
-
     } catch (error) {
         console.log(error);
     }
 }
 
+const getFirstName = (userName) => {
+    return userName?.split(" ")[0];
+
+}
+const getRandomType = () => {
+    const type = ["secondary", "primary", "dark", "success", "info"];
+    return type[Math.floor(Math.random() * type.length + 1)];
+}
 
 </script>
 
@@ -93,14 +129,12 @@ const deleteTask = async () => {
                 <b-col cols="3" v-if="isOwner">
                     <p v-if="!isEditMode" @click="enterEditMode">
                         <font-awesome-icon icon="pen-to-square" class="icon" />
-                        <!-- &#128221; -->
                     </p>
                     <div class="edit" v-else>
                         <p @click="deleteTaskMode" id="trash">
                             <font-awesome-icon icon="trash" class="edit-icon" />
                         </p>
                         <p @click="exitEditMode">
-                            <!-- &#128190; -->
                             <font-awesome-icon icon="floppy-disk" class="edit-icon" />
                         </p>
                     </div>
@@ -115,10 +149,31 @@ const deleteTask = async () => {
                 <p v-if="!isEditMode">{{ editedDescription }}</p>
                 <textarea v-else v-model="editedDescription"></textarea>
             </div>
-            <h5 v-else>you sure that you want to delete {{ editedName }} task ?</h5>
+            <p v-else>you sure that you want to delete {{ editedName }} task ?</p>
         </div>
         <div class="footer">
             <div class="info" v-if="!deleting">
+                <b-row>
+
+                    <b-col>
+                        <b-avatar-group>
+                            <b-avatar v-for="member in memberList" :key="member._id" :variant="getRandomType()"
+                                :text="getFirstName(member.username)" size="2rem">
+                            </b-avatar>
+                        </b-avatar-group>
+                    </b-col>
+                    <!-- <p>{{ memberList }}</p> -->
+
+                    <b-col v-if="isEditMode" >
+                        <div class="select">
+                            <select v-model="selectedMember">
+                                <option v-for="member in project.teamMembers" :value="member.username">
+                                    {{ member.username }}
+                                </option>
+                            </select>
+                        </div>
+                    </b-col>
+                </b-row>
                 <!-- <p v-if="!isEditMode">{{ editedState }}</p> -->
                 <!-- <select v-else v-model="editedState">
                     <option v-for="option in states" :value="option.value">
@@ -237,6 +292,11 @@ select {
     background-color: #ffffff;
     color: #2c3e50;
 }
+
+
+.select {
+    width: 8rem;
+} 
 
 @media screen and (min-width: 600px) {
     .task-card {

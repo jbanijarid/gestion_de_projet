@@ -8,7 +8,7 @@ const store = useUserStore();
 const isOwner = store.isOwner;
 const taskList = ref([]);
 
-const props = defineProps(['idProject']);
+const props = defineProps(['projectId']);
 
 onMounted(async () => {
   await fetchTasks();
@@ -16,7 +16,7 @@ onMounted(async () => {
 
 const fetchTasks = async () => {
   try {
-    const resp = await api.getAllTasksByProjectId(props.idProject);
+    const resp = await api.getAllTasksByProjectId(props.projectId);
     taskList.value = resp.data;
   } catch (error) {
     console.error('Erreur lors de la récupération des tâches:', error);
@@ -47,7 +47,7 @@ const addNewTask = (type) => {
   const body = {
     name:"",
     description:"",
-    project: props.idProject,
+    project: props.projectId,
     state:type
   }
   taskList.value.push(body);
@@ -64,7 +64,7 @@ const addNewTask = (type) => {
             @drop="movedTask => onDragEnd('todo', movedTask)" group="taskList" tag="div" :item-key="task => task._id">
             <template #item="{ element }">
               <TaskCard :key="element._id" :id="element._id" :name="element.name" :description="element.description"
-                :project-id="element.project" :state="element.state" @taskDeleted="handleTaskDeleted" />
+                :project-id="element.project" :state="element.state" :members="element.distributeTo" @taskDeleted="handleTaskDeleted" />
             </template>
           </draggable>
           <div v-if="isOwner"  class="addNewTask" @click="addNewTask('todo')">+ add new task</div>
@@ -77,7 +77,7 @@ const addNewTask = (type) => {
             @drop="movedTask => onDragEnd('progress', movedTask)" group="taskList" tag="div" :item-key="task => task._id">
             <template #item="{ element }">
               <TaskCard :key="element._id" :id="element._id" :name="element.name" :description="element.description"
-                :project-id="element.project" :state="element.state" @taskDeleted="handleTaskDeleted" />
+                :project-id="element.project" :state="element.state" :members="element.distributeTo" @taskDeleted="handleTaskDeleted" />
             </template>
           </draggable>
           <div v-if="isOwner" class="addNewTask" @click="addNewTask('progress')">+ add new task</div>
@@ -91,7 +91,7 @@ const addNewTask = (type) => {
             @drop="movedTask => onDragEnd('done', movedTask)" group="taskList" tag="div" :item-key="task => task._id">
             <template #item="{ element }">
               <TaskCard :key="element._id" :id="element._id" :name="element.name" :description="element.description"
-                :project-id="element.project" :state="element.state" @taskDeleted="handleTaskDeleted" />
+                :project-id="element.project" :state="element.state" :members="element.distributeTo" @taskDeleted="handleTaskDeleted" />
             </template>
           </draggable>
           <div v-if="isOwner"  class="addNewTask" @click="addNewTask('done')">+ add new task</div>
@@ -105,10 +105,11 @@ const addNewTask = (type) => {
 <style scoped>
 .task-column {
   border: 1px solid #ddd;
-  padding: 10px;
+  padding: 5px;
   margin: 10px;
   border-radius: 8px;
   box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+  width: 75%;
 }
 
 .task-card {
