@@ -90,11 +90,11 @@ const getFirstName = (userName) => {
           <b-col cols="7">
             <div class="project-details">
               <h1>{{ project.name }}</h1>
-              <!-- <div class="create-sprint-container">
-                <button class="btn" @click="goToSprints()" id="sp">Go to Sprints</button>
-              </div> -->
               <div class="details">
-                <p><strong>Description:</strong> {{ project.description }}</p>
+                <p>{{ project.description }}</p>
+              </div>
+              <div class="create-sprint-container">
+                <button class="btn" @click="goToSprints()" id="sp">Go to Sprints</button>
               </div>
             </div>
           </b-col>
@@ -140,7 +140,7 @@ const getFirstName = (userName) => {
         </b-row>
       </div>
 
-      <Kanban :id-project="props.projectId" />
+      <Kanban :project-id="props.projectId" />
     </div>
 
     <div v-else>

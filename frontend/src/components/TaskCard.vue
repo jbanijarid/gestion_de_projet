@@ -51,7 +51,6 @@ const addTaskTo = async () => {
             memberList.value.push(resp.data);
             selectedMember.value =''; 
             console.log(response);
-            
         }
     } catch (error) {
         // console.error('Failed to add a new member to the task: ', error);
@@ -103,7 +102,6 @@ const deleteTask = async () => {
             await api.deleteTask(props.id);
         }
         emit('taskDeleted', props.id);
-
     } catch (error) {
         console.log(error);
     }
@@ -131,14 +129,12 @@ const getRandomType = () => {
                 <b-col cols="3" v-if="isOwner">
                     <p v-if="!isEditMode" @click="enterEditMode">
                         <font-awesome-icon icon="pen-to-square" class="icon" />
-                        <!-- &#128221; -->
                     </p>
                     <div class="edit" v-else>
                         <p @click="deleteTaskMode" id="trash">
                             <font-awesome-icon icon="trash" class="edit-icon" />
                         </p>
                         <p @click="exitEditMode">
-                            <!-- &#128190; -->
                             <font-awesome-icon icon="floppy-disk" class="edit-icon" />
                         </p>
                     </div>
