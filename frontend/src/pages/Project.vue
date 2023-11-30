@@ -12,6 +12,7 @@ const props = defineProps(['projectId']);
 const isOwner = ref(false);
 const project = ref(null);
 const newMemberUsername = ref('');
+const removeMemberUsername = ref('');
 const message = ref(null);
 const showRemoveIconFor = ref(null);
 
@@ -54,11 +55,15 @@ const addMemberToProject = async () => {
   }
 };
 
-const removeMemberFromProject = async (memberId) => {
-  console.log('click !');
+const removeMemberFromProject = async () => {
   try {
-    const response = await api.removeProjectMember(props.projectId, memberId);
-    // console.log(response);
+    if (removeMemberUsername.value !== '') {
+      const resp = await api.getUserByName(removeMemberUsername.value);
+      // console.log(resp.data._id);
+      const response = await api.removeProjectMember(props.projectId, resp.data._id );
+      removeMemberUsername.value = '';
+      await fetchProjectDetails();
+    }
     await fetchProjectDetails();
   } catch (error) {
     console.error('Failed to remove a member from the project:', error);
@@ -73,25 +78,22 @@ const goToSprints = async () => {
 
 
 const showRemoveIcon = (memberId) => {
-  console.log("overrrrrrrrr");
   showRemoveIconFor.value = memberId;
 };
 
 const hideRemoveIcon = (memberId) => {
-  console.log("hideeeeeeee");
   showRemoveIconFor.value = null;
 };
 
 const getRandomType = () => {
   const type = ["secondary", "primary", "dark", "success", "info"];
   return type[Math.floor(Math.random() * type.length + 1)];
-
 }
 
 const getFirstName = (userName) => {
   return userName.split(" ")[0];
-}
 
+}
 
 </script>
 
@@ -102,8 +104,7 @@ const getFirstName = (userName) => {
 
 
         <b-row>
-          <b-col>
-
+          <b-col cols="7">
             <div class="project-details">
               <h1>{{ project.name }}</h1>
               <!-- <div class="create-sprint-container">
@@ -125,22 +126,38 @@ const getFirstName = (userName) => {
                     >
                   </b-avatar>
                 </b-avatar-group> -->
+
                 <b-avatar-group>
                   <b-avatar v-for="member in project.teamMembers" :key="member._id" :variant="getRandomType()"
                     :text="getFirstName(member.username)" size="4rem" @mouseover="showRemoveIcon(member._id)"
-                    @mouseleave="hideRemoveIcon()" @click="removeMemberFromProject(member._id)"> </b-avatar>
+                    @mouseleave="hideRemoveIcon()" @click="removeMemberFromProject(member._id)">
+                    <template v-slot:append>
+                      <span v-if="isOwner && member._id === selectedMemberId" class="delete-icon">&#10006;</span>
+                    </template>
+                  </b-avatar>
                 </b-avatar-group>
-                <!-- <span @click="console.log('hello')"></span> -->
-                <!--  -->
-                <!-- <span class="member-username">{{ member.username }}</span> -->
-              </div>
-              <div v-if="isOwner" class="add-member-section">
-                <input v-model="newMemberUsername" placeholder="New Member Username" class="new-member-input" />
-                <b-button @click="addMemberToProject">Add</b-button>
               </div>
             </div>
           </b-col>
 
+          <b-col>
+            <div v-if="isOwner" class="add-remove-section">
+              <b-tabs content-class="mt-3" class="">
+                <b-tab title="add" active>
+                  <div class="add-remove-member-section">
+                    <input v-model="newMemberUsername" placeholder="New Member Username" class="new-remove-member-input" />
+                    <b-button variant="success" @click="addMemberToProject">Add</b-button>
+                  </div>
+                </b-tab>
+                <b-tab title="remove">
+                  <div class="add-remove-member-section">
+                    <input v-model="removeMemberUsername" placeholder="Username to remove " class="new-remove-member-input" />
+                    <b-button variant="danger" @click="removeMemberFromProject">Remove</b-button>
+                  </div>
+                </b-tab>
+              </b-tabs>
+            </div>
+          </b-col>
         </b-row>
       </div>
 
@@ -172,21 +189,22 @@ const getFirstName = (userName) => {
 .details {
   margin-bottom: 20px;
 }
-
-.team-members {
+.add-remove-section {
+  font-size: .5em;
+}
+.add-remove-member-section {
+  margin-top: 1em;
   display: flex;
-  flex-wrap: wrap;
+  height: 2em;
+  width: .1rem;
 }
 
-.add-member-section {
-  margin-top: 20px;
-  display: flex;
-  height: 1.2em;
-}
+.new-remove-member-input {
+  /* flex-grow: 1; */
+  margin-right: .5em;
+  width: 9rem;
+  font-size: 1em;
 
-.new-member-input {
-  flex-grow: 1;
-  margin-right: 1em;
 }
 
 .create-sprint-container {

@@ -3,6 +3,7 @@ import { onMounted, ref, computed } from 'vue';
 import { useUserStore } from '../stores/userConection';
 import { api } from '../../http-api';
 import router from '../router';
+import gsap from 'gsap';
 const store = useUserStore();
 const userId = store.getUseeId;
 const userProjectsList = ref([]);
@@ -37,7 +38,7 @@ const enterEditMode = () => {
 const exitEditMode = async () => {
   isNewProjectMode.value = false;
   newProject.value.name = '';
-  newProject.value.description ='';
+  newProject.value.description = '';
 }
 
 const creatProject = async () => {
@@ -57,17 +58,38 @@ const creatProject = async () => {
     newProject.value = { name: '', description: '' };
   } catch (error) {
     console.error('Failed to create a new project:', error);
-  }finally {
+  } finally {
     exitEditMode();
   }
 };
-const goToProject = (id)=>{
+const goToProject = (id) => {
   // console.log(id);
-  router.push ({name: 'project', params: {projectId: id}});
+  router.push({ name: 'project', params: { projectId: id } });
 }
 
 
+const onBeforeEnter = (el) => {
+  el.style.opacity = 0
+  el.style.height = 0
+}
 
+const onEnter = (el, done) => {
+  gsap.to(el, {
+    opacity: 1,
+    height: '2.4em',
+    delay: el.dataset.index * 0.20,
+    onComplete: done
+  })
+}
+
+const onLeave = (el, done) => {
+  gsap.to(el, {
+    opacity: 0,
+    height: 0,
+    delay: el.dataset.index * 0.15,
+    onComplete: done
+  })
+}
 </script>
 
 <template>
@@ -79,31 +101,33 @@ const goToProject = (id)=>{
       <input v-model="searchQuery" type="text" placeholder="Search projects..." class="search-bar" />
       <b-button variant="outline-success" class="btn" @click="enterEditMode"> new project </b-button>
     </div>
-  <ul class="project-list" v-if="filteredProjects.length > 0">
-    <li v-for="project in filteredProjects" :key="project._id" class="project-item" @click="goToProject(project._id)">
-        <div class="project-info" >
+    <TransitionGroup v-if="filteredProjects.length > 0" tag="ul" :css="false" @before-enter="onBeforeEnter"
+      @enter="onEnter" @leave="onLeave">
+      <li v-for="(project, index) in filteredProjects" :key="project.name" :data-index="index" class="project-item"
+        @click="goToProject(project._id)">
+        <div class="project-info">
           <span class="project-name">{{ project.name }}</span>
           <span class="owner-info">
             {{ project.owner === userId ? 'Owner' : 'Team Member' }}
           </span>
         </div>
-    </li>
-  </ul>
+      </li>
+    </TransitionGroup>
   </div>
 
-    <!-- Display a message if no projects are found -->
-    <div v-if="filteredProjects.length === 0 && !isNewProjectMode" class="no-projects-message">No projects found.</div>
-    <!-- Editable Project Info for Creating New Project -->
-    <div v-if="isNewProjectMode" class="new-project-section">
-      <div class="project-info">
-        <input v-model="newProject.name" placeholder="Project Name" />
-        <textarea v-model="newProject.description" placeholder="Project Description"></textarea>
-      </div>
-      <div class="button-container">
-        <b-button variant="success" class="btn" @click="creatProject">Create Project</b-button>
-        <b-button variant="outline-secondary" class="btn" @click="exitEditMode()">Cancel</b-button>
-      </div>
+  <!-- Display a message if no projects are found -->
+  <div v-if="filteredProjects.length === 0 && !isNewProjectMode" class="no-projects-message">No projects found.</div>
+  <!-- Editable Project Info for Creating New Project -->
+  <div v-if="isNewProjectMode" class="new-project-section">
+    <div class="project-info">
+      <input v-model="newProject.name" placeholder="Project Name" />
+      <textarea v-model="newProject.description" placeholder="Project Description"></textarea>
     </div>
+    <div class="button-container">
+      <b-button variant="success" class="btn" @click="creatProject">Create Project</b-button>
+      <b-button variant="outline-secondary" class="btn" @click="exitEditMode()">Cancel</b-button>
+    </div>
+  </div>
 </template>
 
 <style scoped>
@@ -143,11 +167,11 @@ const goToProject = (id)=>{
   color: var(--text-light);
 }
 
-.project-list {
+/* .project-list {
   list-style: none;
   padding: 0;
   transition: 2ms;
-}
+} */
 
 .project-item {
   background-color: var(--background-light);
