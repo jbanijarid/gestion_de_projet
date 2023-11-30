@@ -26,7 +26,7 @@ export const createTask = async (body) => {
 // Controller to get a task by ID
 export const getTaskById = async (id) => {
     try {
-        const task = await Task.findById(id).populate('distributeTo');;
+        const task = await Task.findById(id).populate('distributeTo');
         if (!task) {
             return { success: false, message: 'Task not found' };
         }
@@ -51,7 +51,7 @@ export const countTasksByProject = async (projectId) => {
 
 export const findTasksByProject = async (projectId) => {
     try {
-        const tasks = await Task.find({ project: projectId });
+        const tasks = await Task.find({ project: projectId }).populate('distributeTo');
         if (!tasks) {
             return { success: false, message: 'tasks not found' };
         }
