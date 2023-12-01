@@ -37,6 +37,6 @@ export const api = {
   getAllSprints:() => requests.get('sprints', {}),
   getAllSprintsByProject:(id) => requests.get(`sprints/project/${id}`),
   getSprintById:(id) => requests.get(`sprints/${id}`),
-  addSprint: (body) => requests.post('sprints', body)
-
+  addSprint: (body) => requests.post('sprints', body),
+  getTasksBySprintId: (id) => requests.get(`sprints/${id}/tasks`)
 };

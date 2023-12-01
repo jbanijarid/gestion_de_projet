@@ -1,6 +1,7 @@
 <script setup>
 import { ref, onMounted, defineProps} from 'vue';
 import { api } from '../../http-api.js';
+import Kanban from "./Kanban.vue";
 
 const props = defineProps(['sprintId']);
 const sprint = ref(null);
@@ -46,6 +47,8 @@ const formatSprintDate = (date) => {
             <span class="task-state">State: {{ task.state }}</span>
           </div>
         </div>
+
+        <Kanban :project-id="sprintId" :project="false" />
       </div>
 
   

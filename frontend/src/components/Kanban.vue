@@ -8,7 +8,7 @@ const store = useUserStore();
 const isOwner = store.isOwner;
 const taskList = ref([]);
 
-const props = defineProps(['projectId']);
+const props = defineProps(['projectId', 'project']);
 
 onMounted(async () => {
   await fetchTasks();
@@ -16,8 +16,14 @@ onMounted(async () => {
 
 const fetchTasks = async () => {
   try {
-    const resp = await api.getAllTasksByProjectId(props.projectId);
-    taskList.value = resp.data;
+    if(props.project === true){
+      const resp = await api.getAllTasksByProjectId(props.projectId);
+      taskList.value = resp.data;
+    } else {
+      const resp = await api.getTasksBySprintId(props.projectId);
+      taskList.value = resp.data;
+    }
+    
   } catch (error) {
     console.error('Erreur lors de la récupération des tâches:', error);
   }
