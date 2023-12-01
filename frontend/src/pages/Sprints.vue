@@ -52,7 +52,7 @@ const createSprint = async () => {
       name: newSprint.value.name,
       start_date: newSprint.value.start_date,
       end_date: newSprint.value.end_date,
-      projectId: projectId,
+      project: projectId,
     });
 
     // Add the new sprint to the local list

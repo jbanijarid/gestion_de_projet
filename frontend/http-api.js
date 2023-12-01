@@ -36,6 +36,7 @@ export const api = {
   deleteTask: (id) => requests.delete(`tasks/${id}`),
   getAllSprints:() => requests.get('sprints', {}),
   getAllSprintsByProject:(id) => requests.get(`sprints/project/${id}`),
-  getSprintById:(id) => requests.get(`sprints/${id}`)
+  getSprintById:(id) => requests.get(`sprints/${id}`),
+  addSprint: (body) => requests.post('sprints', body)
 
 };
