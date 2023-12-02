@@ -692,4 +692,50 @@ router.route('/sprints/:id/tasks').get(sprintController.getTasksBySprint);
  */
 router.route('/sprints/:id').put(sprintController.modifySprint);
 
+/**
+ * @openapi
+ * /sprints/{id}/tasks/{taskId}:
+ *   put:
+ *     summary: Add a task ID to a sprint.
+ *     description: Add the provided data to the tasks array.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the sprint to update.
+ *       - in: path
+ *         name: taskId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the task to add.
+ *     responses:
+ *       200:
+ *         description: Task added successfully.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               data:
+ *                 _id: sprintID
+ *                 name: updatedName
+ *                 project: updatedProjectID
+ *                 start_date: updatedStartDate
+ *                 end_date: updatedEndDate
+ *                 tasks: [updatedTaskID1, updatedTaskID2]
+ *               message: Task added successfully.
+ *       404:
+ *         description: Sprint not found or error updating sprint.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Sprint not found or error updating sprint.
+ *     tags:
+ *       - Sprints
+ */
+router.route('/sprints/:id/tasks/:taskId').put(sprintController.addTask);
+
 export default router;

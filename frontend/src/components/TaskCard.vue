@@ -77,8 +77,11 @@ const exitEditMode = async () => {
                 project: id,
                 state: editedState.value
             }
-            await api.addTask(body);
-            //if(projectStore.)
+            const newTask = await api.addTask(body);
+            if(projectStore.getIsSprint() === true){
+                console.log(newTask.data._id);
+                await api.addTaskToSprint(projectStore.getProjectId(), newTask.data._id);
+            }
         } else {
             await api.updateTask(props.id, {
                 name: editedName.value,

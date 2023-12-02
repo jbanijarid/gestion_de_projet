@@ -125,6 +125,20 @@ export const countTasksBySprint = async (sprintId) => {
   }
 }
 
+export const addTaskToSprint = async (sprintId, taskId) => {
+    try {
+      const sprint = await Sprint.findById(sprintId).populate('tasks');
+      console.log(sprint);
+      sprint.tasks.push(taskId);
+      const updatedSprint = await sprint.save();
+      return { success: true, data: updatedSprint, message: 'Task added successfully'};
+    } catch (error) {
+      return { success: false, message: 'Error adding task: ' + error };
+    }
+
+
+}
+
 export const updateSprint = async (sprintId, newData)=> {
   try {
     const sprint = await Sprint.findById(sprintId).populate('tasks');
