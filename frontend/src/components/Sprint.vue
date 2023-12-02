@@ -2,9 +2,11 @@
 import { ref, onMounted, defineProps} from 'vue';
 import { api } from '../../http-api.js';
 import Kanban from "./Kanban.vue";
+import { useProjectStore } from '../stores/project';
 
 const props = defineProps(['sprintId']);
 const sprint = ref(null);
+const projectStore = useProjectStore();
 
 
 onMounted(async () => {
@@ -19,12 +21,16 @@ const fetchSprintDetails = async () => {
   const response = await api.getSprintById(props.sprintId);
   sprint.value = response.data;
   console.log(sprint.value);
+  await projectStore.setProjectId(props.sprintId);
+  await projectStore.setIsSprint(true);
 };
 
 const formatSprintDate = (date) => {
   const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
   return new Date(date).toLocaleDateString(undefined, options);
 };
+
+
 
 </script>
 

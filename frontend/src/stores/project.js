@@ -5,6 +5,7 @@ import { ref } from 'vue';
 export const useProjectStore = defineStore('project', () => {
   const state = {
     projectId: null,
+    isSprint: false
   };
 
   const setProjectId = (id) => {
@@ -15,5 +16,13 @@ export const useProjectStore = defineStore('project', () => {
     return state.projectId;
   };
 
-  return { setProjectId, getProjectId };
+  const setIsSprint = (bool) => {
+    state.isSprint = bool;
+  }
+
+  const getIsSprint = () => {
+    return state.isSprint;
+  }
+
+  return { setProjectId, getProjectId, setIsSprint, getIsSprint };
 });

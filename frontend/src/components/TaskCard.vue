@@ -2,6 +2,7 @@
 import { ref, onMounted, defineProps } from 'vue';
 import { api } from '../../http-api.js';
 import { useUserStore } from '../stores/userConection';
+import { useProjectStore } from '../stores/project';
 
 const emit = defineEmits(['taskDeleted']);
 const props = defineProps({
@@ -14,6 +15,7 @@ const props = defineProps({
 });
 
 const store = useUserStore();
+const projectStore = useProjectStore();
 const isOwner = store.isOwner;
 const project = ref(null);
 const isEditMode = ref(false);
@@ -67,14 +69,16 @@ const exitEditMode = async () => {
     isEditMode.value = false;
     try {
         if (!props.id) {
+            let id = props.projectId;
             await addTaskTo();
             const body = {
                 name: editedName.value,
                 description: editedDescription.value,
-                project: props.projectId,
+                project: id,
                 state: editedState.value
             }
             await api.addTask(body);
+            //if(projectStore.)
         } else {
             await api.updateTask(props.id, {
                 name: editedName.value,

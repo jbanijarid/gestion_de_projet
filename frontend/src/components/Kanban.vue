@@ -4,7 +4,9 @@ import { api } from '../../http-api';
 import TaskCard from '../components/TaskCard.vue';
 import Draggable from 'vuedraggable';
 import { useUserStore } from '../stores/userConection';
+import { useProjectStore } from '../stores/project';
 const store = useUserStore();
+const projectStore = useProjectStore();
 const isOwner = store.isOwner;
 const taskList = ref([]);
 
@@ -49,11 +51,17 @@ const onDragEnd = async (etat, movedTask) => {
   }
 };
 
-const addNewTask = (type) => {
+const addNewTask = async (type) => {
+  let id = props.projectId;
+  if(projectStore.getIsSprint() === true){
+    const sprint = await api.getSprintById(id);
+    id = sprint.data.project;
+  }
+  console.log(id);
   const body = {
     name:"",
     description:"",
-    project: props.projectId,
+    project: id,
     state:type
   }
   taskList.value.push(body);
@@ -83,7 +91,7 @@ const addNewTask = (type) => {
             @drop="movedTask => onDragEnd('progress', movedTask)" group="taskList" tag="div" :item-key="task => task._id">
             <template #item="{ element }">
               <TaskCard :key="element._id" :id="element._id" :name="element.name" :description="element.description"
-                :project-id="element.project" :state="element.state" :members="element.distributeTo" @taskDeleted="handleTaskDeleted" />
+                :projectId="element.project" :state="element.state" :members="element.distributeTo" @taskDeleted="handleTaskDeleted" />
             </template>
           </draggable>
           <div v-if="isOwner" class="addNewTask" @click="addNewTask('progress')">+ add new task</div>

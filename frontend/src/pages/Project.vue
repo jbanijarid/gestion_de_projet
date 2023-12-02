@@ -27,6 +27,7 @@ onMounted(async () => {
 const fetchProjectDetails = async () => {
   const response = await api.getProjectById(props.projectId);
   await projectStore.setProjectId(props.projectId);
+  await projectStore.setIsSprint(false);
   project.value = response.data;
   isOwner.value = store.getUseeId == project.value.owner;
   store.setOwner(isOwner.value);
