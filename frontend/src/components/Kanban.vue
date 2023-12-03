@@ -9,6 +9,7 @@ const store = useUserStore();
 const projectStore = useProjectStore();
 const isOwner = store.isOwner;
 const taskList = ref([]);
+const notInSprintTaskList = ref([]);
 
 const props = defineProps(['projectId']);
 
@@ -24,6 +25,10 @@ const fetchTasks = async () => {
     } else {
       const resp = await api.getTasksBySprintId(props.projectId);
       taskList.value = resp.data;
+      const sprint = await api.getSprintById(props.projectId);
+      const projectTasks = await api.getAllTasksByProjectId(sprint.data.project);
+      const sprintTasks = taskList.value.map(task => task._id);
+      notInSprintTaskList.value = projectTasks.data.filter(task => !sprintTasks.includes(task._id));
     }
     
   } catch (error) {
@@ -31,9 +36,13 @@ const fetchTasks = async () => {
   }
 };
 
-const handleTaskDeleted = (taskId) => {
+const handleTaskDeleted = async (taskId) => {
   // Update the local taskList by filtering out the deleted task
   taskList.value = taskList.value.filter(task => task._id !== taskId);
+  if(projectStore.getIsSprint()){
+    const task = await api.getTaskById(taskId);
+    notInSprintTaskList.value.push(task.data);
+  }
 };
 
 
@@ -66,11 +75,26 @@ const addNewTask = async (type) => {
   }
   taskList.value.push(body);
 };
+
+const addExistingTask = async () => {
+  const select = document.getElementById("tasklist");
+  const taskId = select.options[select.selectedIndex].value;
+  await api.addTaskToSprint(props.projectId, taskId);
+  notInSprintTaskList.value = notInSprintTaskList.value.filter(task => task._id !== taskId);
+  const task = await api.getTaskById(taskId);
+  taskList.value.push(task.data);
+}
 </script>
 
 <template>
   <div class="container-fluid">
     <div v-if="projectStore.getIsSprint()" class="projectTaskList">
+      <select id="tasklist">
+        <option v-for="task in notInSprintTaskList" v-bind:value="task._id">
+          {{ task.name }}
+        </option>  
+      </select>
+      <b-button variant="success" @click="addExistingTask">Add task</b-button>
     </div>
     <div class="row">
       <div class="col-md-4">
@@ -138,5 +162,9 @@ const addNewTask = async (type) => {
 }
 .addNewTask:hover {
   color: var( --text-light);
+}
+
+button {
+  margin-left: 10px;
 }
 </style>
