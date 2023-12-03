@@ -43,14 +43,17 @@ const enterEditMode = () => {
     isEditMode.value = true;
 };
 
-const addTaskTo = async () => {
+const distTaskTo = async (taskId) => {
     try {
         if (selectedMember.value !== '') {
+            console.log(selectedMember.value);
             const resp = await api.getUserByName(selectedMember.value);
-            const response = await api.distributeTaskTo(props.id, { memberId: resp.data._id });
-            memberList.value.push(resp.data);
+            const response = await api.distributeTaskTo(taskId, { memberId: resp.data._id });
+            console.log(resp.data);
+            // memberList.value.push(resp.data);
+            // TODO fix this probleme 
+            memberList.value = [...memberList.value, resp.data];
             selectedMember.value =''; 
-            console.log(response);
         }
     } catch (error) {
         // console.error('Failed to add a new member to the task: ', error);
@@ -67,21 +70,22 @@ const exitEditMode = async () => {
     isEditMode.value = false;
     try {
         if (!props.id) {
-            await addTaskTo();
             const body = {
                 name: editedName.value,
                 description: editedDescription.value,
                 project: props.projectId,
                 state: editedState.value
             }
-            await api.addTask(body);
+            const resp = await api.addTask(body);
+            console.log(resp.data);
+            await distTaskTo(resp.data._id);
         } else {
             await api.updateTask(props.id, {
                 name: editedName.value,
                 description: editedDescription.value,
                 // state: editedState.value
             });
-            await addTaskTo();
+            await distTaskTo(props.id);
         }
         // Optional: You can emit an event or perform other actions after a successful update
     } catch (error) {
@@ -149,7 +153,7 @@ const getRandomType = () => {
                 <p v-if="!isEditMode">{{ editedDescription }}</p>
                 <textarea v-else v-model="editedDescription"></textarea>
             </div>
-            <p v-else>you sure that you want to delete {{ editedName }} task ?</p>
+            <p v-else>are you sure that you want to delete {{ editedName }} task ?</p>
         </div>
         <div class="footer">
             <div class="info" v-if="!deleting">
@@ -162,7 +166,7 @@ const getRandomType = () => {
                             </b-avatar>
                         </b-avatar-group>
                     </b-col>
-                    <!-- <p>{{ memberList }}</p> -->
+                    <!-- <p>{{ memberList.value }}</p> -->
 
                     <b-col v-if="isEditMode" >
                         <div class="select">
@@ -174,12 +178,6 @@ const getRandomType = () => {
                         </div>
                     </b-col>
                 </b-row>
-                <!-- <p v-if="!isEditMode">{{ editedState }}</p> -->
-                <!-- <select v-else v-model="editedState">
-                    <option v-for="option in states" :value="option.value">
-                        {{ option.text }}
-                    </option>
-                </select> -->
             </div>
             <div v-else class="conferm">
                 <b-button variant="danger" class="btn" @click="deleteTask"> delete </b-button>
