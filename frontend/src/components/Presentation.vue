@@ -1,47 +1,51 @@
-<script>
+<script setup >
 import { ref, onMounted } from 'vue';
 import { gsap } from 'gsap';
 
-export default {
-  setup() {
-    const apercusRef = ref(null);
-    const section1Ref = ref(null);
-    const section2Ref = ref(null);
-    const section3Ref = ref(null);
-    const image1Ref = ref(null);
-    const image2Ref = ref(null);
-    const image3Ref = ref(null);
+const apercusRef = ref(null);
 
-    const handleMouseOver = (index) => {
-      gsap.to(this[`image${index}Ref`], { scale: 1.1, duration: 0.3, ease: 'power3.out' });
-    };
 
-    const handleMouseOut = (index) => {
-      gsap.to(this[`image${index}Ref`], { scale: 1, duration: 0.3, ease: 'power3.out' });
-    };
+// const iamgesAndSection = ref ([
+//   {
+//   image:null,
+//   section:null,
+//   },
+//   {
+//     image:null,
+//     section:null,
+//   },
+//   {
+//     image:null,
+//     section:null,
+//   }
+// ])
 
-    onMounted(() => {
-      gsap.from(apercusRef.value, { opacity: 0, duration: 1 });
-      gsap.from([section1Ref.value, section2Ref.value, section3Ref.value], { opacity: 0, y: 50, stagger: 0.2, duration: 1 });
+const section1Ref = ref(null);
+const section2Ref = ref(null);
+const section3Ref = ref(null);
+const image1Ref = ref(null);
+const image2Ref = ref(null);
+const image3Ref = ref(null);
 
-      gsap.from(image1Ref.value, { opacity: 0, x: -50, duration: 1 });
-      gsap.from(image2Ref.value, { opacity: 0, x: 50, duration: 1 });
-      gsap.from(image3Ref.value, { opacity: 0, x: -50, duration: 1 });
-    });
 
-    return {
-      apercusRef,
-      section1Ref,
-      section2Ref,
-      section3Ref,
-      image1Ref,
-      image2Ref,
-      image3Ref,
-      handleMouseOver,
-      handleMouseOut,
-    };
-  },
+
+const handleMouseOver = (index) => {
+  gsap.to(`image${index}Ref`, { scale: 1.1, duration: 0.3, ease: 'power3.out' });
 };
+
+const handleMouseOut = (index) => {
+  gsap.to(`image${index}Ref`, { scale: 1, duration: 0.3, ease: 'power3.out' });
+};
+
+onMounted(() => {
+  gsap.from(apercusRef.value, { opacity: 0, duration: 1 });
+  gsap.from([section1Ref.value, section2Ref.value, section3Ref.value], { opacity: 0, y: 50, stagger: 0.2, duration: 1 });
+
+  gsap.from(image1Ref.value, { opacity: 0, x: -50, duration: 1 });
+  gsap.from(image2Ref.value, { opacity: 0, x: 50, duration: 1 });
+  gsap.from(image3Ref.value, { opacity: 0, x: -50, duration: 1 });
+});
+
 </script>
 
 
@@ -53,11 +57,12 @@ export default {
       <b-row>
         <b-col lg="6" class="image-text">
           <p class="section-title">Un outil de gestion de projets conçu pour le travail d'équipe</p>
-          <p class="image-description">Créez et planifiez vos projets, visualisez vos tâches, suivez chaque étape avec un tableau Kanban interactif</p>
+          <p class="image-description">Créez et planifiez vos projets, visualisez vos tâches, suivez chaque étape avec un
+            tableau Kanban interactif</p>
         </b-col>
         <b-col lg="6">
           <div class="image-item" ref="image1Ref">
-            <img src="../assets/project.png" alt="projet" class="image">
+            <img src="@/assets/project.png" alt="projet" class="image">
           </div>
         </b-col>
       </b-row>
@@ -71,7 +76,7 @@ export default {
         </b-col>
         <b-col lg="6">
           <div class="image-item" ref="image2Ref">
-            <img src="../assets/listeProjects.png" alt="liste de projet" class="image">
+            <img src="@/assets/listeProjects.png" alt="liste de projet" class="image">
           </div>
         </b-col>
       </b-row>
@@ -81,11 +86,12 @@ export default {
     <div class="images-container" ref="section3Ref" @mouseover="handleMouseOver(3)" @mouseout="handleMouseOut(3)">
       <b-row>
         <b-col lg="6" class="image-text">
-          <p class="section-title">Accélérez vos projets en planifiant de manière agile avec des sprints, tout en boostant la productivité grâce à des tableaux Kanban dédiés à chaque sprint</p>
+          <p class="section-title">Accélérez vos projets en planifiant de manière agile avec des sprints, tout en boostant
+            la productivité grâce à des tableaux Kanban dédiés à chaque sprint</p>
         </b-col>
         <b-col lg="6">
           <div class="image-item" ref="image3Ref">
-            <img src="../assets/sprint.png" alt="Capture d'écran de la page d'accueil" class="image">
+            <img src="@/assets/sprint.png" alt="Capture d'écran de la page d'accueil" class="image">
           </div>
         </b-col>
       </b-row>
@@ -95,7 +101,6 @@ export default {
 
 
 <style>
-
 .image-item:hover {
   transform: translateY(-10px);
   box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
