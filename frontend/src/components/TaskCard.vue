@@ -79,7 +79,6 @@ const exitEditMode = async () => {
             }
             const newTask = await api.addTask(body);
             if(projectStore.getIsSprint() === true){
-                console.log(newTask.data._id);
                 await api.addTaskToSprint(projectStore.getProjectId(), newTask.data._id);
             }
         } else {
@@ -106,7 +105,12 @@ const disableDeleteMode = () => {
 const deleteTask = async () => {
     try {
         if (props.id) {
-            await api.deleteTask(props.id);
+            if(projectStore.getIsSprint()){
+                console.log(props.id);
+                await api.removeTaskFromSprint(projectStore.getProjectId(), props.id);
+            } else {
+                await api.deleteTask(props.id);
+            }
         }
         emit('taskDeleted', props.id);
     } catch (error) {

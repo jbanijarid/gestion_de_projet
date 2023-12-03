@@ -141,7 +141,7 @@ const getFirstName = (userName) => {
         </b-row>
       </div>
 
-      <Kanban :project-id="props.projectId" :project="true" />
+      <Kanban :project-id="props.projectId" />
     </div>
 
     <div v-else>

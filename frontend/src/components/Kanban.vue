@@ -10,7 +10,7 @@ const projectStore = useProjectStore();
 const isOwner = store.isOwner;
 const taskList = ref([]);
 
-const props = defineProps(['projectId', 'project']);
+const props = defineProps(['projectId']);
 
 onMounted(async () => {
   await fetchTasks();
@@ -18,7 +18,7 @@ onMounted(async () => {
 
 const fetchTasks = async () => {
   try {
-    if(props.project === true){
+    if(projectStore.getIsSprint() === false){
       const resp = await api.getAllTasksByProjectId(props.projectId);
       taskList.value = resp.data;
     } else {
@@ -70,6 +70,8 @@ const addNewTask = async (type) => {
 
 <template>
   <div class="container-fluid">
+    <div v-if="projectStore.getIsSprint()" class="projectTaskList">
+    </div>
     <div class="row">
       <div class="col-md-4">
         <div class="task-column" data-etat="todo">

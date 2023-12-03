@@ -18,11 +18,10 @@ onMounted(async () => {
 });
 
 const fetchSprintDetails = async () => {
-  const response = await api.getSprintById(props.sprintId);
-  sprint.value = response.data;
-  console.log(sprint.value);
   await projectStore.setProjectId(props.sprintId);
   await projectStore.setIsSprint(true);
+  const response = await api.getSprintById(props.sprintId);
+  sprint.value = response.data;
 };
 
 const formatSprintDate = (date) => {
@@ -46,15 +45,10 @@ const formatSprintDate = (date) => {
         </div>
 
         <div class="tasks">
-          <p><strong>Tasks: </strong> </p>
-          <div v-for="task in sprint.tasks" :key="task._id" class="task">
-            <span class="task-name">Name: {{ task.name }}</span>
-            <span class="task-des">Description: {{ task.description }}</span>
-            <span class="task-state">State: {{ task.state }}</span>
-          </div>
+          <h2>Tasks</h2>
         </div>
 
-        <Kanban :project-id="sprintId" :project="false" />
+        <Kanban :project-id="props.sprintId" />
       </div>
 
   

@@ -139,6 +139,19 @@ export const addTaskToSprint = async (sprintId, taskId) => {
 
 }
 
+export const removeTaskFromSprint = async (sprintId, taskId) => {
+  try {
+    const sprint = await Sprint.findById(sprintId);
+    const existingTaskIds = sprint.tasks.map(task => task.toString());
+    const newTaskList = existingTaskIds.filter(task => task !== taskId);
+    sprint.tasks = newTaskList;
+    const updatedSprint = await sprint.save();
+    return { success: true, data: updatedSprint, message: 'Task removed successfully'};
+  } catch (error) {
+    return { success: false, message: 'Error removing task: ' + error};
+  }
+}
+
 export const updateSprint = async (sprintId, newData)=> {
   try {
     const sprint = await Sprint.findById(sprintId).populate('tasks');

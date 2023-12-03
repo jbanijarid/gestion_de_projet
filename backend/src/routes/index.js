@@ -738,4 +738,50 @@ router.route('/sprints/:id').put(sprintController.modifySprint);
  */
 router.route('/sprints/:id/tasks/:taskId').put(sprintController.addTask);
 
+/**
+ * @openapi
+ * /sprints/{id}/tasks/remove/{taskId}:
+ *   put:
+ *     summary: Remove a task ID from a sprint.
+ *     description: Remove the provided data from the tasks array.
+ *     parameters:
+ *       - in: path
+ *         name: id
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the sprint to update.
+ *       - in: path
+ *         name: taskId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the task to remove.
+ *     responses:
+ *       200:
+ *         description: Task removed successfully.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: true
+ *               data:
+ *                 _id: sprintID
+ *                 name: updatedName
+ *                 project: updatedProjectID
+ *                 start_date: updatedStartDate
+ *                 end_date: updatedEndDate
+ *                 tasks: [updatedTaskID1, updatedTaskID2]
+ *               message: Task removed successfully.
+ *       404:
+ *         description: Sprint not found or error updating sprint.
+ *         content:
+ *           application/json:
+ *             example:
+ *               success: false
+ *               message: Sprint not found or error updating sprint.
+ *     tags:
+ *       - Sprints
+ */
+router.route('/sprints/:id/tasks/remove/:taskId').put(sprintController.removeTask);
+
 export default router;

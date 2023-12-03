@@ -8,7 +8,8 @@ import {
   countTasksBySprint,
   countSprintsByProject,
   updateSprint,
-  addTaskToSprint
+  addTaskToSprint,
+  removeTaskFromSprint
 } from '../models/sprint.js';
 
 export const addSprint = async (req, res) => {
@@ -62,6 +63,15 @@ export const getTasksBySprint = async (req, res) => {
 export const addTask = async (req, res) => {
   try {
     const response = await addTaskToSprint(req.params.id, req.params.taskId);
+    res.status(response.success ? 200 : 404).json(response);
+  } catch (error) {
+    res.status(500).json({ success: false, message: 'Internal Server Error'});
+  }
+}
+
+export const removeTask = async (req, res) => {
+  try {
+    const response = await removeTaskFromSprint(req.params.id, req.params.taskId);
     res.status(response.success ? 200 : 404).json(response);
   } catch (error) {
     res.status(500).json({ success: false, message: 'Internal Server Error'});
