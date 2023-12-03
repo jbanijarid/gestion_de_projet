@@ -1,5 +1,5 @@
 <script setup>
-import { ref, onMounted, defineProps} from 'vue';
+import { ref, onMounted, defineProps } from 'vue';
 import { api } from '../../http-api.js';
 import Kanban from "./Kanban.vue";
 import { useProjectStore } from '../stores/project';
@@ -11,7 +11,7 @@ const projectStore = useProjectStore();
 
 onMounted(async () => {
   try {
-    await fetchSprintDetails ();
+    await fetchSprintDetails();
   } catch (error) {
     console.error('Failed to fetch sprint details:', error);
   }
@@ -34,30 +34,29 @@ const formatSprintDate = (date) => {
 </script>
 
 <template>
-
-  <div class="sprint-details-container">
-      <div v-if="sprint" class="sprint-details">
-        <h1>{{ sprint.name }}</h1>
-        <div class="details">
-          <p><strong>Date of creation:</strong> {{ formatSprintDate(sprint.created_at) }}</p>
-          <p><strong>Start date:</strong> {{ formatSprintDate(sprint.start_date) }}</p>
-          <p><strong>End date:</strong> {{ formatSprintDate(sprint.end_date) }}</p>
-        </div>
-
-        <div class="tasks">
-          <h2>Tasks</h2>
-        </div>
-
-        <Kanban :project-id="props.sprintId" />
+  <div v-if="sprint" class="sprint-details-container">
+    <div class="sprint-details">
+      <h1>{{ sprint.name }}</h1>
+      <div class="details">
+        <p><strong>Date of creation:</strong> {{ formatSprintDate(sprint.created_at) }}</p>
+        <p><strong>Start date:</strong> {{ formatSprintDate(sprint.start_date) }}</p>
+        <p><strong>End date:</strong> {{ formatSprintDate(sprint.end_date) }}</p>
       </div>
 
-  
-      <div v-else>
-        <!-- Handle loading or error state -->
-        <b-spinner type="grow" label="Loading..."></b-spinner>
+      <div class="tasks">
+        <h2>Tasks</h2>
       </div>
+
+    </div>
+    <Kanban :project-id="props.sprintId" />
+
   </div>
 
+
+  <div v-else>
+    <!-- Handle loading or error state -->
+    <b-spinner type="grow" label="Loading..."></b-spinner>
+  </div>
 </template>
   
 <style scoped>
@@ -65,7 +64,7 @@ const formatSprintDate = (date) => {
   max-width: 10000px;
   margin: 0 auto;
   padding: 20px;
-} 
+}
 
 .sprint-details {
   background-color: #f8f9fa;
@@ -97,5 +96,4 @@ const formatSprintDate = (date) => {
 .task-name {
   font-weight: bold;
 }
-
 </style>

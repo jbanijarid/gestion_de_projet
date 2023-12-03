@@ -45,7 +45,15 @@ export const createSprint = async (data) => {
 
 export const getSprintById = async (id) => {
   try {
-    const sprint = await Sprint.findById(id).populate('tasks');
+    // const sprint = await Sprint.findById(id).populate('tasks');
+    // .populate('distributeTo') 
+    const sprint = await Sprint.findById(id).populate({
+        path: 'tasks',
+        populate: {
+          path: 'distributeTo',
+          model: 'User',
+        },
+      });
     if (!sprint) {
       return { success: false, message: 'Sprint not found' };
     }
@@ -69,7 +77,13 @@ export const countSprintsByProject = async (projectId) => {
 
 export const findSprintsByProject = async (projectId) => {
   try {
-    const sprints = await Sprint.find({ project: projectId }).populate('tasks');
+    const sprints = await Sprint.find({ project: projectId }).populate({
+      path: 'tasks',
+      populate: {
+        path: 'distributeTo',
+        model: 'User',
+      },
+    });
     if (!sprints) {
       return { success: false, message: 'sprints not found' };
     }
@@ -93,7 +107,13 @@ export const countAllSprints = async () => {
 
 export const findAllSprints = async () => {
   try {
-    const sprints = await Sprint.find().populate('tasks');
+    const sprints = await Sprint.find().populate({
+      path: 'tasks',
+      populate: {
+        path: 'distributeTo',
+        model: 'User',
+      },
+    });
     return { success: true, data: sprints };
   } catch (error) {
     return { success: false, message: 'Sprints not found ' + error };
@@ -102,7 +122,13 @@ export const findAllSprints = async () => {
 
 export const findTasksBySprint = async (sprintId) => {
   try {
-    const sprint = await Sprint.findById(sprintId).populate('tasks');
+    const sprint = await Sprint.findById(sprintId).populate({
+      path: 'tasks',
+      populate: {
+        path: 'distributeTo',
+        model: 'User',
+      },
+    });
     if (!sprint) {
       return { success: false, message: 'Sprint not found' };
     }
@@ -126,15 +152,15 @@ export const countTasksBySprint = async (sprintId) => {
 }
 
 export const addTaskToSprint = async (sprintId, taskId) => {
-    try {
-      const sprint = await Sprint.findById(sprintId).populate('tasks');
-      console.log(sprint);
-      sprint.tasks.push(taskId);
-      const updatedSprint = await sprint.save();
-      return { success: true, data: updatedSprint, message: 'Task added successfully'};
-    } catch (error) {
-      return { success: false, message: 'Error adding task: ' + error };
-    }
+  try {
+    const sprint = await Sprint.findById(sprintId).populate('tasks');
+    console.log(sprint);
+    sprint.tasks.push(taskId);
+    const updatedSprint = await sprint.save();
+    return { success: true, data: updatedSprint, message: 'Task added successfully' };
+  } catch (error) {
+    return { success: false, message: 'Error adding task: ' + error };
+  }
 
 
 }
@@ -146,13 +172,13 @@ export const removeTaskFromSprint = async (sprintId, taskId) => {
     const newTaskList = existingTaskIds.filter(task => task !== taskId);
     sprint.tasks = newTaskList;
     const updatedSprint = await sprint.save();
-    return { success: true, data: updatedSprint, message: 'Task removed successfully'};
+    return { success: true, data: updatedSprint, message: 'Task removed successfully' };
   } catch (error) {
-    return { success: false, message: 'Error removing task: ' + error};
+    return { success: false, message: 'Error removing task: ' + error };
   }
 }
 
-export const updateSprint = async (sprintId, newData)=> {
+export const updateSprint = async (sprintId, newData) => {
   try {
     const sprint = await Sprint.findById(sprintId).populate('tasks');
 
