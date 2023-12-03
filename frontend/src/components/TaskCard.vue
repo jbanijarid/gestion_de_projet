@@ -2,6 +2,7 @@
 import { ref, onMounted, defineProps } from 'vue';
 import { api } from '../../http-api.js';
 import { useUserStore } from '../stores/userConection';
+import { useProjectStore } from '../stores/project';
 
 const emit = defineEmits(['taskDeleted']);
 const props = defineProps({
@@ -14,6 +15,7 @@ const props = defineProps({
 });
 
 const store = useUserStore();
+const projectStore = useProjectStore();
 const isOwner = store.isOwner;
 const project = ref(null);
 const isEditMode = ref(false);
@@ -70,15 +72,18 @@ const exitEditMode = async () => {
     isEditMode.value = false;
     try {
         if (!props.id) {
+            let id = props.projectId;
             const body = {
                 name: editedName.value,
                 description: editedDescription.value,
-                project: props.projectId,
+                project: id,
                 state: editedState.value
             }
-            const resp = await api.addTask(body);
-            console.log(resp.data);
-            await distTaskTo(resp.data._id);
+            const newTask = await api.addTask(body);
+            if(projectStore.getIsSprint() === true){
+                await api.addTaskToSprint(projectStore.getProjectId(), newTask.data._id);
+            }
+            await distTaskTo(newTask.data._id);
         } else {
             await api.updateTask(props.id, {
                 name: editedName.value,
@@ -103,7 +108,12 @@ const disableDeleteMode = () => {
 const deleteTask = async () => {
     try {
         if (props.id) {
-            await api.deleteTask(props.id);
+            if(projectStore.getIsSprint()){
+                console.log(props.id);
+                await api.removeTaskFromSprint(projectStore.getProjectId(), props.id);
+            } else {
+                await api.deleteTask(props.id);
+            }
         }
         emit('taskDeleted', props.id);
     } catch (error) {

@@ -4,9 +4,12 @@ import { api } from '../../http-api';
 import TaskCard from '../components/TaskCard.vue';
 import Draggable from 'vuedraggable';
 import { useUserStore } from '../stores/userConection';
+import { useProjectStore } from '../stores/project';
 const store = useUserStore();
+const projectStore = useProjectStore();
 const isOwner = store.isOwner;
 const taskList = ref([]);
+const notInSprintTaskList = ref([]);
 
 const props = defineProps(['projectId']);
 
@@ -16,16 +19,30 @@ onMounted(async () => {
 
 const fetchTasks = async () => {
   try {
-    const resp = await api.getAllTasksByProjectId(props.projectId);
-    taskList.value = resp.data;
+    if(projectStore.getIsSprint() === false){
+      const resp = await api.getAllTasksByProjectId(props.projectId);
+      taskList.value = resp.data;
+    } else {
+      const resp = await api.getTasksBySprintId(props.projectId);
+      taskList.value = resp.data;
+      const sprint = await api.getSprintById(props.projectId);
+      const projectTasks = await api.getAllTasksByProjectId(sprint.data.project);
+      const sprintTasks = taskList.value.map(task => task._id);
+      notInSprintTaskList.value = projectTasks.data.filter(task => !sprintTasks.includes(task._id));
+    }
+    
   } catch (error) {
     console.error('Erreur lors de la récupération des tâches:', error);
   }
 };
 
-const handleTaskDeleted = (taskId) => {
+const handleTaskDeleted = async (taskId) => {
   // Update the local taskList by filtering out the deleted task
   taskList.value = taskList.value.filter(task => task._id !== taskId);
+  if(projectStore.getIsSprint()){
+    const task = await api.getTaskById(taskId);
+    notInSprintTaskList.value.push(task.data);
+  }
 };
 
 
@@ -43,19 +60,42 @@ const onDragEnd = async (etat, movedTask) => {
   }
 };
 
-const addNewTask = (type) => {
+const addNewTask = async (type) => {
+  let id = props.projectId;
+  if(projectStore.getIsSprint() === true){
+    const sprint = await api.getSprintById(id);
+    id = sprint.data.project;
+  }
+  console.log(id);
   const body = {
     name:"",
     description:"",
-    project: props.projectId,
+    project: id,
     state:type
   }
   taskList.value.push(body);
 };
+
+const addExistingTask = async () => {
+  const select = document.getElementById("tasklist");
+  const taskId = select.options[select.selectedIndex].value;
+  await api.addTaskToSprint(props.projectId, taskId);
+  notInSprintTaskList.value = notInSprintTaskList.value.filter(task => task._id !== taskId);
+  const task = await api.getTaskById(taskId);
+  taskList.value.push(task.data);
+}
 </script>
 
 <template>
   <div class="container-fluid">
+    <div v-if="projectStore.getIsSprint()" class="projectTaskList">
+      <select id="tasklist">
+        <option v-for="task in notInSprintTaskList" v-bind:value="task._id">
+          {{ task.name }}
+        </option>  
+      </select>
+      <b-button variant="success" @click="addExistingTask">Add task</b-button>
+    </div>
     <div class="row">
       <div class="col-md-4">
         <div class="task-column" data-etat="todo">
@@ -77,7 +117,7 @@ const addNewTask = (type) => {
             @drop="movedTask => onDragEnd('progress', movedTask)" group="taskList" tag="div" :item-key="task => task._id">
             <template #item="{ element }">
               <TaskCard :key="element._id" :id="element._id" :name="element.name" :description="element.description"
-                :project-id="element.project" :state="element.state" :members="element.distributeTo" @taskDeleted="handleTaskDeleted" />
+                :projectId="element.project" :state="element.state" :members="element.distributeTo" @taskDeleted="handleTaskDeleted" />
             </template>
           </draggable>
           <div v-if="isOwner" class="addNewTask" @click="addNewTask('progress')">+ add new task</div>
@@ -122,5 +162,9 @@ const addNewTask = (type) => {
 }
 .addNewTask:hover {
   color: var( --text-light);
+}
+
+button {
+  margin-left: 10px;
 }
 </style>

@@ -1,9 +1,12 @@
 <script setup>
 import { ref, onMounted, defineProps} from 'vue';
 import { api } from '../../http-api.js';
+import Kanban from "./Kanban.vue";
+import { useProjectStore } from '../stores/project';
 
 const props = defineProps(['sprintId']);
 const sprint = ref(null);
+const projectStore = useProjectStore();
 
 
 onMounted(async () => {
@@ -15,15 +18,18 @@ onMounted(async () => {
 });
 
 const fetchSprintDetails = async () => {
+  await projectStore.setProjectId(props.sprintId);
+  await projectStore.setIsSprint(true);
   const response = await api.getSprintById(props.sprintId);
   sprint.value = response.data;
-  console.log(sprint.value);
 };
 
 const formatSprintDate = (date) => {
   const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
   return new Date(date).toLocaleDateString(undefined, options);
 };
+
+
 
 </script>
 
@@ -39,13 +45,10 @@ const formatSprintDate = (date) => {
         </div>
 
         <div class="tasks">
-          <p><strong>Tasks: </strong> </p>
-          <div v-for="task in sprint.tasks" :key="task._id" class="task">
-            <span class="task-name">Name: {{ task.name }}</span>
-            <span class="task-des">Description: {{ task.description }}</span>
-            <span class="task-state">State: {{ task.state }}</span>
-          </div>
+          <h2>Tasks</h2>
         </div>
+
+        <Kanban :project-id="props.sprintId" />
       </div>
 
   

@@ -36,6 +36,10 @@ export const api = {
   deleteTask: (id) => requests.delete(`tasks/${id}`),
   getAllSprints:() => requests.get('sprints', {}),
   getAllSprintsByProject:(id) => requests.get(`sprints/project/${id}`),
-  getSprintById:(id) => requests.get(`sprints/${id}`)
-
+  getSprintById:(id) => requests.get(`sprints/${id}`),
+  addSprint: (body) => requests.post('sprints', body),
+  getTasksBySprintId: (id) => requests.get(`sprints/${id}/tasks`),
+  updateSprint: (id, body) => requests.put(`sprints/${id}`, body),
+  addTaskToSprint: (id, taskId) => requests.put(`sprints/${id}/tasks/${taskId}`),
+  removeTaskFromSprint: (id, taskId) => requests.put(`sprints/${id}/tasks/remove/${taskId}`)
 };
