@@ -4,6 +4,7 @@ import * as userController from '../controllers/userController.js';
 import * as projectController from '../controllers/projectController.js';
 import * as taskController from "../controllers/taskController.js";
 import * as sprintController from '../controllers/sprintController.js';
+import * as noteController from '../controllers/noteController.js';
 const router = Router();
 
 
@@ -783,5 +784,87 @@ router.route('/sprints/:id/tasks/:taskId').put(sprintController.addTask);
  *       - Sprints
  */
 router.route('/sprints/:id/tasks/remove/:taskId').put(sprintController.removeTask);
+
+
+// ****************************************************** NOTES : 
+
+/**
+ * @openapi
+ * /notes:
+ *   post:
+ *     summary: Create a new note.
+ *     description: Creates a new note with the provided data.
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *           schema:
+ *             type: object
+ *             properties:
+ *               projectId:
+ *                 type: string
+ *     responses:
+ *       200:
+ *         description: The new note.
+ *       404:
+ *         description: Error 
+ *     tags:
+ *       - Notes
+ */
+router.route('/notes').post(noteController.addNote);
+
+/**
+ * @openapi
+ * /notes/project/{projectId}:
+ *   get:
+ *     summary: Get all notes of a project
+ *     description: Get a list of all project.
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The projectId of the project to get all it's notes.
+ *     responses:
+ *       '200':
+ *         description: Successful response with a list of notes of a gevin project.
+ *     tags:
+ *       - Notes
+ */
+router.route('/notes/project/:projectId').get(noteController.getNotesByProject);
+
+/**
+ * @openapi
+ * /notes/project/{projectId}/values:
+ *   put:
+ *     summary: Add note To project notes table
+ *     description: Add a new member to the note.
+ *     parameters:
+ *       - in: path
+ *         name: projectId
+ *         required: true
+ *         schema:
+ *           type: string
+ *         description: The ID of the project to add the note to .
+ *     requestBody:
+ *       required: true
+ *       content:
+ *         application/json:
+ *          schema:
+ *              type: object
+ *              properties:
+ *                value:
+ *                  type: integer
+ *                  description: The value of the note to be added.
+ *     responses:
+ *       200:
+ *         description: note added to the notes successfully.
+ *       404:
+ *         description: Error adding note to project notes .
+ *     tags:
+ *       - Notes
+ */
+router.route('/notes/project/:projectId/values').put(noteController.addNoteToProject);
 
 export default router;
