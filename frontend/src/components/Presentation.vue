@@ -81,11 +81,11 @@ export default {
     <div class="images-container" ref="section3Ref" @mouseover="handleMouseOver(3)" @mouseout="handleMouseOut(3)">
       <b-row>
         <b-col lg="6" class="image-text">
-          <p class="section-title">Accélérez vos projets avec une planification agile et des sprints efficaces</p>
+          <p class="section-title">Accélérez vos projets en planifiant de manière agile avec des sprints, tout en boostant la productivité grâce à des tableaux Kanban dédiés à chaque sprint</p>
         </b-col>
         <b-col lg="6">
           <div class="image-item" ref="image3Ref">
-            <img src="../assets/project.png" alt="Capture d'écran de la page d'accueil" class="image">
+            <img src="../assets/sprint.png" alt="Capture d'écran de la page d'accueil" class="image">
           </div>
         </b-col>
       </b-row>
