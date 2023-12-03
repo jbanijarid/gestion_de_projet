@@ -4,6 +4,7 @@ import { ref } from 'vue';
 import SignIn from '../components/SignIn.vue';
 import SignUp from '../components/SignUp.vue';
 import { useUserStore } from "../stores/userConection";
+import Presentation from "../components/Presentation.vue"
 
 const store = useUserStore();
 
@@ -31,24 +32,23 @@ const signout = ()=>{
 </script>
 
 <template>
-  <div>
+  <div class="animation-container" @click="startAnimation">
     <b-row>
       <b-col>
-        <h1>Home Page </h1>
+        <h1> JTAFN </h1>
       </b-col>
       <b-col>
         <dev class="inup" v-if="!store.isConnected">
           <b-button-group>
-            <b-button variant="outline-secondary" @click="openModal('signin')" :disabled="!ablebtn">Sign In</b-button>
-            <b-button variant="outline-secondary" @click="openModal('signup')" :disabled="!ablebtn">Sign Up</b-button>
+            <b-button class="button" variant="outline-secondary" @click="openModal('signin')" :disabled="!ablebtn">Sign In</b-button>
+            <b-button class="button" variant="outline-secondary" @click="openModal('signup')" :disabled="!ablebtn">Sign Up</b-button>
           </b-button-group>
         </dev>
         <div class="signout" v-else>
-          <b-button variant="outline-secondary" @click="signout">Sign Out</b-button>
+          <b-button class="button" variant="outline-secondary" @click="signout">Sign Out</b-button>
         </div>
         </b-col>
     </b-row>
-    <h6>Welcome to our Project Manager</h6>
     <div class="signin" v-if="open.signin">
       <SignIn @close-it="closeModal('signin')" @open-signup="openModal('signup')"/>
     </div>
@@ -56,14 +56,32 @@ const signout = ()=>{
       <SignUp @close-it="closeModal('signup')" @open-signin="openModal('signin')"/>
     </div>
   </div>
+  <Presentation />
 </template>
   
 
   
 <style scoped>
 h1 {
-  font-size: var(--font-size-title);
+  font-size: xx-large;
+  color: #333; 
 }
-/* Add your styles here */
+
+.button {
+  color: black;
+}
+
+.animation-container {
+  width: 100%;
+  text-align: center;
+  margin-top: 10px;
+  font-family: "Times New Roman", Times, serif;
+  user-select: none;
+  background: linear-gradient(to right, #ecf0f1, #6f7173, #ecf0f1); /* Fond de couleur dégradé */
+  padding: 20px;
+  border-radius: 10px;
+  box-shadow: 0 0 20px rgba(0, 0, 0, 0.2);
+  overflow: hidden;
+}
 </style>
   
