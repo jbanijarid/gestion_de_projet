@@ -67,11 +67,12 @@ const {userInfo} = toRefs(store);
 }
 
 .main {
-  margin-left: 0;
+  margin-left: 12vw;
   /* Adjusted to match the sidebar width */
   font-size: 28px;
   padding: 0px 10px;
-  width: 60vw;
+  width: auto;
+  height: 100%;
 }
 
 /* Media query for smaller screens */
