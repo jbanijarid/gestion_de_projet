@@ -27,6 +27,10 @@ export default defineConfig({
       '^/api/sprints': {
         target: 'http://localhost:8080' 
       }
+      ,
+      '^/api/notes': {
+        target: 'http://localhost:8080' 
+      }
     }
   },
   build: {

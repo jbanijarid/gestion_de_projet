@@ -865,6 +865,6 @@ router.route('/notes/project/:projectId').get(noteController.getNotesByProject);
  *     tags:
  *       - Notes
  */
-router.route('/notes/project/:projectId/values').put(noteController.addNoteToProject);
+router.route('/notes/project/:projectId/value').put(noteController.addNoteToProject);
 
 export default router;

@@ -53,7 +53,7 @@ const removeMemberFromProject = async () => {
     if (removeMemberUsername.value !== '') {
       const resp = await api.getUserByName(removeMemberUsername.value);
       // console.log(resp.data._id);
-      const response = await api.removeProjectMember(props.projectId, resp.data._id );
+      const response = await api.removeProjectMember(props.projectId, resp.data._id);
       removeMemberUsername.value = '';
       await fetchProjectDetails();
     }
@@ -67,7 +67,10 @@ const goToSprints = async () => {
   // console.log(projectStore.getProjectId());
   router.push({ name: 'sprints', params: { projectId: props.projectId } });
 };
-
+const goToNotes = async () => {
+  // console.log(projectStore.getProjectId());
+  router.push({ name: 'notes' });
+};
 
 const getRandomType = () => {
   const type = ["secondary", "primary", "dark", "success", "info"];
@@ -94,9 +97,19 @@ const getFirstName = (userName) => {
               <div class="details">
                 <p>{{ project.description }}</p>
               </div>
-              <div class="create-sprint-container">
-                <button class="btn" @click="goToSprints()" id="sp">Go to Sprints</button>
-              </div>
+              <b-row>
+                <b-col>
+                  <div class="create-sprint-container">
+                    <button class="btn" @click="goToNotes()" id="note">Go to Note</button>
+                  </div>
+                </b-col>
+
+                <b-col>
+                  <div class="create-sprint-container">
+                    <button class="btn" @click="goToSprints()" id="sp">Go to Sprints</button>
+                  </div>
+                </b-col>
+              </b-row>
             </div>
           </b-col>
 
@@ -125,13 +138,15 @@ const getFirstName = (userName) => {
               <b-tabs content-class="mt-3" class="">
                 <b-tab title="add" active>
                   <div class="add-remove-member-section">
-                    <input v-model="newMemberUsername" placeholder="New Member Username" class="new-remove-member-input" />
+                    <input v-model="newMemberUsername" placeholder="New Member Username"
+                      class="new-remove-member-input" />
                     <b-button variant="success" @click="addMemberToProject">Add</b-button>
                   </div>
                 </b-tab>
                 <b-tab title="remove">
                   <div class="add-remove-member-section">
-                    <input v-model="removeMemberUsername" placeholder="Username to remove " class="new-remove-member-input" />
+                    <input v-model="removeMemberUsername" placeholder="Username to remove "
+                      class="new-remove-member-input" />
                     <b-button variant="danger" @click="removeMemberFromProject">Remove</b-button>
                   </div>
                 </b-tab>
@@ -169,9 +184,11 @@ const getFirstName = (userName) => {
 .details {
   margin-bottom: 20px;
 }
+
 .add-remove-section {
   font-size: .5em;
 }
+
 .add-remove-member-section {
   margin-top: 1em;
   display: flex;
@@ -209,6 +226,5 @@ const getFirstName = (userName) => {
 
 b-avatar:hover .delete-icon {
   display: block;
-}
-</style>
+}</style>
   

@@ -5,21 +5,6 @@ import { gsap } from 'gsap';
 const apercusRef = ref(null);
 
 
-// const iamgesAndSection = ref ([
-//   {
-//   image:null,
-//   section:null,
-//   },
-//   {
-//     image:null,
-//     section:null,
-//   },
-//   {
-//     image:null,
-//     section:null,
-//   }
-// ])
-
 const section1Ref = ref(null);
 const section2Ref = ref(null);
 const section3Ref = ref(null);
