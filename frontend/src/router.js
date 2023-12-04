@@ -32,6 +32,12 @@ const routes = [
       name: 'sprints',
       component:  () => import("./pages/Sprints.vue"),
       props: true,
+    },
+    {
+      path: '/notes',
+      name: 'notes',
+      component:  () => import("./pages/Notes.vue"),
+      props: true,
     }
     
   ];
