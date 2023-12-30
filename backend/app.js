@@ -4,11 +4,15 @@ import router  from "./src/routes/index.js";
 import { config } from "dotenv";
 import swaggerJsDoc from 'swagger-jsdoc';
 import { serve, setup } from 'swagger-ui-express';
+import cors from 'cors';
 
 config();
 const port = process.env.PORT;
 
 const app = express();
+app.use(cors({
+    origin: 'https://gestion-de-projet-3rzab875b-firasmessaoud5-gmailcom.vercel.app/' // Replace with your frontend domain
+  }));
 connectDb();
 
 const options = {
