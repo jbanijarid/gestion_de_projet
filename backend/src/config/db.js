@@ -6,7 +6,7 @@ config();
 async function connectDB() {
     try {
         console.log("Opening connection");
-        const conn = await connect(process.env.MONGO_URI + '/' + process.env.DB_NAME, {
+        const conn = await connect(process.env.MONGO_URI, {
             useNewUrlParser: true,
             useUnifiedTopology: true,
         });
