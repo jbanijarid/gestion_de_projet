@@ -11,7 +11,7 @@ const port = process.env.PORT;
 
 const app = express();
 app.use(cors({
-    origin: 'https://gestion-de-projet-kohl.vercel.app/' // Replace with your frontend domain
+    origin: 'https://gestion-de-projet-kohl.vercel.app' // Replace with your frontend domain
   }));
 connectDb();
 
