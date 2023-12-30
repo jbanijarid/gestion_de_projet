@@ -13,23 +13,23 @@ export default defineConfig({
   server: {
     proxy: {
       '^/api/users': {
-        target: 'http://localhost:8080' 
+        target: 'https://backend-api-mongod.onrender.com' 
       },
       '^/api/projects': {
-        target: 'http://localhost:8080' 
+        target: 'https://backend-api-mongod.onrender.com' 
       },
       '^/api/tasks': {
-        target: 'http://localhost:8080' 
+        target: 'https://backend-api-mongod.onrender.com' 
       },
       '^/api/login': {
-        target: 'http://localhost:8080' 
+        target: 'https://backend-api-mongod.onrender.com' 
       },
       '^/api/sprints': {
-        target: 'http://localhost:8080' 
+        target: 'https://backend-api-mongod.onrender.com' 
       }
       ,
       '^/api/notes': {
-        target: 'http://localhost:8080' 
+        target: 'https://backend-api-mongod.onrender.com' 
       }
     }
   },
