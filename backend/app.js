@@ -4,12 +4,15 @@ import router  from "./src/routes/index.js";
 import { config } from "dotenv";
 import swaggerJsDoc from 'swagger-jsdoc';
 import { serve, setup } from 'swagger-ui-express';
+import cors from 'cors';
 
 config();
-const host = process.env.HOST;
 const port = process.env.PORT;
 
 const app = express();
+app.use(cors({
+    origin: 'https://gestion-de-projet-kohl.vercel.app' // Replace with your frontend domain
+  }));
 connectDb();
 
 const options = {
@@ -36,6 +39,6 @@ app.use(express.json())
 app.use('/api', router);
 app.use('/docs', serve, setup(openapiSpecification));
 
-app.listen(port, host, () => {
-    console.log(`Server is running on http://${host}:${port}`)
+app.listen(port, () => {
+    console.log(`Server is running on port ${port}`)
   });
