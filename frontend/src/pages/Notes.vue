@@ -72,46 +72,57 @@ const updateRating = (rating) => {
 </script>
 
 <template>
-    <div class="averageRating">
-        <div class="rating">
-            <b-row align-h="start">
-                <b-col>
-                    <span v-for="star in 5" :key="star"
-                        :class="{ filled: star <= averageRating, empty: star > averageRating }">
-                        &#9733;
-                    </span>
-                </b-col>
-                <b-col>
-                    <p>{{ averageRating ? averageRating : 0}}</p>
-                </b-col>
-                <b-col>
-                    total notes : {{ note?.length ?note?.length: 0  }}
-                </b-col>
-            </b-row>
+    <div class="notes">
+        <h2 class="title">Notes</h2>
+
+        <div class="averageRating">
+            <div class="rating">
+                <b-row align-h="start">
+                    <b-col>
+                        <span v-for="star in 5" :key="star"
+                            :class="{ filled: star <= averageRating, empty: star > averageRating }">
+                            &#9733;
+                        </span>
+                    </b-col>
+                    <!-- <b-col>
+                    <p>{{ averageRating ? averageRating : 0 }} </p>
+                </b-col> -->
+                    <b-col>
+                        total notes : {{ note?.length ? note?.length : 0 }}
+                    </b-col>
+                </b-row>
+            </div>
         </div>
-    </div>
 
-    <div class="gavinRating">
-        <div class="rating">
-            <b-row>
-
-                <b-col>
-                    <span v-for="star in 5" :key="star" :class="{ filled: star <= gavinNote, empty: star > gavinNote }"
-                        @click="updateRating(star)">
-                        &#9733;
-                    </span>
-                </b-col>
-                <b-col>
-                    <!-- <p>{{ gavinNote }}</p> -->
-                    <b-button variant="success" @click="addNote">Add Note</b-button>
-                </b-col>
-            </b-row>
+        <div class="gavinRating">
+            <div class="rating">
+                <b-row>
+                    <b-col>
+                        <span v-for="star in 5" :key="star" :class="{ filled: star <= gavinNote, empty: star > gavinNote }"
+                            @click="updateRating(star)">
+                            &#9733;
+                        </span>
+                    </b-col>
+                    <b-col>
+                        <!-- <p>{{ gavinNote }}</p> -->
+                        <b-button variant="success" @click="addNote">Add Note</b-button>
+                    </b-col>
+                </b-row>
+            </div>
         </div>
     </div>
 </template>
 
   
 <style scoped>
+.notes {
+    margin: 10vw;
+    background-color: #f8f9fa;
+    border-radius: 8px;
+    padding: 20px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+
 .averageRating {
     text-align: center;
     margin-bottom: 20px;
@@ -128,11 +139,13 @@ const updateRating = (rating) => {
 }
 
 .filled {
-    color: #FFD700; /* Gold color for filled stars */
+    color: #FFD700;
+    /* Gold color for filled stars */
 }
 
 .empty {
-    color: #ccc; /* Color for empty stars */
+    color: #ccc;
+    /* Color for empty stars */
     cursor: pointer;
 }
 
@@ -141,7 +154,8 @@ const updateRating = (rating) => {
 }
 
 /* Hover effect for stars */
-.filled:hover, .empty:hover {
+.filled:hover,
+.empty:hover {
     transform: scale(1.2);
 }
 
@@ -163,6 +177,5 @@ const updateRating = (rating) => {
     font-size: 14px;
     color: #555;
 }
-
 </style>
   
