@@ -38,13 +38,9 @@ const formatSprintDate = (date) => {
     <div class="sprint-details">
       <h1>{{ sprint.name }}</h1>
       <div class="details">
-        <p><strong>Date of creation:</strong> {{ formatSprintDate(sprint.created_at) }}</p>
-        <p><strong>Start date:</strong> {{ formatSprintDate(sprint.start_date) }}</p>
-        <p><strong>End date:</strong> {{ formatSprintDate(sprint.end_date) }}</p>
-      </div>
-
-      <div class="tasks">
-        <h2>Tasks</h2>
+        <p> Date of creation :{{ formatSprintDate(sprint.created_at) }}</p>
+        <p> Start date : {{ formatSprintDate(sprint.start_date) }}</p>
+        <p> End date : {{ formatSprintDate(sprint.end_date) }}</p>
       </div>
 
     </div>
@@ -61,7 +57,7 @@ const formatSprintDate = (date) => {
   
 <style scoped>
 .sprint-details-container {
-  max-width: 10000px;
+  /* max-width: 10000px; */
   margin: 0 auto;
   padding: 20px;
 }
@@ -74,7 +70,8 @@ const formatSprintDate = (date) => {
 }
 
 .details {
-  margin-bottom: 20px;
+  margin-bottom: 2rem;
+  font-size: 16px;
 }
 
 
