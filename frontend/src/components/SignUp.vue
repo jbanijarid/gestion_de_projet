@@ -13,7 +13,7 @@ const data = reactive({
   email: '',
   password: '',
   options: ['manager', 'team member'],
-  selectedOption: '',
+  selectedOption: 'manager',
 });
 
 const register = async () => {
@@ -62,7 +62,7 @@ const closeSignupAndOpenSginin = () => {
           <input type="password" id="password" v-model="data.password" required />
         </div>
 
-        <div class="form-group">
+        <!-- <div class="form-group">
           <h2>Choisissez une option :</h2>
           <div class="options-container">
             <div v-for="(option, index) in data.options" :key="index" class="option">
@@ -70,7 +70,7 @@ const closeSignupAndOpenSginin = () => {
               <label :for="'option' + index">{{ option }}</label>
             </div>
           </div>
-        </div>
+        </div> -->
         <button type="submit">S'inscrire</button>
       </form>
     </div>
