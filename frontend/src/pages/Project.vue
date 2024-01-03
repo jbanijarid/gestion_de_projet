@@ -140,14 +140,14 @@ const getFirstName = (userName) => {
                   <div class="add-remove-member-section">
                     <input v-model="newMemberUsername" placeholder="New Member Username"
                       class="new-remove-member-input" />
-                    <b-button variant="success" @click="addMemberToProject">Add</b-button>
+                    <b-button class="btn" variant="success" @click="addMemberToProject">Add</b-button>
                   </div>
                 </b-tab>
                 <b-tab title="remove">
                   <div class="add-remove-member-section">
                     <input v-model="removeMemberUsername" placeholder="Username to remove "
                       class="new-remove-member-input" />
-                    <b-button variant="danger" @click="removeMemberFromProject">Remove</b-button>
+                    <b-button class="btn" variant="danger" @click="removeMemberFromProject">Remove</b-button>
                   </div>
                 </b-tab>
               </b-tabs>
@@ -196,6 +196,11 @@ const getFirstName = (userName) => {
   width: .1rem;
 }
 
+.btn {
+  padding: 0;
+  width: 5rem;
+}
+
 .new-remove-member-input {
   /* flex-grow: 1; */
   margin-right: .5em;
@@ -226,5 +231,6 @@ const getFirstName = (userName) => {
 
 b-avatar:hover .delete-icon {
   display: block;
-}</style>
+}
+</style>
   
