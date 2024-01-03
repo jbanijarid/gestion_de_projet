@@ -196,8 +196,8 @@ const getFirstName = (userName) => {
   width: .1rem;
 }
 
-.btn {
-  padding: 0;
+.add-remove-member-section > .btn {
+  padding: 2px;
   width: 5rem;
 }
 
